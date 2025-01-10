@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "B_n1SpikeB"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OpenHook"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CloseHook"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
