@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.TestSubsystem;
+//import frc.robot.subsystems.TestSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
 
@@ -13,7 +13,7 @@ public class BotControls {
 
 	RobotContainer rContainer = RobotContainer.getInstance();
     ControlHub controlHub = ControlHub.getInstance();
-    TestSubsystem m_TestSubsystem = TestSubsystem.getInstance();
+    //TestSubsystem m_TestSubsystem = TestSubsystem.getInstance();
     boolean interruptedPPLib = false;
 
     final static SendableChooser<Boolean> ControllerMode = new SendableChooser<>();
@@ -51,7 +51,7 @@ public class BotControls {
     if (OneControllerQuery == true){
             if (controlHub.driverController.A_Button.wasActivated()) {
                 System.out.println("A Button Detected");
-                rContainer.Score().schedule();
+                //rContainer.Score().schedule();
             }
 
             if (controlHub.driverController.X_Button.wasActivated()){
@@ -70,7 +70,7 @@ public class BotControls {
                 // }            }
             
                 if (controlHub.driverController.Y_Button.wasActivated()){
-                rContainer.Score().schedule();
+                //rContainer.Score().schedule();
                 }
             
             if (controlHub.driverController.L_Bumper.isBeingPressed()){
@@ -78,7 +78,7 @@ public class BotControls {
     
             if (controlHub.driverController.R_Bumper.isBeingPressed()){
                 //rContainer.IntakeNoteStow().schedule();
-                rContainer.RunNegative();
+                //rContainer.RunNegative();
             }
 
             // if(controlHub.driverController.POV0.isBeingPressed()){

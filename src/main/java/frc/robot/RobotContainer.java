@@ -34,7 +34,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.HookConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.TestSubsystem;
+//import frc.robot.subsystems.TestSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -69,7 +69,7 @@ public class RobotContainer {
   /*READ ME:
   The robot's subsystems
   */
-  public final TestSubsystem m_TestSubsystem;
+  //public final TestSubsystem m_TestSubsystem;
   private static RobotContainer instance = null;
   public final AutoModeManager m_AutoModeManager;
   public final ControlHub m_ControlHub;
@@ -86,7 +86,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_TestSubsystem =TestSubsystem.getInstance();
+    //m_TestSubsystem =TestSubsystem.getInstance();
     m_robotDrive = new DriveSubsystem();
 
     m_AutoModeManager = new AutoModeManager();
@@ -101,7 +101,7 @@ public class RobotContainer {
           -MathUtil.applyDeadband(m_ControlHub.driverController.getRightX(), OIConstants.kDriveDeadband),
           true, true),
       m_robotDrive));
-      NamedCommands.registerCommand("TestCommand", new InstantCommand(() -> Score()));
+      //NamedCommands.registerCommand("TestCommand", new InstantCommand(() -> Score()));
   }
 
 
@@ -115,36 +115,36 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
 
-  public void RunPositive(){
-    new RunCommand(() -> m_TestSubsystem.setOpenLoop(.2), m_TestSubsystem);
-  }
+  // public void RunPositive(){
+  //   new RunCommand(() -> m_TestSubsystem.setOpenLoop(.2), m_TestSubsystem);
+  // }
 
-  public void RunNegative(){
-    new RunCommand(() -> m_TestSubsystem.setOpenLoop(-0.2), m_TestSubsystem);
-  }
+  // public void RunNegative(){
+  //   new RunCommand(() -> m_TestSubsystem.setOpenLoop(-0.2), m_TestSubsystem);
+  // }
 
-  public Command IntakePrep(){
-    return new RunCommand(() -> m_TestSubsystem.setState(States.TestPos.POS1), m_TestSubsystem);
-  }
+  // public Command IntakePrep(){
+  //   return new RunCommand(() -> m_TestSubsystem.setState(States.TestPos.POS1), m_TestSubsystem);
+  // }
 
-  public Command IntakeStow(){
-    return new RunCommand(() -> m_TestSubsystem.setState(States.TestPos.STOW), m_TestSubsystem);
-  }
+  // public Command IntakeStow(){
+  //   return new RunCommand(() -> m_TestSubsystem.setState(States.TestPos.STOW), m_TestSubsystem);
+  // }
 
-  public Command Score(){
-    return new ParallelCommandGroup(
-          // new RunCommand(() -> {
-          //   arm.setArmState(States.ArmPos.SCORE);
-          //   }, arm),
-          // new SequentialCommandGroup(
-          //   new WaitCommand(HookConstants.delay),
-          //   new RunCommand(() -> {
-          //     hook.setHookState(States.HookPos.SCORE);
-          //   }, hook
-          //   )
-          // )
-        );
-  }
+  // public Command Score(){
+  //   return new ParallelCommandGroup(
+  //         // new RunCommand(() -> {
+  //         //   arm.setArmState(States.ArmPos.SCORE);
+  //         //   }, arm),
+  //         // new SequentialCommandGroup(
+  //         //   new WaitCommand(HookConstants.delay),
+  //         //   new RunCommand(() -> {
+  //         //     hook.setHookState(States.HookPos.SCORE);
+  //         //   }, hook
+  //         //   )
+  //         // )
+  //       );
+  // }
 
   // public Command StowArm(){
   // return new RunCommand(() -> {
