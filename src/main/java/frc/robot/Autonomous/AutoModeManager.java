@@ -9,12 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public final class AutoModeManager{
     public enum DesiredMode {
 		DO_NOTHING,
-		TEST_PATH_AUTO,
-		GO_PATH_AUTO,
-        RETURN_PATH_AUTO,
-        ONE_NOTE_AUTO,
-        PLAYOFF_AUTO,
-        THREE_NOTE
+        NEW_AUTO
 	}
 
     public static AutoModeManager AutoQueue;
@@ -29,9 +24,6 @@ public final class AutoModeManager{
     public static Command m_autonomousCommand;
 
     public AutoModeManager() {
-    mModeChooser.addOption("Go Path", DesiredMode.GO_PATH_AUTO);
-    mModeChooser.addOption("IgnoreReturn", DesiredMode.RETURN_PATH_AUTO);
-    mModeChooser.addOption("Three Note Auto", DesiredMode.THREE_NOTE);
     mModeChooser.setDefaultOption("Default Auto", DesiredMode.DO_NOTHING);
     }
 
@@ -50,11 +42,7 @@ public final class AutoModeManager{
             case DO_NOTHING:
 				m_autonomousCommand = DoNothingCommand.NoAuto();
                 break;
-            case GO_PATH_AUTO:
-				m_autonomousCommand = GoAutoCommand.driveAutoCommand();
-                break;
-            case THREE_NOTE:
-                m_autonomousCommand = ThreeNoteAutoCommand.score3NoteCommand();
+            case NEW_AUTO:
                 break;
             // case RETURN_PATH_AUTO:
 			// 	return Optional.of(new TestPathMode());
