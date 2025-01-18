@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 public final class AutoModeManager{
     public enum DesiredMode {
 		DO_NOTHING,
+        GO_AUTO,
+        RETURN_AUTO,
+        AB_BOTAUTO,
         NEW_AUTO
 	}
 
@@ -25,6 +28,9 @@ public final class AutoModeManager{
 
     public AutoModeManager() {
     mModeChooser.setDefaultOption("Default Auto", DesiredMode.DO_NOTHING);
+    mModeChooser.setDefaultOption("Default Auto", DesiredMode.RETURN_AUTO);
+    mModeChooser.setDefaultOption("Default Auto", DesiredMode.GO_AUTO);
+    mModeChooser.setDefaultOption("Default Auto", DesiredMode.AB_BOTAUTO);
     }
 
     public static void updateAutoMode(){
@@ -42,10 +48,15 @@ public final class AutoModeManager{
             case DO_NOTHING:
 				m_autonomousCommand = DoNothingCommand.NoAuto();
                 break;
-            case NEW_AUTO:
+            case GO_AUTO:
+                m_autonomousCommand = GoAutoCommand.runDefaultedAutoCommand();
                 break;
-            // case RETURN_PATH_AUTO:
-			// 	return Optional.of(new TestPathMode());
+            case RETURN_AUTO:
+                m_autonomousCommand = ReturnAutoCommand.runDefaultedAutoCommand();
+            break;
+            case AB_BOTAUTO:
+                m_autonomousCommand = BlueBottomCommand.runDefaultedAutoCommand();
+                break;
             default:
 			    System.out.println("ERROR: unexpected auto mode!");
 				break;

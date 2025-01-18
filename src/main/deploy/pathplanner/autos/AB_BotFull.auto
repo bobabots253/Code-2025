@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AB_BotStart"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AB_BotL2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AB_BotL3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AB_BotL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AB_BotL5"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
