@@ -75,7 +75,7 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  private final static AHRS Nav_x = new AHRS(AHRS.NavXComType.kI2C);
+  private final static AHRS Nav_x = new AHRS(AHRS.NavXComType.kMXP_SPI);
   public final boolean fieldFlipped = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
   // Locations for the swerve drive modules relative to the robot center.
   // Distance in meters
@@ -126,9 +126,9 @@ public class DriveSubsystem extends SubsystemBase {
     // Configure Autobuilder (Auto manager/handler) for the routine
     try{
       RobotConfig config = RobotConfig.fromGUISettings();
-
+      //getPoseVision
     AutoBuilder.configure(
-      this::getPoseVision, // Robot pose supplier
+      this::getPose, // Robot pose supplier
       this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
       this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds

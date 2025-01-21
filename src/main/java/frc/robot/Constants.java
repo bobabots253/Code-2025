@@ -58,15 +58,15 @@ public final class Constants {
     //Default SparkMAX ID's for 2024:
     //Driving CW frontR: 1,3,5,7
     //Turning CW frontR: 2,4,6,8
-    public static final int kFrontLeftDrivingCanId = 7;
-    public static final int kRearLeftDrivingCanId = 5;
-    public static final int kFrontRightDrivingCanId = 1;
-    public static final int kRearRightDrivingCanId = 3;
+    public static final int kFrontLeftDrivingCanId = 1; 
+    public static final int kRearLeftDrivingCanId = 7;
+    public static final int kFrontRightDrivingCanId = 3;
+    public static final int kRearRightDrivingCanId = 5;
 
-    public static final int kFrontLeftTurningCanId = 8;
-    public static final int kRearLeftTurningCanId = 6;
-    public static final int kFrontRightTurningCanId = 2;
-    public static final int kRearRightTurningCanId = 4;
+    public static final int kFrontLeftTurningCanId = 2;
+    public static final int kRearLeftTurningCanId = 8;
+    public static final int kFrontRightTurningCanId = 4;
+    public static final int kRearRightTurningCanId = 6;
 
     //Use to globally fix Gyro Flip
     public static final boolean kGyroReversed = false;

@@ -28,9 +28,9 @@ public final class AutoModeManager{
 
     public AutoModeManager() {
     mModeChooser.setDefaultOption("Default Auto", DesiredMode.DO_NOTHING);
-    mModeChooser.setDefaultOption("Default Auto", DesiredMode.RETURN_AUTO);
-    mModeChooser.setDefaultOption("Default Auto", DesiredMode.GO_AUTO);
-    mModeChooser.setDefaultOption("Default Auto", DesiredMode.AB_BOTAUTO);
+    mModeChooser.addOption("Return Auto", DesiredMode.RETURN_AUTO);
+    mModeChooser.addOption("Go Auto", DesiredMode.GO_AUTO);
+    mModeChooser.addOption("Bottom Feeder", DesiredMode.AB_BOTAUTO);
     }
 
     public static void updateAutoMode(){
