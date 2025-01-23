@@ -162,6 +162,7 @@ public class DriveSubsystem extends SubsystemBase {
 }
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("NavX Exists", Nav_x.isConnected());
     // Update the odometry in the periodic block
     //Main Odometry Update
     m_odometry.update(

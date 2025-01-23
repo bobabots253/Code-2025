@@ -61,6 +61,12 @@ public class FieldSetup {
         };
 
         //put(, new Translation2d(Units.inchesToMeters(X),Units.inchesToMeters(Y)));
+        // 6 Total Starting Configs: For each cage
+        //Important POI:
+        // All Reef Scoring Position (A-L)
+        //Proccessor
+        // Top & Bottom Feeding Station
+
 
         public static final int kRedSpeakerId = 4;
         public static final int kBlueSpeakerId = 7;
