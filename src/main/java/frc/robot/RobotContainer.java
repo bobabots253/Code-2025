@@ -205,7 +205,7 @@ public class RobotContainer {
         Pose2d redAMPPose2d = new Pose2d((redAMPTranslation2d), Rotation2d.fromDegrees(90));
   
   public static Command PathFindAmp(boolean permission){
-    return new PathfindToPose(FieldSetup.allianceAmpEntryPoseSupplier, FieldSetup.ampEntryTolerance,permission);
+    return new PathfindToPose(FieldSetup.allianceAmpEntryPoseSupplier, FieldSetup.ampEntryTolerance, permission);
   }
 
 }

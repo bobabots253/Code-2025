@@ -52,8 +52,6 @@ public class PathfindToPose extends Command {
         yController = new PIDController(.1, 0, 0);
 
         rotController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(3.5, 3.5));
-
-
         holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
         holonomicDriveController.setTolerance(this.tolerance);
         addRequirements(driveRequire);
@@ -64,12 +62,6 @@ public class PathfindToPose extends Command {
     public void execute() {
         currentTrajectory = null;
         timeOffset = 0;
-        // Pose2d currentPose = driveRequire.getPoseVision();
-        // // Translation2d targetTranslation2d = ((Pose2d) target).getTranslation();
-        // if (currentPose.getTranslation().getDistance(targetTranslation2d) > 0.25){
-        //     ChassisSpeeds currentSpeeds = driveRequire.getRobotRelativeSpeeds();
-        //     PPLibTelemetry.setCurrentPose(currentPose);
-        // }
         PathConstraints constraints = new PathConstraints(3.0, 4.0,
         Units.degreesToRadians(540),
         Units.degreesToRadians(720));

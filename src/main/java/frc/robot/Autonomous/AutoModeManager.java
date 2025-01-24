@@ -4,7 +4,12 @@ import java.util.Optional;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Autonomous.BlueAutos.BlueBottomCommand;
+import frc.robot.Autonomous.BlueAutos.BlueMidSafetyCommand;
 //import frc.robot.subsystems.TestSubsystem;
+import frc.robot.Autonomous.DefaultCommands.DoNothingCommand;
+import frc.robot.Autonomous.DefaultCommands.GoAutoCommand;
+import frc.robot.Autonomous.DefaultCommands.ReturnAutoCommand;
 
 public final class AutoModeManager{
     public enum DesiredMode {
@@ -12,7 +17,9 @@ public final class AutoModeManager{
         GO_AUTO,
         RETURN_AUTO,
         AB_BOTAUTO,
-        NEW_AUTO
+        NEW_AUTO,
+        AB_MIDLEAVE,
+        AB_MIDSCOREONE
 	}
 
     public static AutoModeManager AutoQueue;
@@ -31,6 +38,8 @@ public final class AutoModeManager{
     mModeChooser.addOption("Return Auto", DesiredMode.RETURN_AUTO);
     mModeChooser.addOption("Go Auto", DesiredMode.GO_AUTO);
     mModeChooser.addOption("Bottom Feeder", DesiredMode.AB_BOTAUTO);
+    mModeChooser.addOption("Safety Auto", DesiredMode.AB_MIDLEAVE);
+    mModeChooser.addOption("Mid 1 Coral", DesiredMode.AB_MIDSCOREONE);
     }
 
     public static void updateAutoMode(){
@@ -56,6 +65,12 @@ public final class AutoModeManager{
             break;
             case AB_BOTAUTO:
                 m_autonomousCommand = BlueBottomCommand.runDefaultedAutoCommand();
+                break;
+            case AB_MIDLEAVE:
+                m_autonomousCommand = BlueMidSafetyCommand.runDefaultedAutoCommand();
+                break;
+            case AB_MIDSCOREONE:
+            m_autonomousCommand = BlueMidSafetyCommand.runScoreOneAutoCommand();
                 break;
             default:
 			    System.out.println("ERROR: unexpected auto mode!");

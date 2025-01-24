@@ -1,4 +1,4 @@
-package frc.robot.Autonomous;
+package frc.robot.Autonomous.BlueAutos;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 

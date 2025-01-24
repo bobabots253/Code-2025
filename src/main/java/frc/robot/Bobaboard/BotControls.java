@@ -58,35 +58,13 @@ public class BotControls {
                 interruptedPPLib = !interruptedPPLib;
                 RobotContainer.PathFindAmp(interruptedPPLib).schedule();
             }
-                // if(interruptedPPLib == false){
-                //     interruptedPPLib = true;
-                //     try {RobotContainer.PathFindAmp(interruptedPPLib);}
-                //         catch (Exception e){
-                //             System.out.println("Failed To Start PPLib Command");
-                //         }
-                //     interruptedPPLib = false;
-                // }else {interruptedPPLib = false;
-                //     RobotContainer.PathFindAmp(false).end(true);;
-                // }            }
+
             
-                if (controlHub.driverController.Y_Button.wasActivated()){
-                //rContainer.Score().schedule();
-                }
             
             if (controlHub.driverController.L_Bumper.isBeingPressed()){
             }
     
-            if (controlHub.driverController.R_Bumper.isBeingPressed()){
-                //rContainer.IntakeNoteStow().schedule();
-                //rContainer.RunNegative();
-            }
 
-            // if(controlHub.driverController.POV0.isBeingPressed()){
-            //     rContainer.RunArmPositive();
-            // }
-            // if (controlHub.driverController.POV180.isBeingPressed()){
-            //     rContainer.RunArmNegative();
-            // }
             
         }else{
             // if (controlHub.operatorController.L_Bumper.wasActivated()) {

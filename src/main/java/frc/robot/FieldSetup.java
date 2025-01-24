@@ -67,29 +67,71 @@ public class FieldSetup {
         //Proccessor
         // Top & Bottom Feeding Station
 
+        public static final int kBlueTopFeedingStationId = 13;
+        public static final int kBlueBotFeedingStationID = 12;
+        public static final int kBlueProccessorId = 16;
+        public static final int kBlueReefPosAId = 18;
+        public static final int kBlueReefPosBId = 18;
+        public static final int kBlueReefPosCId = 17;
+        public static final int kBlueReefPosDId = 17;
+        public static final int kBlueReefPosEId = 22;
+        public static final int kBlueReefPosFId = 22;
+        public static final int kBlueReefPosGId = 21;
+        public static final int kBlueReefPosHId = 21;
+        public static final int kBlueReefPosIId = 20;
+        public static final int kBlueReefPosJId = 20;
+        public static final int kBlueReefPosKId = 19;
+        public static final int kBlueReefPosLId = 19;
 
-        public static final int kRedSpeakerId = 4;
-        public static final int kBlueSpeakerId = 7;
-        public static final int kRedAmpId = 5;
-        public static final int kBlueAmpId = 6;
+        public static final int kRedTopFeedingStationId = 2;
+        public static final int kRedBotFeedingStationID = 1;
+        public static final int kRedProccessorId = 3;
+        public static final int kRedReefPosAId = 7;
+        public static final int kRedReefPosBId = 7;
+        public static final int kRedReefPosCId = 8;
+        public static final int kRedReefPosDId = 8;
+        public static final int kRedReefPosEId = 9;
+        public static final int kRedReefPosFId = 9;
+        public static final int kRedReefPosGId = 10;
+        public static final int kRedReefPosHId = 10;
+        public static final int kRedReefPosIId = 11;
+        public static final int kRedReefPosJId = 11;
+        public static final int kRedReefPosKId = 6;
+        public static final int kRedReefPosLId = 6;
 
-        public static Supplier<Translation2d> allianceSpeakerPositionSupplier = () -> DriverStation.getAlliance()
+
+
+        public static Supplier<Translation2d> allianceTopFeedingStationSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? getTagTranslation(kBlueSpeakerId)
-                                .minus(new Translation2d(0, .10))
-                        : getTagTranslation(kRedSpeakerId);
+                        ? getTagTranslation(kBlueTopFeedingStationId)
+                                .plus(new Translation2d(0.219, -0.296))
+                        : getTagTranslation(kRedTopFeedingStationId)
+                                .plus(new Translation2d(-0.193, -0.27));
 
-        public static final Translation2d ampEntryOffset = new Translation2d(0, -0.5);
-
-        public static final Pose2d ampEntryTolerance = new Pose2d(new Translation2d(0.2, 0.2),
-                Rotation2d.fromDegrees(1));
-
-        public static final Supplier<Pose2d> allianceAmpEntryPoseSupplier = () -> DriverStation.getAlliance()
+        public static Supplier<Translation2d> allianceBottomFeedingStationSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d(getTagTranslation(kBlueAmpId),
-                                Rotation2d.fromDegrees(90))
-                        : new Pose2d(getTagTranslation(kRedAmpId),
-                                Rotation2d.fromDegrees(90));
+                        ? getTagTranslation(kBlueBotFeedingStationID)
+                                .plus(new Translation2d(0.200, 0.270))
+                        : getTagTranslation(kRedBotFeedingStationID)
+                                .plus(new Translation2d(-0.194, 0.267));
+
+        public static Supplier<Translation2d> allianceProccessorSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? getTagTranslation(kBlueProccessorId)
+                                .plus(new Translation2d(0.000,0.371))
+                        : getTagTranslation(kRedProccessorId)
+                                .plus(new Translation2d(0.000,-0.373));
+
+
+        // public static final Pose2d ampEntryTolerance = new Pose2d(new Translation2d(0.2, 0.2),
+        //         Rotation2d.fromDegrees(1));
+
+        // public static final Supplier<Pose2d> allianceAmpEntryPoseSupplier = () -> DriverStation.getAlliance()
+        //         .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+        //                 ? new Pose2d(getTagTranslation(kBlueAmpId),
+        //                         Rotation2d.fromDegrees(90))
+        //                 : new Pose2d(getTagTranslation(kRedAmpId),
+        //                         Rotation2d.fromDegrees(90));
 //.plus(ampEntryOffset)
 
         public static Translation2d getTagTranslation(int id) {
