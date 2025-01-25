@@ -25,6 +25,10 @@ public final class BlueBottomCommand{
     public static Command getPathPlannerCommandLengthE() {
         return new PathPlannerAuto("AB_BotL5");
     }
+
+    public static Command getFullAutoCommand(){
+        return new PathPlannerAuto("AB_BotFull");
+    }
     public static Command runDefaultedAutoCommand(){
         return new SequentialCommandGroup(
         BlueBottomCommand.getPathPlannerCommandLengthA(),
@@ -37,6 +41,12 @@ public final class BlueBottomCommand{
         new WaitCommand(0.1),
         BlueBottomCommand.getPathPlannerCommandLengthE(),
         new WaitCommand(0.1)
+        );
+    }
+
+    public static Command runFullAutoCommand(){
+        return new SequentialCommandGroup(
+          BlueBottomCommand.getFullAutoCommand()  
         );
     }
 }

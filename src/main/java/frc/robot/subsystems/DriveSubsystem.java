@@ -402,7 +402,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /** Zeroes the heading of the robot. */
-  public static void zeroHeading() {
+  public void zeroHeading() {
     Nav_x.reset();
   }
 

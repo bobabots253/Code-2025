@@ -88,7 +88,6 @@ public class RobotContainer {
   public RobotContainer() {
     //m_TestSubsystem =TestSubsystem.getInstance();
     m_robotDrive = new DriveSubsystem();
-
     m_AutoModeManager = new AutoModeManager();
     m_ControlHub = ControlHub.getInstance();
   
@@ -195,18 +194,19 @@ public class RobotContainer {
     return DriverStation.getAlliance();
   }
 
-  public static Command ampAutoDrive() {
-    return new DriveToPose(FieldSetup.allianceAmpEntryPoseSupplier, FieldSetup.ampEntryTolerance);
-  }
+  // public static Command ampAutoDrive() {
+  //   return new DriveToPose(FieldSetup.allianceAmpEntryPoseSupplier, FieldSetup.ampEntryTolerance);
+  // }
+
   
   double redAMP_x = 14.7;
         double redAMP_Y = 7.8;
         Translation2d redAMPTranslation2d = new Translation2d(redAMP_x,redAMP_Y);
         Pose2d redAMPPose2d = new Pose2d((redAMPTranslation2d), Rotation2d.fromDegrees(90));
   
-  public static Command PathFindAmp(boolean permission){
-    return new PathfindToPose(FieldSetup.allianceAmpEntryPoseSupplier, FieldSetup.ampEntryTolerance, permission);
-  }
+  // public static Command PathFindAmp(boolean permission){
+  //   return new PathfindToPose(FieldSetup.allianceAmpEntryPoseSupplier, FieldSetup.ampEntryTolerance, permission);
+  // }
 
 }
 

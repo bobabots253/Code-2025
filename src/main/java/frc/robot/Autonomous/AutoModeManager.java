@@ -10,6 +10,7 @@ import frc.robot.Autonomous.BlueAutos.BlueMidSafetyCommand;
 import frc.robot.Autonomous.DefaultCommands.DoNothingCommand;
 import frc.robot.Autonomous.DefaultCommands.GoAutoCommand;
 import frc.robot.Autonomous.DefaultCommands.ReturnAutoCommand;
+import frc.robot.Autonomous.DefaultCommands.StandStillCommand;
 
 public final class AutoModeManager{
     public enum DesiredMode {
@@ -19,7 +20,8 @@ public final class AutoModeManager{
         AB_BOTAUTO,
         NEW_AUTO,
         AB_MIDLEAVE,
-        AB_MIDSCOREONE
+        AB_MIDSCOREONE,
+        STAND_STILL
 	}
 
     public static AutoModeManager AutoQueue;
@@ -40,6 +42,7 @@ public final class AutoModeManager{
     mModeChooser.addOption("Bottom Feeder", DesiredMode.AB_BOTAUTO);
     mModeChooser.addOption("Safety Auto", DesiredMode.AB_MIDLEAVE);
     mModeChooser.addOption("Mid 1 Coral", DesiredMode.AB_MIDSCOREONE);
+    mModeChooser.addOption("Stand Still Boi", DesiredMode.STAND_STILL);
     }
 
     public static void updateAutoMode(){
@@ -64,14 +67,16 @@ public final class AutoModeManager{
                 m_autonomousCommand = ReturnAutoCommand.runDefaultedAutoCommand();
             break;
             case AB_BOTAUTO:
-                m_autonomousCommand = BlueBottomCommand.runDefaultedAutoCommand();
+                m_autonomousCommand = BlueBottomCommand.runFullAutoCommand();
                 break;
             case AB_MIDLEAVE:
                 m_autonomousCommand = BlueMidSafetyCommand.runDefaultedAutoCommand();
                 break;
             case AB_MIDSCOREONE:
-            m_autonomousCommand = BlueMidSafetyCommand.runScoreOneAutoCommand();
+                m_autonomousCommand = BlueMidSafetyCommand.runScoreOneAutoCommand();
                 break;
+            case STAND_STILL:
+                m_autonomousCommand = StandStillCommand.runDefaultedAutoCommand();   
             default:
 			    System.out.println("ERROR: unexpected auto mode!");
 				break;

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
+import frc.robot.Autonomous.DefaultCommands.StandStillCommand;
 //import frc.robot.subsystems.TestSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -50,13 +51,13 @@ public class BotControls {
     public void RunRobot(){
     if (OneControllerQuery == true){
             if (controlHub.driverController.A_Button.wasActivated()) {
-                System.out.println("A Button Detected");
-                //rContainer.Score().schedule();
+                rContainer.m_robotDrive.zeroHeading();
             }
 
             if (controlHub.driverController.X_Button.wasActivated()){
                 interruptedPPLib = !interruptedPPLib;
-                RobotContainer.PathFindAmp(interruptedPPLib).schedule();
+                StandStillCommand.scheduleDefaultCommand();
+                // RobotContainer.PathFindAmp(interruptedPPLib).schedule();
             }
 
             

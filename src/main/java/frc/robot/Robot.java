@@ -123,6 +123,7 @@ public class Robot extends TimedRobot {
     URCL.start();
     DriverStation.startDataLog(DataLogManager.getLog());
     mDriveControls.PutControllerOption();
+    m_robotContainer.m_robotDrive.zeroHeading();
   } 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
