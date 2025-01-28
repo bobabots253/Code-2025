@@ -42,6 +42,8 @@ public class BotControls {
         SmartDashboard.putBoolean("Driver B Button", controlHub.driverController.X_Button.isBeingPressed());
         SmartDashboard.putBoolean("Driver X Button", controlHub.driverController.X_Button.isBeingPressed());
         SmartDashboard.putBoolean("Driver Y Button", controlHub.driverController.Y_Button.isBeingPressed());
+        SmartDashboard.putBoolean("Operator A Button", controlHub.operatorController.A_Button.isBeingPressed());
+        SmartDashboard.putBoolean("Operator B Button", controlHub.operatorController.B_Button.isBeingPressed());
         SmartDashboard.putBoolean("Operator X Button", controlHub.operatorController.X_Button.isBeingPressed());
         SmartDashboard.putBoolean("Operator Y Button", controlHub.operatorController.Y_Button.isBeingPressed());
         SmartDashboard.putBoolean("Driver LBumper", controlHub.driverController.L_Bumper.isBeingPressed());
@@ -55,11 +57,13 @@ public class BotControls {
             }
 
             if (controlHub.driverController.X_Button.wasActivated()){
-                interruptedPPLib = !interruptedPPLib;
                 StandStillCommand.scheduleDefaultCommand();
-                // RobotContainer.PathFindAmp(interruptedPPLib).schedule();
             }
 
+            if (controlHub.driverController.Y_Button.wasActivated()){
+                interruptedPPLib = !interruptedPPLib;
+                RobotContainer.PathFindReef21(interruptedPPLib).schedule();
+            }
             
             
             if (controlHub.driverController.L_Bumper.isBeingPressed()){

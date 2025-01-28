@@ -99,7 +99,8 @@ public class FieldSetup {
         public static final int kRedReefPosKId = 6;
         public static final int kRedReefPosLId = 6;
 
-
+        public static final Pose2d kReefFarEntranceTolerance = new Pose2d(new Translation2d(0.0, 0.0),
+                Rotation2d.fromDegrees(0));
 
         public static Supplier<Translation2d> allianceTopFeedingStationSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
@@ -122,9 +123,15 @@ public class FieldSetup {
                         : getTagTranslation(kRedProccessorId)
                                 .plus(new Translation2d(0.000,-0.373));
 
+        public static Supplier<Pose2d> allianceReefFarSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosHId)
+                        .plus(new Translation2d(0.379,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosHId)
+                        .plus(new Translation2d( -0.379,0.000)), new Rotation2d());
 
-        // public static final Pose2d ampEntryTolerance = new Pose2d(new Translation2d(0.2, 0.2),
-        //         Rotation2d.fromDegrees(1));
+        //Finish Reef Suppliers
+
 
         // public static final Supplier<Pose2d> allianceAmpEntryPoseSupplier = () -> DriverStation.getAlliance()
         //         .orElse(DriverStation.Alliance.Blue) == Alliance.Blue

@@ -48,6 +48,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.limelights.VisionSubsystem;
 import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
 import frc.utils.SwerveUtils;
@@ -102,6 +103,7 @@ public class DriveSubsystem extends SubsystemBase {
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
   final Field2d m_fieldGyro = new Field2d();
   final Field2d m_fieldVision = new Field2d();
+  public static Pose2d refinedVisionPose;
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -186,6 +188,8 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
       });
 
+    refinedVisionPose = VisionSubsystem.getInstance().getEstimatedPose();
+
     SmartDashboard.putData("Field Gyro", m_fieldGyro);
     SmartDashboard.putData("Field Vision", m_fieldVision);
     m_fieldGyro.setRobotPose(m_odometry.getPoseMeters());
@@ -225,12 +229,6 @@ public class DriveSubsystem extends SubsystemBase {
   double yaw;
   double NTlatency = 0.003;
   public void addVisionMeasurement(String limelight) {
-    // var isRedalliance = DriverStation.getAlliance();
-    //     if (isRedalliance.isPresent() && isRedalliance.get() == DriverStation.Alliance.Red) {
-    //       yaw = -(Nav_x.getRotation2d().getDegrees()); // -180 degrees?
-    //     } else {
-    //       yaw = -(Nav_x.getRotation2d().getDegrees());
-    //     }
       LimelightHelpers.SetRobotOrientation(limelight, getHeading(), 0,
               0, 0, 0, 0);
       if (LimelightHelpers.getTV(limelight)) {
@@ -260,7 +258,9 @@ public class DriveSubsystem extends SubsystemBase {
     return m_kinematics.toChassisSpeeds(m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState());
   }
 
-
+  public Pose2d getRefinedPoseVision(){
+    return refinedVisionPose;
+  }
 
   //Drive !ROBOT! Centric for Auto
   public void driveRobotRelative(ChassisSpeeds speeds) {

@@ -32,15 +32,15 @@ public final class BlueBottomCommand{
     public static Command runDefaultedAutoCommand(){
         return new SequentialCommandGroup(
         BlueBottomCommand.getPathPlannerCommandLengthA(),
-        new WaitCommand(0.1),
+            new WaitCommand(0.1),
         BlueBottomCommand.getPathPlannerCommandLengthB(),
-        new WaitCommand(0.1),
+            new WaitCommand(0.1),
         BlueBottomCommand.getPathPlannerCommandLengthC(),
-        new WaitCommand(0.1),
+            new WaitCommand(0.1),
         BlueBottomCommand.getPathPlannerCommandLengthD(),
-        new WaitCommand(0.1),
+            new WaitCommand(0.1),
         BlueBottomCommand.getPathPlannerCommandLengthE(),
-        new WaitCommand(0.1)
+            new WaitCommand(0.1)
         );
     }
 
