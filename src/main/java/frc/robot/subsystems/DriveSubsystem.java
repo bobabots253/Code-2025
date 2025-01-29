@@ -126,6 +126,16 @@ public class DriveSubsystem extends SubsystemBase {
       VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(5)),
       VecBuilder.fill(0.75, 0.75, 99999999));
 
+      SwerveDrivePoseEstimator refinedodometryVision = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
+      (fieldFlipped ? getInitialFlippeRotation2d(): getRotation2DHeading()), new SwerveModulePosition[] {
+              m_frontLeft.getPosition(),
+              m_frontRight.getPosition(),
+              m_rearLeft.getPosition(),
+              m_rearRight.getPosition()
+      }, new Pose2d(),
+      VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(5)),
+      VecBuilder.fill(0.75, 0.75, 99999999));
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     // Configure Autobuilder (Auto manager/handler) for the routine
@@ -187,8 +197,23 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
       });
-
+    
+      refinedodometryVision.update(
+        Rotation2d.fromDegrees(-Nav_x.getAngle()),
+        new SwerveModulePosition[] {
+              m_frontLeft.getPosition(),
+              m_frontRight.getPosition(),
+              m_rearLeft.getPosition(),
+              m_rearRight.getPosition()
+        });
+    
     refinedVisionPose = VisionSubsystem.getInstance().getEstimatedPose();
+
+    try{
+      refinedodometryVision.addVisionMeasurement(refinedVisionPose, Timer.getFPGATimestamp() - NTlatency);
+    } catch ( Exception err){
+      System.out.println("Couldn't Return Refined Vision");
+    }
 
     SmartDashboard.putData("Field Gyro", m_fieldGyro);
     SmartDashboard.putData("Field Vision", m_fieldVision);
