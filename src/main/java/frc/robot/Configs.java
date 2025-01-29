@@ -48,6 +48,31 @@ public final class Configs {
                     .positionWrappingInputRange(0, turningFactor);
         }
     }
+
+    public static final class ElevatorSubsystem {
+        public static final SparkMaxConfig motorRConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig motorLConfig = new SparkMaxConfig();
+        
+        static{
+                motorLConfig.follow(Constants.ElevatorConstants.rightMotorID);
+                motorLConfig
+                                .idleMode(IdleMode.kBrake)
+                                .smartCurrentLimit(45);
+                motorLConfig.closedLoop
+                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                                .pid(0, 0, 0)
+                                .outputRange(-1, 1);
+                motorRConfig
+                                .idleMode(IdleMode.kBrake)
+                                .smartCurrentLimit(45);
+                motorRConfig.closedLoop
+                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                                .pid(0, 0, 0)
+                                .outputRange(-1, 1);
+        }
+        
+    }
+
     public static final class TestSubsystem {
         public static final SparkMaxConfig TestConfig = new SparkMaxConfig();
         public static final SparkMaxConfig TestConfig2 = new SparkMaxConfig();

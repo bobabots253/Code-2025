@@ -156,6 +156,11 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
+  public static final class ElevatorConstants{
+    public static final int leftMotorID = 20; // This needs to be changed just a random number
+    public static final int rightMotorID = 21; // This also needs to be changed
+  }
+
   public static final class TestSubsystemConstants {
     // add id's
     // relative to absolute: relative = 5*absolute + 0.3
