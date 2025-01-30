@@ -102,26 +102,32 @@ public class FieldSetup {
         public static final Pose2d kReefFarEntranceTolerance = new Pose2d(new Translation2d(0.0, 0.0),
                 Rotation2d.fromDegrees(0));
 
-        public static Supplier<Translation2d> allianceTopFeedingStationSupplier = () -> DriverStation.getAlliance()
+        public static Supplier<Pose2d> allianceTopFeedingStationSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? getTagTranslation(kBlueTopFeedingStationId)
-                                .plus(new Translation2d(0.219, -0.296))
-                        : getTagTranslation(kRedTopFeedingStationId)
-                                .plus(new Translation2d(-0.193, -0.27));
+                        ? new Pose2d(getTagTranslation(kBlueTopFeedingStationId)
+                                .plus(new Translation2d(0.219, -0.270)),
+                                new Rotation2d())
+                        : new Pose2d(getTagTranslation(kRedTopFeedingStationId)
+                                .plus(new Translation2d(-0.193, -0.270)),
+                                new Rotation2d());
 
-        public static Supplier<Translation2d> allianceBottomFeedingStationSupplier = () -> DriverStation.getAlliance()
+        public static Supplier<Pose2d> allianceBottomFeedingStationSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? getTagTranslation(kBlueBotFeedingStationID)
-                                .plus(new Translation2d(0.200, 0.270))
-                        : getTagTranslation(kRedBotFeedingStationID)
-                                .plus(new Translation2d(-0.194, 0.267));
+                        ? new Pose2d(getTagTranslation(kBlueBotFeedingStationID)
+                                .plus(new Translation2d(0.200, 0.270)),
+                                new Rotation2d())
+                        : new Pose2d(getTagTranslation(kRedBotFeedingStationID)
+                                .plus(new Translation2d(-0.194, 0.267)),
+                                new Rotation2d());
 
-        public static Supplier<Translation2d> allianceProccessorSupplier = () -> DriverStation.getAlliance()
+        public static Supplier<Pose2d> allianceProccessorSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? getTagTranslation(kBlueProccessorId)
-                                .plus(new Translation2d(0.000,0.371))
-                        : getTagTranslation(kRedProccessorId)
-                                .plus(new Translation2d(0.000,-0.373));
+                        ? new Pose2d(getTagTranslation(kBlueProccessorId)
+                                .plus(new Translation2d(0.000,0.371)),
+                                new Rotation2d())
+                        : new Pose2d(getTagTranslation(kRedProccessorId)
+                                .plus(new Translation2d(0.000,-0.373)),
+                                 new Rotation2d());
 
         public static Supplier<Pose2d> allianceReefFarSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
@@ -130,6 +136,229 @@ public class FieldSetup {
                         : new Pose2d (getTagTranslation(kRedReefPosHId)
                         .plus(new Translation2d( -0.379,0.000)), new Rotation2d());
 
+        public static Supplier<Pose2d> allianceReefCloseSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosAId)
+                        .plus(new Translation2d(0.379,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosAId)
+                        .plus(new Translation2d( -0.379,0.000)), new Rotation2d());
+        
+        public static Supplier<Pose2d> allianceReefLeftFrontSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosIId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kBlueReefPosIId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+        
+        public static Supplier<Pose2d> allianceReefLeftBackSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosKId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosKId)
+                        .plus(new Translation2d( 0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> allianceReefRightFrontSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosFId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosFId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> allianceReefRightBackSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> allianceReefASupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+        
+        public static Supplier<Pose2d> allianceReefBSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> allianceReefCSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> allianceReefDSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> allianceReefESupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> allianceReefFSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> allianceReefGSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> allianceHSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> allianceReefISupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> allianceReefJSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> allianceReefKSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> allianceReefLSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> majorStartingPosASupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+        public static Supplier<Pose2d> majorStartingPosBSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+       public static Supplier<Pose2d> majorStartingPosCSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+       public static Supplier<Pose2d> minorStartingPosASupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+       public static Supplier<Pose2d> minorStartingPosBSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+       public static Supplier<Pose2d> minorStartingPosCSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+                
+       public static Supplier<Pose2d> minorStartingPosDSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+       public static Supplier<Pose2d> minorStartingPosESupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+       public static Supplier<Pose2d> minorStartingPosFSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+       public static Supplier<Pose2d> minorStartingPosGSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+       public static Supplier<Pose2d> midStartingLineSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+       public static Supplier<Pose2d> spikeASupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+       public static Supplier<Pose2d> spikeBSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+       public static Supplier<Pose2d> spikeCSupplier = () -> DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+                        ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+                        .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+                        : new Pose2d (getTagTranslation(kRedReefPosDId)
+                        .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
+
+//        public static Supplier<Pose2d> spikeCSupplier = () -> DriverStation.getAlliance()
+//                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+//                         ? new Pose2d(getTagTranslation(kBlueReefPosDId)
+//                         .plus(new Translation2d(0.000,0.000)), new Rotation2d())
+//                         : new Pose2d (getTagTranslation(kRedReefPosDId)
+//                         .plus(new Translation2d( -0.000,0.000)), new Rotation2d());
         //Finish Reef Suppliers
 
 

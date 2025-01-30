@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,6 +38,7 @@ public class VisionSubsystem extends SubsystemBase {
     /** Last heartbeat of the back LL (updated every frame) */
     private volatile long lastHeartbeatBackLL = 0;
     DriveSubsystem driveRequire = RobotContainer.getInstance().m_robotDrive;
+    private final Notifier notifier;
 
     //Fix these later
     private final List<Integer> BLUE_REEF = Arrays.asList(12, 13, 14, 15, 16, 17, 18, 29, 20, 21, 22);
@@ -47,7 +50,59 @@ public class VisionSubsystem extends SubsystemBase {
     private final List<Integer> BLUE_PROCCESSOR = Arrays.asList(12, 15, 16, 17, 18, 22);
     private final List<Integer> RED_PROCCESSR = Arrays.asList(2, 3, 4, 7, 8, 9, 10);
 
+    private volatile Timer lastDataTimer;
+
     public VisionSubsystem() {
+    this.notifier = new Notifier(() -> notifierLoop());
+    this.notifier.setName("Vision Notifier");
+    this.notifier.startPeriodic(0.020); //20ms
+    }
+
+    public boolean recentVisionData() {
+        return !this.lastDataTimer.hasElapsed(VisionConstants.RECENT_DATA_CUTOFF);
+    }
+
+    public synchronized void notifierLoop() {
+        VisionData[] filteredLimelightDatas = getFilteredLimelightData(false);
+    
+        //loop overrun warnings
+        for (VisionData data : filteredLimelightDatas) {
+            // if (data.canTrustRotation) { //data.canTrustRotation
+            //     // Only trust rotational data when adding this pose.
+            //     driveRequire.refinedodometryVision.setVisionMeasurementStdDevs(VecBuilder.fill(
+            //         9999999,
+            //         9999999,
+            //         recentVisionData() ? 1 : 0.5
+            //     ));
+            //     driveRequire.refinedodometryVision.addVisionMeasurement(
+            //         data.MegaTag.pose,
+            //         data.MegaTag.timestampSeconds
+            //     );
+            // }
+
+            if (data.canTrustPosition) {
+                if (driveRequire.refinedodometryVision.getEstimatedPosition().getTranslation()
+                        .getDistance(data.MegaTag2.pose.getTranslation())
+                        <= 2
+                ) {
+                    this.lastDataTimer.restart();
+                }
+
+                // Only trust positional data when adding this pose.
+                driveRequire.refinedodometryVision.setVisionMeasurementStdDevs(VecBuilder.fill(
+                    recentVisionData() ? 0.7 : 0.1,
+                    recentVisionData() ? 0.7 : 0.1,
+                    9999999
+                ));
+                driveRequire.refinedodometryVision.addVisionMeasurement(
+                    data.MegaTag2.pose,
+                    data.MegaTag2.timestampSeconds
+                );
+            }
+        }
+
+        // This method is suprprisingly efficient, generally below 1 ms.
+        optimizeLimelights();
     }
 
     private VisionData[] getFilteredLimelightData(boolean useStored) {
