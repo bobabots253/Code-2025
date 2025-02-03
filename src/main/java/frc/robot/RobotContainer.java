@@ -31,7 +31,6 @@ import frc.robot.commands.DriveToPose;
 import frc.robot.commands.PathfindToPose;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.HookConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 //import frc.robot.subsystems.TestSubsystem;
