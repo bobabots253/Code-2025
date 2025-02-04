@@ -157,8 +157,13 @@ public final class Constants {
   }
 
   public static final class ElevatorConstants {
+    //CAN Id's
     public static final int masterLiftingCANId = 9;
     public static final int slaveLiftingCANId = 10;
+
+    //Elevator DIO Port
+    public static final int pivotMasterHallEffectDIO = 0;
+    public static final int pivotSlaveHallEffectDIO = 1;
 
     public static final double idealHomingLinearPosition = 0.000; //revs
     public static final double softZeroLinearPosition = 0.000; //revs
@@ -195,9 +200,14 @@ public final class Constants {
   }
 
   public static final class EndEffectorConstants {
+    //EF CAN Id's
     public static final int pivotCANId = 12;
     public static final int intakeRollerCANId = 11;
     public static final int algaeRollerCANId = 13;
+
+    //EF DIO Port
+    public static final int masterHallEffectSensor = 2;
+    public static final int slaveHallEffectSensor = 3;
 
     //INTAKE/ROLLERS
     public static final double idealHoldingIntakeVelocity = 0.000; //RPM

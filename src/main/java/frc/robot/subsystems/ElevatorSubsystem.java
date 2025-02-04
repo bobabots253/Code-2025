@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
@@ -23,7 +24,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 
 
@@ -32,6 +32,8 @@ public class ElevatorSubsystem extends SubsystemBase{
 private static SparkMax m_masterLiftingSparkMax;
 private static SparkMax m_slaveLiftingSparkMax;
 private final RelativeEncoder m_LiftingEncoder;
+private static DigitalInput masterHallEffectSensor;
+private static DigitalInput slaveHallEffectSensor;
 private final SparkClosedLoopController m_LiftingPIDController;
 
 private static ElevatorSubsystem instance;
@@ -52,6 +54,10 @@ private ElevatorSubsystem() {
     PersistMode.kPersistParameters);
     m_slaveLiftingSparkMax.configure(Configs.ElevatorSubsystem.slaveLiftingConfig, ResetMode.kResetSafeParameters,
     PersistMode.kPersistParameters);
+
+    //Homing & Safe Code Stop
+    masterHallEffectSensor = new DigitalInput(ElevatorConstants.pivotMasterHallEffectDIO);
+    slaveHallEffectSensor = new DigitalInput(ElevatorConstants.pivotSlaveHallEffectDIO);
 }
 
     public void setLazyPercentageOpenLoop(double value) {
@@ -67,8 +73,17 @@ private ElevatorSubsystem() {
         m_LiftingEncoder.setPosition(0.0);
     }
 
+    public boolean isWithinHardDeck(){
+        return masterHallEffectSensor.get();
+    }
+
     @Override
     public void periodic() {
+
+        if (isWithinHardDeck()){
+            System.out.println("Hitting Code Stop");
+        }
+        
         SmartDashboard.putNumber("Elevator Relative Position", m_LiftingEncoder.getPosition());
         SmartDashboard.putNumber("Elevator Master Current", m_masterLiftingSparkMax.getOutputCurrent());
         SmartDashboard.putNumber("Elevator Follower Current", m_slaveLiftingSparkMax.getOutputCurrent());
