@@ -33,9 +33,11 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 //import frc.robot.subsystems.TestSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -48,6 +50,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -73,6 +76,7 @@ public class RobotContainer {
   public final AutoModeManager m_AutoModeManager;
   public final ControlHub m_ControlHub;
   public final DriveSubsystem m_robotDrive;
+  public final ElevatorSubsystem m_Elevator;
    /*READ ME:
   A static instance of the Robot Container with all its contents
   */
@@ -89,6 +93,7 @@ public class RobotContainer {
     m_robotDrive = new DriveSubsystem();
     m_AutoModeManager = new AutoModeManager();
     m_ControlHub = ControlHub.getInstance();
+    m_Elevator = ElevatorSubsystem.getInstance();
   
     // Configure default commands
     SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
@@ -111,11 +116,27 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
    * passing it to a
    * {@link JoystickButton}.
-   */
+      * @return 
+      */
+   
+  public Command RunElevatorPositive(){
+    return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(.1), m_Elevator);
+  }
 
-  // public void RunPositive(){
-  //   new RunCommand(() -> m_TestSubsystem.setOpenLoop(.2), m_TestSubsystem);
-  // }
+  public Command RunElevatorNegative(){
+    return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(.1), m_Elevator);
+  }
+
+  public Command StopElevator(){
+    return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(0.0), m_Elevator);
+  }
+
+  public void permissibleForward(BooleanSupplier permission){
+    new ConditionalCommand(RunElevatorPositive(), StopElevator(), permission);
+  }
+  public void permissibleBackward(BooleanSupplier permission){
+    new ConditionalCommand(RunElevatorNegative(), StopElevator(), permission);
+  }
 
   // public void RunNegative(){
   //   new RunCommand(() -> m_TestSubsystem.setOpenLoop(-0.2), m_TestSubsystem);

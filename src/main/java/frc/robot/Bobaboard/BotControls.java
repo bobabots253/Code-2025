@@ -1,5 +1,7 @@
 package frc.robot.Bobaboard;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,6 +18,8 @@ public class BotControls {
     ControlHub controlHub = ControlHub.getInstance();
     //TestSubsystem m_TestSubsystem = TestSubsystem.getInstance();
     boolean interruptedPPLib = false;
+    boolean interruptedElevatorForward = false;
+    boolean interruptedElevatorBackward = false;
 
     final static SendableChooser<Boolean> ControllerMode = new SendableChooser<>();
     public boolean OneControllerQuery = true;
@@ -62,11 +66,16 @@ public class BotControls {
 
             if (controlHub.driverController.Y_Button.wasActivated()){
                 interruptedPPLib = !interruptedPPLib;
-                RobotContainer.PathFindReef21(interruptedPPLib).schedule();
+                interruptedElevatorForward = !interruptedElevatorForward;
+                BooleanSupplier supplier = () ->  interruptedElevatorForward;
+                rContainer.permissibleForward(supplier);
             }
             
             
-            if (controlHub.driverController.L_Bumper.isBeingPressed()){
+            if (controlHub.driverController.B_Button.wasActivated()){
+                interruptedElevatorBackward = !interruptedElevatorBackward;
+                BooleanSupplier supplier = () ->  interruptedElevatorForward;
+                rContainer.permissibleBackward(supplier);
             }
     
 

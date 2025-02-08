@@ -103,22 +103,21 @@ public class FieldSetup {
         public static final Pose2d kReefFarEntranceTolerance = new Pose2d(new Translation2d(0.0, 0.0),
                 Rotation2d.fromDegrees(0));
 
+
+        //Centered with the Tag
+        //Use this format for examples.
         public static Supplier<Pose2d> allianceTopFeedingStationSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d(getTagTranslation(kBlueTopFeedingStationId)
-                                .plus(new Translation2d(1.087, 7.071)),
-                                new Rotation2d())
-                        : new Pose2d(getTagTranslation(kRedTopFeedingStationId)
-                                .plus(new Translation2d(-0.193, 7.071)),
-                                new Rotation2d());
+                        ? new Pose2d(new Translation2d(1.050, 7.040), 
+                                new Rotation2d(306 * (Math.PI/180)))
+                        : new Pose2d(new Translation2d(16.485, 7.040),
+                                new Rotation2d(234 * (Math.PI/180)));
 
         public static Supplier<Pose2d> allianceBottomFeedingStationSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d(getTagTranslation(kBlueBotFeedingStationID)
-                                .plus(new Translation2d(0.200, 0.270)),
+                        ? new Pose2d(new Translation2d(1.070, 0.970),
                                 new Rotation2d())
-                        : new Pose2d(getTagTranslation(kRedBotFeedingStationID)
-                                .plus(new Translation2d(-0.194, 0.267)),
+                        : new Pose2d(new Translation2d(16.470, 0.970),
                                 new Rotation2d());
 
         public static Supplier<Pose2d> allianceProccessorSupplier = () -> DriverStation.getAlliance()

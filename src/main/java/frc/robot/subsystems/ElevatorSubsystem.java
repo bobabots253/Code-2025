@@ -24,6 +24,9 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
+
+import java.util.prefs.Preferences;
+
 import com.revrobotics.RelativeEncoder;
 
 
@@ -35,6 +38,11 @@ private final RelativeEncoder m_LiftingEncoder;
 private static DigitalInput masterHallEffectSensor;
 private static DigitalInput slaveHallEffectSensor;
 private final SparkClosedLoopController m_LiftingPIDController;
+
+//Tunable Values
+public final String kTunableP = "Tunable_P";
+public static final String KTunable_I = "Tunable_I";
+public static final String KTunable_D = "Tunable_D";
 
 private static ElevatorSubsystem instance;
 
@@ -58,6 +66,21 @@ private ElevatorSubsystem() {
     //Homing & Safe Code Stop
     masterHallEffectSensor = new DigitalInput(ElevatorConstants.pivotMasterHallEffectDIO);
     slaveHallEffectSensor = new DigitalInput(ElevatorConstants.pivotSlaveHallEffectDIO);
+    
+    //Preferences.putDouble(kTunableP , ElevatorConstants.kIncrementalPostionP);
+}
+
+@Override
+public void periodic() {
+
+    if (isWithinHardDeck()){
+        System.out.println("Hitting Code Stop");
+    }
+    
+    SmartDashboard.putNumber("Elevator Relative Position", m_LiftingEncoder.getPosition());
+    SmartDashboard.putNumber("Elevator Master Current", m_masterLiftingSparkMax.getOutputCurrent());
+    SmartDashboard.putNumber("Elevator Follower Current", m_slaveLiftingSparkMax.getOutputCurrent());
+
 }
 
     public void setLazyPercentageOpenLoop(double value) {
@@ -77,17 +100,6 @@ private ElevatorSubsystem() {
         return masterHallEffectSensor.get();
     }
 
-    @Override
-    public void periodic() {
-
-        if (isWithinHardDeck()){
-            System.out.println("Hitting Code Stop");
-        }
-        
-        SmartDashboard.putNumber("Elevator Relative Position", m_LiftingEncoder.getPosition());
-        SmartDashboard.putNumber("Elevator Master Current", m_masterLiftingSparkMax.getOutputCurrent());
-        SmartDashboard.putNumber("Elevator Follower Current", m_slaveLiftingSparkMax.getOutputCurrent());
-    }
 
     public void setLazyPositionSetpoint(double position) {
         m_LiftingPIDController.setReference(position, ControlType.kPosition);
@@ -111,6 +123,7 @@ private ElevatorSubsystem() {
                 break;
         }
     }
+
 
 
 }
