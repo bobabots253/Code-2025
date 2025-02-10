@@ -53,6 +53,8 @@ public class VisionSubsystem extends SubsystemBase {
     private volatile Timer lastDataTimer;
 
     public VisionSubsystem() {
+    this.lastDataTimer = new Timer();
+    this.lastDataTimer.start();
     this.notifier = new Notifier(() -> notifierLoop());
     this.notifier.setName("Vision Notifier");
     this.notifier.startPeriodic(0.020); //20ms
