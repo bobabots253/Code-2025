@@ -197,6 +197,8 @@ public final class Constants {
     //Universal Elevator Output Limits
     public static final double kUniversalPIDOutputLow = -1; //max output is capped @ 1
     public static final double kUniversalPIDOutputHigh = 1;
+    public static final double ELEVATOR_MAX_TRAVEL = 20; //heuristic
+    public static final double ELEVATOR_MIN_TRAVEL = -0.5; //heuristic
   }
 
   public static final class EndEffectorConstants {

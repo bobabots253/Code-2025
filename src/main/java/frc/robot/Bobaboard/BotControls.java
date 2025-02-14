@@ -59,26 +59,14 @@ public class BotControls {
             if (controlHub.driverController.A_Button.wasActivated()) {
                 rContainer.m_robotDrive.zeroHeading();
             }
-
-            if (controlHub.driverController.X_Button.wasActivated()){
-                StandStillCommand.scheduleDefaultCommand();
-            }
-
-            if (controlHub.driverController.Y_Button.wasActivated()){
-                interruptedPPLib = !interruptedPPLib;
-                interruptedElevatorForward = !interruptedElevatorForward;
-                BooleanSupplier supplier = () ->  interruptedElevatorForward;
-                //rContainer.permissibleForward(supplier);
-            }
             
-            
-            if (controlHub.driverController.B_Button.wasActivated()){
-                interruptedElevatorBackward = !interruptedElevatorBackward;
-                BooleanSupplier supplier = () ->  interruptedElevatorForward;
-                //rContainer.permissibleBackward(supplier);
+            if (controlHub.driverController.L_Bumper.isBeingPressed()) {
+                rContainer.m_Elevator.setLazyPercentageOpenLoop(0.1);
             }
-    
 
+            if (controlHub.driverController.R_Bumper.isBeingPressed()) {
+                rContainer.m_Elevator.setLazyPercentageOpenLoop(-0.1);
+            }
             
         }else{
             // if (controlHub.operatorController.L_Bumper.wasActivated()) {

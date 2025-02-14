@@ -74,12 +74,18 @@ private ElevatorSubsystem() {
 public void periodic() {
 
     if (isWithinHardDeck()){
+        System.out.println("Hitting Hard Stop");
+    }
+
+    if (!isWithinExtensionRange()){
         System.out.println("Hitting Code Stop");
+        stopElevator();
     }
     
     SmartDashboard.putNumber("Elevator Relative Position", m_LiftingEncoder.getPosition());
     SmartDashboard.putNumber("Elevator Master Current", m_masterLiftingSparkMax.getOutputCurrent());
     SmartDashboard.putNumber("Elevator Follower Current", m_slaveLiftingSparkMax.getOutputCurrent());
+    SmartDashboard.putBoolean("Within Extension Range", isWithinExtensionRange());
 
 }
 
@@ -88,7 +94,14 @@ public void periodic() {
         m_masterLiftingSparkMax.set(value);
     }
 
-    public void stopArm() {
+    public void setSafePercentageOpenLoop(double value){
+        SmartDashboard.putNumber("Safe Elevator Running Speed", value);
+        if (isWithinExtensionRange()){
+            m_masterLiftingSparkMax.set(value);
+        }
+    }
+
+    public void stopElevator() {
         setLazyPercentageOpenLoop(0);
     }
 
@@ -98,6 +111,15 @@ public void periodic() {
 
     public boolean isWithinHardDeck(){
         return masterHallEffectSensor.get();
+    }
+
+    public boolean isWithinExtensionRange(){
+        if (m_LiftingEncoder.getPosition() < ElevatorConstants.ELEVATOR_MAX_TRAVEL 
+            && m_LiftingEncoder.getPosition() > ElevatorConstants.ELEVATOR_MIN_TRAVEL){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 

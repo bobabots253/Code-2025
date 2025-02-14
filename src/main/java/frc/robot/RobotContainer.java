@@ -76,7 +76,7 @@ public class RobotContainer {
   public final AutoModeManager m_AutoModeManager;
   public final ControlHub m_ControlHub;
   public final DriveSubsystem m_robotDrive;
-  //public final ElevatorSubsystem m_Elevator;
+  public final ElevatorSubsystem m_Elevator;
    /*READ ME:
   A static instance of the Robot Container with all its contents
   */
@@ -93,7 +93,7 @@ public class RobotContainer {
     m_robotDrive = new DriveSubsystem();
     m_AutoModeManager = new AutoModeManager();
     m_ControlHub = ControlHub.getInstance();
-    //m_Elevator = ElevatorSubsystem.getInstance();
+    m_Elevator = ElevatorSubsystem.getInstance();
   
     // Configure default commands
     SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
@@ -119,17 +119,17 @@ public class RobotContainer {
       * @return 
       */
    
-  // public Command RunElevatorPositive(){
-  //   return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(.1), m_Elevator);
-  // }
+  public Command RunElevatorPositive(){
+    return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(.1), m_Elevator);
+  }
 
-  // public Command RunElevatorNegative(){
-  //   return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(.1), m_Elevator);
-  // }
+  public Command RunElevatorNegative(){
+    return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(.1), m_Elevator);
+  }
 
-  // public Command StopElevator(){
-  //   return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(0.0), m_Elevator);
-  // }
+  public Command StopElevator(){
+    return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(0.0), m_Elevator);
+  }
 
   // public void permissibleForward(BooleanSupplier permission){
   //   new ConditionalCommand(RunElevatorPositive(), StopElevator(), permission);
