@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
@@ -25,7 +27,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 
-import java.util.prefs.Preferences;
+//import java.util.prefs.Preferences;
 
 import com.revrobotics.RelativeEncoder;
 
@@ -41,10 +43,12 @@ private final SparkClosedLoopController m_LiftingPIDController;
 
 //Tunable Values
 public final String kTunableP = "Tunable_P";
-public static final String KTunable_I = "Tunable_I";
-public static final String KTunable_D = "Tunable_D";
+public final String kTunableI = "Tunable_I";
+public final String kTunableD = "Tunable_D";
 
 private static ElevatorSubsystem instance;
+double softIncrementalPositionP;
+Timer pidTimer = new Timer();
 
 public static ElevatorSubsystem getInstance() {
     if(instance == null) instance = new ElevatorSubsystem();
@@ -68,6 +72,14 @@ private ElevatorSubsystem() {
     slaveHallEffectSensor = new DigitalInput(ElevatorConstants.pivotSlaveHallEffectDIO);
     
     //Preferences.putDouble(kTunableP , ElevatorConstants.kIncrementalPostionP);
+    softIncrementalPositionP = 0.0;
+    Preferences.initDouble(kTunableP, softIncrementalPositionP);
+    Preferences.initDouble(kTunableI, softIncrementalPositionP);
+    Preferences.initDouble(kTunableD, softIncrementalPositionP);
+    
+    pidTimer.start();
+    
+    
 }
 
 @Override
@@ -87,6 +99,16 @@ public void periodic() {
     SmartDashboard.putNumber("Elevator Follower Current", m_slaveLiftingSparkMax.getOutputCurrent());
     SmartDashboard.putBoolean("Within Extension Range", isWithinExtensionRange());
 
+
+}
+
+public void changingPID(SparkClosedLoopController pidController){
+    if(pidTimer.hasElapsed(10.0)){
+        m_LiftingPIDController.
+        m_masterLiftingSparkMax.
+        m_LiftingPIDController.
+        pidTimer.restart();
+    }
 }
 
     public void setLazyPercentageOpenLoop(double value) {
@@ -112,7 +134,7 @@ public void periodic() {
     public boolean isWithinHardDeck(){
         return masterHallEffectSensor.get();
     }
-
+    
     public boolean isWithinExtensionRange(){
         if (m_LiftingEncoder.getPosition() < ElevatorConstants.ELEVATOR_MAX_TRAVEL 
             && m_LiftingEncoder.getPosition() > ElevatorConstants.ELEVATOR_MIN_TRAVEL){
@@ -146,6 +168,14 @@ public void periodic() {
         }
     }
 
-
+public void setPIDParameters(double P, double I, double D){
+    Configs.ElevatorSubsystem.masterLiftingConfig.closedLoop
+    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+    .pid(P,
+         I,
+         D)
+    .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh);
+    m_masterLiftingSparkMax.configure(Configs.ElevatorSubsystem.masterLiftingConfig,com.revrobotics.spark.SparkBase.ResetMode.kResetSafeParameters,PersistMode.kNoPersistParameters);
+}
 
 }
