@@ -1,4 +1,5 @@
 package frc.robot.Bobaboard;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -59,6 +60,12 @@ public class XboxControllerSetup extends XboxController {
 	public static final int POV_180 = -6;
 	public static final int POV_270 = -7;
 
+	public static final double POVButtonTolerance = 25; //Degrees //Skill Issue
+	public static final double POVButtonNorth = 0;
+	public static final double POVButtonEast = 90;
+	public static final double POVButtonSouth = 180;
+	public static final double POVButtonWest = 270;
+
 public void setDeadband(double deadband) {
 		DEAD_BAND = deadband;
 	}
@@ -104,12 +111,12 @@ public void setDeadband(double deadband) {
 
 	@Override
 	public double getLeftTriggerAxis() {
-		return Util.deadBand(getRawAxis(2), PRESS_THRESHOLD);
+		return Util.deadBand(getLeftTriggerAxis(), PRESS_THRESHOLD);
 	}
 
 	@Override
 	public double getRightTriggerAxis() {
-		return Util.deadBand(getRawAxis(3), PRESS_THRESHOLD);
+		return Util.deadBand(getRightTriggerAxis(), PRESS_THRESHOLD);
 	}
 
 	public Rotation2d getPOVDirection() {
@@ -131,6 +138,14 @@ public void setDeadband(double deadband) {
 
 	public boolean getFaceButtonY(){
 		return getRawButtonPressed(Y_BUTTON);
+	}
+
+	public boolean getRightBumper(){
+		return getRawButtonPressed(RIGHT_BUMPER);
+	}
+
+	public boolean getLeftBumper(){
+		return getRawButtonPressed(LEFT_BUMPER);
 	}
 
 	public class ButtonCheck {
@@ -166,16 +181,24 @@ public void setDeadband(double deadband) {
 						buttonCheck = getRightTriggerAxis() > 0;
 						break;
 					case POV_0:
-						buttonCheck = (getPOV() == 0);
+						buttonCheck = (MathUtil.isNear(POVButtonNorth,
+							 ((double)getPOV()),
+							 POVButtonTolerance));
 						break;
 					case POV_90:
-						buttonCheck = (getPOV() == 90);
+						buttonCheck = (MathUtil.isNear(POVButtonEast,
+						((double)getPOV()),
+						POVButtonTolerance));
 						break;
 					case POV_180:
-						buttonCheck = (getPOV() == 180);
+						buttonCheck = (MathUtil.isNear(POVButtonSouth,
+						((double)getPOV()),
+						POVButtonTolerance));
 						break;
 					case POV_270:
-						buttonCheck = (getPOV() == 270);
+						buttonCheck = (MathUtil.isNear(POVButtonWest,
+						((double)getPOV()),
+						POVButtonTolerance));
 						break;
 					case A_BUTTON:
 						buttonCheck = (getFaceButtonA());
@@ -188,6 +211,12 @@ public void setDeadband(double deadband) {
 						break;
 					case B_BUTTON:
 						buttonCheck = (getFaceButtonB());
+						break;
+					case LEFT_BUMPER:
+						buttonCheck = (getLeftBumper());
+						break;
+					case RIGHT_BUMPER:
+						buttonCheck = (getLeftBumper());
 						break;
 					default:
 						buttonCheck = false;
@@ -297,8 +326,8 @@ public void setDeadband(double deadband) {
 		Y_Button.update();
 		L_Bumper.update();
 		R_Bumper.update();
-		// L_Trigger.update();
-		// R_Trigger.update();
+		L_Trigger.update();
+		R_Trigger.update();
 		POV0.update();
 		POV90.update();
 		POV180.update();

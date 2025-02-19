@@ -199,6 +199,8 @@ public final class Constants {
     public static final double kUniversalPIDOutputHigh = 1;
     public static final double ELEVATOR_MAX_TRAVEL = 20; //heuristic
     public static final double ELEVATOR_MIN_TRAVEL = -0.5; //heuristic
+    public static final double ELEVATOR_OUTPUT_LOW = -0.75;
+    public static final double ELEVATOR_OUTPUT_HIGH = 0.75;
   }
 
   public static final class EndEffectorConstants {

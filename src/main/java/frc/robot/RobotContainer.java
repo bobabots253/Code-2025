@@ -118,18 +118,7 @@ public class RobotContainer {
    * {@link JoystickButton}.
       * @return 
       */
-   
-  public Command RunElevatorPositive(){
-    return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(.1), m_Elevator);
-  }
 
-  public Command RunElevatorNegative(){
-    return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(.1), m_Elevator);
-  }
-
-  public Command StopElevator(){
-    return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(0.0), m_Elevator);
-  }
 
   // public void permissibleForward(BooleanSupplier permission){
   //   new ConditionalCommand(RunElevatorPositive(), StopElevator(), permission);

@@ -60,14 +60,16 @@ public class BotControls {
                 rContainer.m_robotDrive.zeroHeading();
             }
             
-            if (controlHub.driverController.L_Bumper.isBeingPressed()) {
-                rContainer.m_Elevator.setLazyPercentageOpenLoop(0.1);
-            }
+            if (controlHub.driverController.L_Bumper.isBeingPressed() || controlHub.driverController.R_Bumper.isBeingPressed()) {
+                if(controlHub.driverController.L_Bumper.isBeingPressed() && !controlHub.driverController.R_Bumper.isBeingPressed()){
+                    rContainer.m_Elevator.setLazyPercentageOpenLoop(-0.1);
+                } 
+                if (controlHub.driverController.L_Bumper.isBeingPressed() && !controlHub.driverController.L_Bumper.isBeingPressed()){
+                    rContainer.m_Elevator.setLazyPercentageOpenLoop(0.1);
+            } else{
+                rContainer.m_Elevator.setLazyPercentageOpenLoop(0.0); 
+            }  
 
-            if (controlHub.driverController.R_Bumper.isBeingPressed()) {
-                rContainer.m_Elevator.setLazyPercentageOpenLoop(-0.1);
-            }
-            
         }else{
             // if (controlHub.operatorController.L_Bumper.wasActivated()) {
             //     rContainer.FallOffChain().schedule();
@@ -85,6 +87,5 @@ public class BotControls {
         }
     }
     
-
-
+  }
 }

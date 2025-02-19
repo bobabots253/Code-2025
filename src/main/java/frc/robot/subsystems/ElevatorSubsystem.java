@@ -1,11 +1,13 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Configs;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
@@ -35,6 +37,7 @@ public class ElevatorSubsystem extends SubsystemBase{
 private static SparkMax m_masterLiftingSparkMax;
 private static SparkMax m_slaveLiftingSparkMax;
 private final RelativeEncoder m_LiftingEncoder;
+private final RelativeEncoder m_followerEncoder;
 private static DigitalInput masterHallEffectSensor;
 private static DigitalInput slaveHallEffectSensor;
 private final SparkClosedLoopController m_LiftingPIDController;
@@ -54,8 +57,10 @@ public static ElevatorSubsystem getInstance() {
 private ElevatorSubsystem() {
     m_masterLiftingSparkMax = new SparkMax(ElevatorConstants.masterLiftingCANId, MotorType.kBrushless);
     m_slaveLiftingSparkMax = new SparkMax(ElevatorConstants.slaveLiftingCANId, MotorType.kBrushless);
+
     // Setup encoders and PID controllers for the driving SPARKS MAX.
     m_LiftingEncoder = m_masterLiftingSparkMax.getEncoder();
+    m_followerEncoder = m_slaveLiftingSparkMax.getEncoder();
     m_LiftingPIDController = m_masterLiftingSparkMax.getClosedLoopController();
 
     m_masterLiftingSparkMax.configure(Configs.ElevatorSubsystem.masterLiftingConfig, ResetMode.kResetSafeParameters,
@@ -68,37 +73,37 @@ private ElevatorSubsystem() {
     slaveHallEffectSensor = new DigitalInput(ElevatorConstants.pivotSlaveHallEffectDIO);
     
     //Preferences.putDouble(kTunableP , ElevatorConstants.kIncrementalPostionP);
+    resetEncoders();
 }
 
 @Override
 public void periodic() {
 
-    if (isWithinHardDeck()){
-        System.out.println("Hitting Hard Stop");
-    }
 
     if (!isWithinExtensionRange()){
-        System.out.println("Hitting Code Stop");
+        System.out.println("Elevator Hitting Code Stop");
         stopElevator();
     }
     
-    SmartDashboard.putNumber("Elevator Relative Position", m_LiftingEncoder.getPosition());
-    SmartDashboard.putNumber("Elevator Master Current", m_masterLiftingSparkMax.getOutputCurrent());
-    SmartDashboard.putNumber("Elevator Follower Current", m_slaveLiftingSparkMax.getOutputCurrent());
-    SmartDashboard.putBoolean("Within Extension Range", isWithinExtensionRange());
+    SmartDashboard.putNumber("Elevator /relativePosition", m_LiftingEncoder.getPosition());
+    SmartDashboard.putNumber("Elevator /masterCurrent", m_masterLiftingSparkMax.getOutputCurrent());
+    SmartDashboard.putNumber("Elevator /followerCurrent", m_slaveLiftingSparkMax.getOutputCurrent());
+    SmartDashboard.putBoolean("Elevator /withinExtensionRange", isWithinExtensionRange());
 
 }
 
-    public void setLazyPercentageOpenLoop(double value) {
-        SmartDashboard.putNumber("Elevator Running Speed", value);
-        m_masterLiftingSparkMax.set(value);
+    public void setLazyPercentageOpenLoop(double OpenLoopPercentage) {
+        SmartDashboard.putNumber("Elevator /Raw Output Speed (#.##)", OpenLoopPercentage);
+        m_masterLiftingSparkMax.set(OpenLoopPercentage);
     }
 
-    public void setSafePercentageOpenLoop(double value){
-        SmartDashboard.putNumber("Safe Elevator Running Speed", value);
+    public void setSafePercentageOpenLoop(double OpenLoopPercentage){
+        SmartDashboard.putNumber("Elevator / Safe Output Speed (#.##)", OpenLoopPercentage);
         if (isWithinExtensionRange()){
-            m_masterLiftingSparkMax.set(value);
-        }
+            m_masterLiftingSparkMax.set(
+                MathUtil.clamp(OpenLoopPercentage,
+                 ElevatorConstants.ELEVATOR_OUTPUT_LOW, ElevatorConstants.ELEVATOR_OUTPUT_HIGH));
+            }
     }
 
     public void stopElevator() {
@@ -107,10 +112,6 @@ public void periodic() {
 
     public void resetEncoders() {
         m_LiftingEncoder.setPosition(0.0);
-    }
-
-    public boolean isWithinHardDeck(){
-        return masterHallEffectSensor.get();
     }
 
     public boolean isWithinExtensionRange(){
@@ -122,15 +123,41 @@ public void periodic() {
         }
     }
 
-
-    public void setLazyPositionSetpoint(double position) {
-        m_LiftingPIDController.setReference(position, ControlType.kPosition);
-        SmartDashboard.putNumber("Elevator SetPoint", position);
+    public boolean isWithinMotorAlignment(){
+        return m_LiftingEncoder.getPosition() == m_followerEncoder.getPosition();
     }
 
-    public void setLazyElevatorState(States.ElevatorPos state) {
-        SmartDashboard.putNumber("Position", state.val);
-        switch (state) {
+    public void setCoastMode(boolean CoastModeEnabled){
+        if (CoastModeEnabled) {
+            m_masterLiftingSparkMax.configure(
+                Configs.ElevatorSubsystem.masterLiftingCoastModeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+            m_slaveLiftingSparkMax.configure(
+                Configs.ElevatorSubsystem.slaveLiftingCoastModeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+          } else {
+            m_masterLiftingSparkMax.configure(
+                Configs.ElevatorSubsystem.masterLiftingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+            m_slaveLiftingSparkMax.configure(
+                Configs.ElevatorSubsystem.masterLiftingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        }
+    }
+
+    public void setNeutralMode() {
+        stopElevator();
+        new WaitCommand(1.00).schedule();
+        setCoastMode(true);
+      }
+
+
+    public void setLazyPositionSetpoint(double requestedSetpoint) {
+        m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition);
+        SmartDashboard.putNumber("Elevator /requestedSetpoint", requestedSetpoint);
+    }
+
+
+    //Add the Rest & Add Button Bindings
+    public void setLazyElevatorState(States.ElevatorPos requestedState) {
+        SmartDashboard.putNumber("Elevator /requestedPosition", requestedState.val);
+        switch (requestedState) {
             case STOW:
                 setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
                 break;
@@ -140,6 +167,8 @@ public void periodic() {
             case L2Score:
                 setLazyPositionSetpoint(ElevatorConstants.L2Score);
                 break;
+            case L3Score:
+                setLazyPositionSetpoint(ElevatorConstants.L3Score);
             default:
                 setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
                 break;
