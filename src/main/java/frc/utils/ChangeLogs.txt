@@ -15,3 +15,8 @@ Changelogs in Prep for Pinnacles 2025
         - Disengaged VIO from Limelights
     Misc:
         - Deleted Deprecated 2024 Code
+>>> 2/19 - Critical Elevator Config Fixed
+    Elevator:
+        - Fixed Inversion for Follower Motor
+    Notes:
+        *Using Deprecated XboxController method for Left and Right Bumpers

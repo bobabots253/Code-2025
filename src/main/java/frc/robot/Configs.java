@@ -72,6 +72,7 @@ public final class Configs {
 
         slaveLiftingConfig.follow(ElevatorConstants.masterLiftingCANId);
         slaveLiftingConfig
+                    .inverted(true)
                     .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
 
@@ -87,6 +88,7 @@ public final class Configs {
 
         slaveLiftingCoastModeConfig.follow(ElevatorConstants.masterLiftingCANId);
         slaveLiftingCoastModeConfig
+                    .inverted(true)
                     .idleMode(IdleMode.kCoast)
                     .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
         }
