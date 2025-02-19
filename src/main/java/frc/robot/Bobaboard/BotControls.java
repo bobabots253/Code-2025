@@ -41,17 +41,23 @@ public class BotControls {
     }
 
     public final void o_reportBotControlData(){
-        SmartDashboard.putBoolean("m_ControllerSelected", OneControllerQuery);
-        SmartDashboard.putBoolean("Driver A Button", controlHub.driverController.A_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Driver B Button", controlHub.driverController.X_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Driver X Button", controlHub.driverController.X_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Driver Y Button", controlHub.driverController.Y_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Operator A Button", controlHub.operatorController.A_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Operator B Button", controlHub.operatorController.B_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Operator X Button", controlHub.operatorController.X_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Operator Y Button", controlHub.operatorController.Y_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Driver LBumper", controlHub.driverController.L_Bumper.isBeingPressed());
-        SmartDashboard.putBoolean("Driver RBumper", controlHub.driverController.R_Bumper.isBeingPressed());
+        SmartDashboard.putBoolean("BotCTRL/isDebugMode:", OneControllerQuery);
+        SmartDashboard.putBoolean("DRV/A_Button", controlHub.driverController.A_Button.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/B_Button", controlHub.driverController.B_Button.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/X_Button", controlHub.driverController.X_Button.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/Y_Button", controlHub.driverController.Y_Button.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/A_Button", controlHub.operatorController.A_Button.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/B_Button", controlHub.operatorController.B_Button.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/X_Button", controlHub.operatorController.X_Button.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/Y_Button", controlHub.operatorController.Y_Button.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/LBumper", controlHub.driverController.L_Bumper.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/RBumper", controlHub.driverController.R_Bumper.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/LBumper", controlHub.operatorController.L_Bumper.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/RBumper", controlHub.operatorController.R_Bumper.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/LTrigger", controlHub.driverController.L_Trigger.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/RTrigger", controlHub.driverController.R_Trigger.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/LTrigger", controlHub.operatorController.L_Trigger.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/RTrigger", controlHub.operatorController.R_Trigger.isBeingPressed());
     }
 
     public void RunRobot(){

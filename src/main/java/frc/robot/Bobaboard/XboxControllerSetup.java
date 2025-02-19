@@ -111,12 +111,12 @@ public void setDeadband(double deadband) {
 
 	@Override
 	public double getLeftTriggerAxis() {
-		return Util.deadBand(getLeftTriggerAxis(), PRESS_THRESHOLD);
+		return Util.deadBand(getRawAxis(2), PRESS_THRESHOLD);
 	}
 
 	@Override
 	public double getRightTriggerAxis() {
-		return Util.deadBand(getRightTriggerAxis(), PRESS_THRESHOLD);
+		return Util.deadBand(getRawAxis(3), PRESS_THRESHOLD);
 	}
 
 	public Rotation2d getPOVDirection() {
