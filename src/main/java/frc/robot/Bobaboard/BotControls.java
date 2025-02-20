@@ -66,15 +66,16 @@ public class BotControls {
                 rContainer.m_robotDrive.zeroHeading();
             }
             
-            if (controlHub.driverController.L_Bumper.isBeingPressed() || controlHub.driverController.R_Bumper.isBeingPressed()) {
-                if(controlHub.driverController.L_Bumper.isBeingPressed() && !controlHub.driverController.R_Bumper.isBeingPressed()){
-                    rContainer.m_Elevator.setLazyPercentageOpenLoop(-0.1);
+            if (controlHub.driverController.A_Button.isBeingPressed() || controlHub.driverController.B_Button.isBeingPressed()) {
+                if(controlHub.driverController.A_Button.isBeingPressed() && !controlHub.driverController.B_Button.isBeingPressed()){
+                    rContainer.m_Elevator.setSafePercentageOpenLoop(-0.25);
                 } 
-                if (controlHub.driverController.L_Bumper.isBeingPressed() && !controlHub.driverController.L_Bumper.isBeingPressed()){
-                    rContainer.m_Elevator.setLazyPercentageOpenLoop(0.1);
+                if (controlHub.driverController.B_Button.isBeingPressed() && !controlHub.driverController.A_Button.isBeingPressed()){
+                    rContainer.m_Elevator.setSafePercentageOpenLoop(0.15);
+                    
             } else{
-                rContainer.m_Elevator.setLazyPercentageOpenLoop(0.0); 
-            }  
+                rContainer.m_Elevator.setSafePercentageOpenLoop(0);
+            } 
 
         }else{
             // if (controlHub.operatorController.L_Bumper.wasActivated()) {
@@ -92,6 +93,5 @@ public class BotControls {
             // }
         }
     }
-    
   }
-}
+} 

@@ -61,6 +61,7 @@ public final class Configs {
 
         static{
         masterLiftingConfig
+                    .inverted(false)
                     .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
         masterLiftingConfig.closedLoop
@@ -70,11 +71,11 @@ public final class Configs {
                          ElevatorConstants.kIncrementalPositionD)
                     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh);
 
-        slaveLiftingConfig.follow(ElevatorConstants.masterLiftingCANId);
         slaveLiftingConfig
                     .inverted(true)
                     .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
+        //aveLiftingConfig.follow(ElevatorConstants.masterLiftingCANId);
 
         masterLiftingCoastModeConfig
                     .idleMode(IdleMode.kCoast)

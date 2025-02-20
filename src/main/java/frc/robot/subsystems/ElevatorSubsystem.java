@@ -1,35 +1,21 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Configs;
-import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.EndEffectorConstants;
-import frc.robot.Constants.ModuleConstants;
 import frc.robot.States;
-
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
-
-import java.util.prefs.Preferences;
-
-import com.revrobotics.RelativeEncoder;
 
 
 public class ElevatorSubsystem extends SubsystemBase{
@@ -99,15 +85,27 @@ public void periodic() {
 
     public void setSafePercentageOpenLoop(double OpenLoopPercentage){
         SmartDashboard.putNumber("Elevator / Safe Output Speed (#.##)", OpenLoopPercentage);
-        if (isWithinExtensionRange()){
+        if (isWithinExtensionRange() && !MathUtil.isNear(18.85, getEncoder(), 0.15)){
             m_masterLiftingSparkMax.set(
                 MathUtil.clamp(OpenLoopPercentage,
                  ElevatorConstants.ELEVATOR_OUTPUT_LOW, ElevatorConstants.ELEVATOR_OUTPUT_HIGH));
-            }
-    }
+            m_slaveLiftingSparkMax.set(
+                MathUtil.clamp(OpenLoopPercentage,
+                 ElevatorConstants.ELEVATOR_OUTPUT_LOW, ElevatorConstants.ELEVATOR_OUTPUT_HIGH));
+            }else{
+            while(MathUtil.isNear(18.85, getEncoder(), 0.15)){
+                m_masterLiftingSparkMax.set(-0.05);
+                m_slaveLiftingSparkMax.set(-0.05);
+                }
+            }        
+        }
 
     public void stopElevator() {
         setLazyPercentageOpenLoop(0);
+    }
+
+    public double getEncoder(){
+        return m_LiftingEncoder.getPosition();
     }
 
     public void resetEncoders() {
@@ -149,7 +147,7 @@ public void periodic() {
 
 
     public void setLazyPositionSetpoint(double requestedSetpoint) {
-        m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition);
+        m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition); //, ClosedLoopSlot.arbFFVolatge, ArbFFUnits.kVoltage
         SmartDashboard.putNumber("Elevator /requestedSetpoint", requestedSetpoint);
     }
 

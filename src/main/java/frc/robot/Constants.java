@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.revrobotics.spark.*;
+import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -197,10 +198,11 @@ public final class Constants {
     //Universal Elevator Output Limits
     public static final double kUniversalPIDOutputLow = -1; //max output is capped @ 1
     public static final double kUniversalPIDOutputHigh = 1;
-    public static final double ELEVATOR_MAX_TRAVEL = 20; //heuristic
-    public static final double ELEVATOR_MIN_TRAVEL = -0.5; //heuristic
+    public static final double ELEVATOR_MAX_TRAVEL = 18.50000; //heuristic
+    public static final double ELEVATOR_MIN_TRAVEL = -0.05000; //heuristic
     public static final double ELEVATOR_OUTPUT_LOW = -0.75;
     public static final double ELEVATOR_OUTPUT_HIGH = 0.75;
+    public static final double arbFFVolatge = 0.05;
   }
 
   public static final class EndEffectorConstants {
