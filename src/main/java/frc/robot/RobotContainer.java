@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Bobaboard.BotControls;
 import frc.robot.Bobaboard.ControlHub;
+import frc.robot.subsystems.EndEffectorSubsystem;
 import frc.robot.commands.DriveToPose;
 import frc.robot.commands.PathfindToPose;
 import frc.robot.Constants.AutoConstants;
@@ -77,6 +78,7 @@ public class RobotContainer {
   public final ControlHub m_ControlHub;
   public final DriveSubsystem m_robotDrive;
   public final ElevatorSubsystem m_Elevator;
+  public final EndEffectorSubsystem m_Effector;
    /*READ ME:
   A static instance of the Robot Container with all its contents
   */
@@ -94,7 +96,7 @@ public class RobotContainer {
     m_AutoModeManager = new AutoModeManager();
     m_ControlHub = ControlHub.getInstance();
     m_Elevator = ElevatorSubsystem.getInstance();
-  
+    m_Effector = EndEffectorSubsystem.getInstance();
     // Configure default commands
     SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
     m_robotDrive.setDefaultCommand(new RunCommand(

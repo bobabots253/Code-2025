@@ -20,3 +20,8 @@ Changelogs in Prep for Pinnacles 2025
         - Fixed Inversion for Follower Motor
     Notes:
         *Using Deprecated XboxController method for Left and Right Bumpers
+>>> 2/21 - End Effector Fixed
+    End Effector:
+        - Fixed Safe Looping Issues
+    Button Mapping:
+        - Manual Elevator and End Effector Added

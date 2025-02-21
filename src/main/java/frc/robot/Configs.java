@@ -94,7 +94,7 @@ public final class Configs {
                     .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
         }
     }
-    public static final class EndEffectorSubsystem {
+    public static final class EndEffectorSubsystemConfig {
         public static final SparkMaxConfig pivotConfig = new SparkMaxConfig();
         public static final SparkMaxConfig intakeRollerConfig = new SparkMaxConfig();
         public static final SparkMaxConfig algaeRollerConfig = new SparkMaxConfig();

@@ -269,6 +269,10 @@ public final class Constants {
     //Universal EF Output Limits
     public static final double kUniversalPIDOutputLow = -1; //max output is capped @ 1
     public static final double kUniversalPIDOutputHigh = 1;
+    public static final double PIVOT_MAX_TRAVEL = 0.710;
+    public static final double PIVOT_MIN_TRAVEL = 0.000;
+    public static final double PIVOT_OUTPUT_HIGH = 0.3;
+    public static final double PIVOT_OUTPUT_LOW = -0.2;
   }
 
   public static final class VisionConstants{
