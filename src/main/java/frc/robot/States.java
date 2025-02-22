@@ -11,7 +11,7 @@ public final class States {
     }
 
     public enum EndEffectorPos {
-        STOW(0), L1Score(1), L2Score(2), L3Score (3), INTAKE(4), PUSH(5), FLY_BIRDY_FLY(6), NOTHING(99); //Add All Pos Later
+        STOW(0), L1Score(1), L2Score(2), L3Score (3), INTAKE(4), PUSH(5), FLY_BIRDY_FLY(6), HARD_REMOVE(7), NOTHING(99); //Add All Pos Later
         public int val;
         private EndEffectorPos(int val) {
             this.val = val;

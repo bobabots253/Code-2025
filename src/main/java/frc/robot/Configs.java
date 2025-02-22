@@ -72,10 +72,9 @@ public final class Configs {
                     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh);
 
         slaveLiftingConfig
-                    .inverted(true)
+                    .follow(ElevatorConstants.masterLiftingCANId)
                     .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
-        //aveLiftingConfig.follow(ElevatorConstants.masterLiftingCANId);
 
         masterLiftingCoastModeConfig
                     .idleMode(IdleMode.kCoast)

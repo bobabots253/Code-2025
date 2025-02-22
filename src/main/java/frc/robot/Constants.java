@@ -168,12 +168,12 @@ public final class Constants {
 
     public static final double idealHomingLinearPosition = 0.000; //revs
     public static final double softZeroLinearPosition = 0.000; //revs
-    public static final double L1Score = 0.120; //find when finished building
+    public static final double L1Score = 8.430; // 2/21/25
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Elevator 
-    public static final double L2Score = 0.120;
+    public static final double L2Score = 12.857; // 2/21/25
     public static final double L2Algae = 0.120;
     public static final double L2Misc = 0.120;
-    public static final double L3Score = 0.120;
+    public static final double L3Score = 19.143; // 2/21/25
     public static final double L3Algae = 0.120;
     public static final double L3Misc = 0.120;
     public static final double pos1 = 0.120; 
@@ -186,9 +186,9 @@ public final class Constants {
     public static final double pidOutputLow = -1; //max output is capped @ 1
     public static final double pidOutputHigh = 1;
 
-    public static final double kIncrementalPostionP = 0.001; //5:1
-    public static final double kIncrementalPostionI = 0.0; //5:1
-    public static final double kIncrementalPositionD = 0.0005; //5:1
+    public static final double kIncrementalPostionP = 0.1; //5:1
+    public static final double kIncrementalPostionI = 0.0001; //5:1
+    public static final double kIncrementalPositionD = 0.005; //5:1
     public static final double kIncrementalPositionFF = 0.0005; //5:1
 
     //Universal Elevator Current Limits
@@ -247,10 +247,10 @@ public final class Constants {
     public static final double Test1 = 0.120; //degrees
     public static final double Test2 = 0.120;
     public static final double Test3 = 0.120;
-    public static final double kPivotAbsolutePositionP = 0.001; //1:1
-    public static final double kPivotAbsolutePositionI = 0.0; //1:1
-    public static final double kPivotAbsolutePositionD = 0.0005; //1:1
-    public static final double kPivotAbsolutePositionFF = 0.0005; //1:1
+    public static final double kPivotAbsolutePositionP = 0.05; //25:1
+    public static final double kPivotAbsolutePositionI = 0.0; 
+    public static final double kPivotAbsolutePositionD = 0.0005; 
+    public static final double kPivotAbsolutePositionFF = 0.0005; 
 
     //ALGAE 
     public static final double idealHoldingAlgaeVelocity = 0.000; //RPM
@@ -258,10 +258,10 @@ public final class Constants {
     public static final double idealStallAlgaeVelocity = 0.000; //RPM
     public static final double idealSlowAlgaeVelocity = 0.000; //RPM
     public static final double idealGroundAlgaeVelocity = 0.000; //RPM
-    public static final double kAlgaeVelocityP = 0.001; //1:1
-    public static final double kAlgaeVelocityI = 0.0; //1:1
-    public static final double kAlgaeVelocityD = 0.0005; //1:1
-    public static final double kAlgaeVelocityFF = 0.0005; //1:1
+    public static final double kAlgaeVelocityP = 0.001; //12:1
+    public static final double kAlgaeVelocityI = 0.0; 
+    public static final double kAlgaeVelocityD = 0.0005; 
+    public static final double kAlgaeVelocityFF = 0.0005; 
     
     //Universal EF Current Limits
     public static final int kUniversalSoftLimit = 40; 

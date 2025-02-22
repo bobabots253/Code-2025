@@ -26,13 +26,13 @@ private final RelativeEncoder m_LiftingEncoder;
 private final RelativeEncoder m_followerEncoder;
 private static DigitalInput masterHallEffectSensor;
 private static DigitalInput slaveHallEffectSensor;
-private final SparkClosedLoopController m_LiftingPIDController;
+private static SparkClosedLoopController m_LiftingPIDController;
 
 //Tunable Values
 public final String kTunableP = "Tunable_P";
 public static final String KTunable_I = "Tunable_I";
 public static final String KTunable_D = "Tunable_D";
-
+public int currentIntSetpointElevator;
 private static ElevatorSubsystem instance;
 
 public static ElevatorSubsystem getInstance() {
@@ -57,7 +57,6 @@ private ElevatorSubsystem() {
     //Homing & Safe Code Stop
     masterHallEffectSensor = new DigitalInput(ElevatorConstants.pivotMasterHallEffectDIO);
     slaveHallEffectSensor = new DigitalInput(ElevatorConstants.pivotSlaveHallEffectDIO);
-    
     //Preferences.putDouble(kTunableP , ElevatorConstants.kIncrementalPostionP);
     resetEncoders();
 }
@@ -75,6 +74,7 @@ public void periodic() {
     SmartDashboard.putNumber("Elevator /masterCurrent", m_masterLiftingSparkMax.getOutputCurrent());
     SmartDashboard.putNumber("Elevator /followerCurrent", m_slaveLiftingSparkMax.getOutputCurrent());
     SmartDashboard.putBoolean("Elevator /withinExtensionRange", isWithinExtensionRange());
+    SmartDashboard.putNumber("Elevator /requestedPosition", currentIntSetpointElevator);
 
 }
 
@@ -145,16 +145,24 @@ public void periodic() {
         setCoastMode(true);
       }
 
-
     public void setLazyPositionSetpoint(double requestedSetpoint) {
-        m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition); //, ClosedLoopSlot.arbFFVolatge, ArbFFUnits.kVoltage
         SmartDashboard.putNumber("Elevator /requestedSetpoint", requestedSetpoint);
+        m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition);
+        // if (isWithinExtensionRange() && !MathUtil.isNear(18.85, getEncoder(), 0.15)){
+        // m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition); //, ClosedLoopSlot.arbFFVolatge, ArbFFUnits.kVoltage
+        // } else{
+        //     while(MathUtil.isNear(18.85, getEncoder(), 0.15)){
+        //         m_masterLiftingSparkMax.set(-0.05);
+        //         m_slaveLiftingSparkMax.set(-0.05);
+        //     }
+        // }
     }
 
 
     //Add the Rest & Add Button Bindings
     public void setLazyElevatorState(States.ElevatorPos requestedState) {
-        SmartDashboard.putNumber("Elevator /requestedPosition", requestedState.val);
+        SmartDashboard.putNumber("Elevator /Position", requestedState.val);
+        currentIntSetpointElevator = requestedState.val;
         switch (requestedState) {
             case STOW:
                 setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
@@ -164,6 +172,7 @@ public void periodic() {
                 break;
             case L2Score:
                 setLazyPositionSetpoint(ElevatorConstants.L2Score);
+                System.out.println("level@");
                 break;
             case L3Score:
                 setLazyPositionSetpoint(ElevatorConstants.L3Score);

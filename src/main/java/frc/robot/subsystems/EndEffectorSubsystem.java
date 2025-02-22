@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -18,7 +19,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.States;
 
-public class EndEffectorSubsystem {
+public class EndEffectorSubsystem extends SubsystemBase{
 private static SparkMax m_pivotSparkMax;
 private static SparkMax m_intakeRollerSparkMax;
 private static SparkMax m_algaeRollerSparkMax;
@@ -126,7 +127,7 @@ private EndEffectorSubsystem(){
     public void setLazyPivotPositionSetpoint(double PositionSetpoint){
         double correctedSetpoint = MathUtil.clamp(PositionSetpoint,
                  EndEffectorConstants.PIVOT_MIN_TRAVEL, EndEffectorConstants.PIVOT_MAX_TRAVEL);
-        m_intakeRollerPIDController.setReference(correctedSetpoint, ControlType.kPosition);
+        m_pivotPIDController.setReference(correctedSetpoint, ControlType.kPosition);
         SmartDashboard.putNumber("Pivot Setpoint", PositionSetpoint);
     }
 
@@ -145,6 +146,8 @@ private EndEffectorSubsystem(){
         switch (requestedState) {
             case STOW:
                 setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
+                setIntakeLazyPercentageOpenLoop(0.00);
+                setAlgaeLazyPercentageOpenLoop(0.0);
                 break;
             case L1Score:
                 setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
@@ -162,8 +165,12 @@ private EndEffectorSubsystem(){
                 setLazyPivotPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
                 setIntakeLazyPercentageOpenLoop(0.2);
                 break;
-            case FLY_BIRDY_FLY:
+            case FLY_BIRDY_FLY: //Scoring Enum
                 setIntakeLazyPercentageOpenLoop(-0.6);
+            case HARD_REMOVE:
+            setIntakeLazyPercentageOpenLoop(0.85);
+                break;
+
             default:
                 setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
                 break;
