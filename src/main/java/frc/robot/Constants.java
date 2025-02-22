@@ -187,8 +187,8 @@ public final class Constants {
     public static final double pidOutputHigh = 1;
 
     public static final double kIncrementalPostionP = 0.1; //5:1
-    public static final double kIncrementalPostionI = 0.0001; //5:1
-    public static final double kIncrementalPositionD = 0.005; //5:1
+    public static final double kIncrementalPostionI = 0.01; //5:1
+    public static final double kIncrementalPositionD = 0; //5:1
     public static final double kIncrementalPositionFF = 0.0005; //5:1
 
     //Universal Elevator Current Limits

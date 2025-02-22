@@ -126,7 +126,7 @@ public class BotControls {
             //
 
         if(controlHub.operatorController.L_Bumper.wasReleased() || controlHub.operatorController.R_Bumper.wasReleased()
-                || controlHub.operatorController.L_Bumper.isNotBeingPressed() || controlHub.operatorController.R_Bumper.isNotBeingPressed()){
+                && controlHub.operatorController.L_Bumper.isNotBeingPressed() && controlHub.operatorController.R_Bumper.isNotBeingPressed()){
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
         } else{
             if (controlHub.operatorController.L_Bumper.isBeingPressed() && !controlHub.operatorController.R_Bumper.isBeingPressed()) {
@@ -148,8 +148,8 @@ public class BotControls {
                     rContainer.tierOneElevatorCommand().schedule();
             }else if (controlHub.operatorController.X_Button.wasActivated() && !controlHub.operatorController.A_Button.isBeingPressed()
                         && !controlHub.operatorController.B_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()){
-                rContainer.tierTwoElevatorCommand().schedule();
-                System.out.println("x");
+                        rContainer.tierTwoElevatorCommand().schedule();
+                        System.out.println("x");
             }else if (controlHub.operatorController.Y_Button.wasActivated() && !controlHub.operatorController.B_Button.isBeingPressed()
                         && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.A_Button.isBeingPressed()){
                     rContainer.tierThreeElevatorCommand().schedule();

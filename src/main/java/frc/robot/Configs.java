@@ -1,8 +1,10 @@
 package frc.robot;
 
+import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.*;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Constants.ElevatorConstants;
@@ -56,6 +58,7 @@ public final class Configs {
     public static final class ElevatorSubsystem {
         public static final SparkMaxConfig masterLiftingConfig = new SparkMaxConfig(); //Left (relative to swerve)
         public static final SparkMaxConfig slaveLiftingConfig = new SparkMaxConfig(); ////Right (relative to swerve)
+        //public static final SparkBaseConfig baseMasterLiftingConfig = new SparkMaxConfig();
         public static final SparkMaxConfig masterLiftingCoastModeConfig = new SparkMaxConfig();
         public static final SparkMaxConfig slaveLiftingCoastModeConfig = new SparkMaxConfig();
 
@@ -72,7 +75,7 @@ public final class Configs {
                     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh);
 
         slaveLiftingConfig
-                    .follow(ElevatorConstants.masterLiftingCANId)
+                    .follow(ElevatorConstants.masterLiftingCANId, true)
                     .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
 
