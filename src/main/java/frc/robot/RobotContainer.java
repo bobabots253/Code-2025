@@ -128,14 +128,13 @@ public class RobotContainer {
   // }
 
    public Command stowElevatorCommand(){
-    return new SequentialCommandGroup(
+    return new ParallelCommandGroup(
           new RunCommand(() -> {
             m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
               m_Effector),
           // new RunCommand(() -> {
           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
           //     m_Effector),
-          new WaitCommand(0.2),
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.STOW);
             }, m_Elevator)

@@ -147,7 +147,11 @@ public void periodic() {
 
     public void setLazyPositionSetpoint(double requestedSetpoint) {
         SmartDashboard.putNumber("Elevator /requestedSetpoint", requestedSetpoint);
-        m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition);
+        if (isWithinExtensionRange()) {
+            m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition);
+        } else {
+            System.out.println("ELEVATOR POSITION OUT OF TOLERANCE - SETPOINT REQUEST");
+        }
         // if (isWithinExtensionRange() && !MathUtil.isNear(18.85, getEncoder(), 0.15)){
         // m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition); //, ClosedLoopSlot.arbFFVolatge, ArbFFUnits.kVoltage
         // } else{
