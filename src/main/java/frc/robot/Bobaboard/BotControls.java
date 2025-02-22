@@ -130,7 +130,7 @@ public class BotControls {
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
         } else{
             if (controlHub.operatorController.L_Bumper.isBeingPressed() && !controlHub.operatorController.R_Bumper.isBeingPressed()) {
-                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.9);
+                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.7);
                 }else if (controlHub.operatorController.R_Bumper.isBeingPressed() && !controlHub.operatorController.L_Bumper.isBeingPressed()) {
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.5);
             }
