@@ -142,14 +142,17 @@ public class RobotContainer {
     }
 
    public Command tierOneElevatorCommand(){
-    return new SequentialCommandGroup(
-          new RunCommand(() -> {
-            m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-              m_Effector),
+    return new ParallelCommandGroup(
+          new SequentialCommandGroup(
+            new WaitCommand(.2),
+            new RunCommand(() -> {
+              m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);
+            }, m_Effector)
+          ),
           // new RunCommand(() -> {
           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
           //     m_Effector),
-          new WaitCommand(0.2),
+          
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.L1Score);
             }, m_Elevator)
@@ -157,7 +160,7 @@ public class RobotContainer {
     }
 
    public Command tierTwoElevatorCommand(){
-    return new SequentialCommandGroup(
+    return new ParallelCommandGroup(
           // new RunCommand(() -> {
           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
           //     m_Effector),
@@ -167,19 +170,30 @@ public class RobotContainer {
           // new WaitCommand(0.2),
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
-            }, m_Elevator)
+            }, m_Elevator),
+          new SequentialCommandGroup(
+            new WaitCommand(.2),
+            new RunCommand(() -> {
+            m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);
+            }, m_Effector)
+          )
+
         );
     }
 
     public Command tierThreeElevatorCommand(){
-      return new SequentialCommandGroup(
-            new RunCommand(() -> {
-              m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-                m_Effector),
+      return new ParallelCommandGroup(
+            
             // new RunCommand(() -> {
             //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
             //     m_Effector),
-            new WaitCommand(0.2),
+            new SequentialCommandGroup(
+              new WaitCommand(0.2),
+              new RunCommand(() -> {
+              m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
+                m_Effector)
+            ),
+
             new RunCommand(() -> {
               m_Elevator.setLazyElevatorState(States.ElevatorPos.L3Score);
               }, m_Elevator)
