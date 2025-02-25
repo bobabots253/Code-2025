@@ -1,10 +1,10 @@
-package frc.robot.Autonomous;
+package frc.robot.Autonomous.DefaultCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.RobotContainer;
 
-public final class DriveTimeCommand{
+public final class DoNothingCommand{
 
 public static Command driveTime (double xspeed, double ySpeed, double rot, double sec){
     return new RunCommand(
@@ -18,8 +18,7 @@ public static Command driveTime (double xspeed, double ySpeed, double rot, doubl
       ).withTimeout(sec);
   }
 
-public static Command TestAuto(){
+public static Command NoAuto(){
     return driveTime(0, 0, 0, 0);
 }
-
 }

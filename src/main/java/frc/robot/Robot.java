@@ -48,7 +48,6 @@ import frc.robot.Autonomous.AutoModeManager.DesiredMode;
 import frc.robot.Bobaboard.BotControls;
 import frc.robot.Bobaboard.ControlHub;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.utils.CoordinateSpace;
 
 /*Important Notes for 2025:
 22 April Tags - Diff Angles (not all @ 90*). - center tags @ 30* down
@@ -123,6 +122,7 @@ public class Robot extends TimedRobot {
     URCL.start();
     DriverStation.startDataLog(DataLogManager.getLog());
     mDriveControls.PutControllerOption();
+    m_robotContainer.m_robotDrive.zeroHeading();
   } 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics

@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.lang.reflect.Array;
 
 import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -39,6 +40,7 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -46,9 +48,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.limelights.VisionSubsystem;
 import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
 import frc.utils.SwerveUtils;
+import edu.wpi.first.wpilibj.SPI;
 
 public class DriveSubsystem extends SubsystemBase {
   private static DriveSubsystem instance;
@@ -75,7 +79,7 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  private final static AHRS Nav_x = new AHRS(AHRS.NavXComType.kMXP_SPI);
+  private final static AHRS Nav_x = new AHRS(NavXComType.kMXP_SPI);
   public final boolean fieldFlipped = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
   // Locations for the swerve drive modules relative to the robot center.
   // Distance in meters
@@ -94,11 +98,17 @@ public class DriveSubsystem extends SubsystemBase {
   private double m_currentTranslationDir = 0.0;
   private double m_currentTranslationMag = 0.0;
 
+  //Basic Vision Measurement Constants
+  double yaw;
+  double NTlatency = 0.003;
+
   private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
   final Field2d m_fieldGyro = new Field2d();
   final Field2d m_fieldVision = new Field2d();
+  final Field2d m_refinedVision = new Field2d();
+  public static Pose2d refinedVisionPose;
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -112,6 +122,16 @@ public class DriveSubsystem extends SubsystemBase {
       });
       
       SwerveDrivePoseEstimator odometryVision = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
+      (fieldFlipped ? getInitialFlippeRotation2d(): getRotation2DHeading()), new SwerveModulePosition[] {
+              m_frontLeft.getPosition(),
+              m_frontRight.getPosition(),
+              m_rearLeft.getPosition(),
+              m_rearRight.getPosition()
+      }, new Pose2d(),
+      VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(5)),
+      VecBuilder.fill(0.75, 0.75, 99999999));
+
+      public SwerveDrivePoseEstimator refinedodometryVision = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
       (fieldFlipped ? getInitialFlippeRotation2d(): getRotation2DHeading()), new SwerveModulePosition[] {
               m_frontLeft.getPosition(),
               m_frontRight.getPosition(),
@@ -162,6 +182,8 @@ public class DriveSubsystem extends SubsystemBase {
 }
   @Override
   public void periodic() {
+    
+    SmartDashboard.putBoolean("NavX Exists", Nav_x.isConnected());
     // Update the odometry in the periodic block
     //Main Odometry Update
     m_odometry.update(
@@ -181,24 +203,41 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
       });
+    
+      refinedodometryVision.update(
+        Rotation2d.fromDegrees(-Nav_x.getAngle()),
+        new SwerveModulePosition[] {
+              m_frontLeft.getPosition(),
+              m_frontRight.getPosition(),
+              m_rearLeft.getPosition(),
+              m_rearRight.getPosition()
+        });
 
-    SmartDashboard.putData("Field Gyro", m_fieldGyro);
-    SmartDashboard.putData("Field Vision", m_fieldVision);
-    m_fieldGyro.setRobotPose(m_odometry.getPoseMeters());
-    // m_fieldVision.setRobotPose(
-    //   odometryVision.getEstimatedPosition().getX(),
-    //   odometryVision.getEstimatedPosition().getY(),
-    //   (Nav_x.getRotation2d())
-    // );
-    m_fieldVision.setRobotPose(odometryVision.getEstimatedPosition());
+    //VisionSubsystem.notifierLoop();
+    //VisionSubsystem.getInstance().notifierLoop();
+    
+    /*Refined Vision Pose Estimator */
+    // refinedVisionPose = VisionSubsystem.getInstance().getEstimatedPose();
+    // try{
+    //   refinedodometryVision.addVisionMeasurement(refinedVisionPose, Timer.getFPGATimestamp() - NTlatency);
+    // } catch ( Exception err){
+    //   System.out.println("Couldn't Return Refined Vision");
+    // }
 
+    /*Basic Vision Pose Estimator */
     try {
-      addVisionMeasurement("limelight");
+      addBasicVisionMeasurement("limelight");
     }
     catch(Exception erException) {
       System.out.println("No Valid Limelight Targets");
     }
 
+    SmartDashboard.putData("Field Gyro", m_fieldGyro);
+    SmartDashboard.putData("Field Vision", m_fieldVision);
+    SmartDashboard.putData("Refined Vision", m_refinedVision);
+    m_fieldGyro.setRobotPose(m_odometry.getPoseMeters());
+    m_fieldVision.setRobotPose(odometryVision.getEstimatedPosition());
+    m_refinedVision.setRobotPose(refinedodometryVision.getEstimatedPosition());
 
     double[] driveMotorCurrent = {
       m_frontLeft.getDriveCurrent(), m_frontRight.getDriveCurrent(),
@@ -218,15 +257,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
   
-  double yaw;
-  double NTlatency = 0.003;
-  public void addVisionMeasurement(String limelight) {
-    // var isRedalliance = DriverStation.getAlliance();
-    //     if (isRedalliance.isPresent() && isRedalliance.get() == DriverStation.Alliance.Red) {
-    //       yaw = -(Nav_x.getRotation2d().getDegrees()); // -180 degrees?
-    //     } else {
-    //       yaw = -(Nav_x.getRotation2d().getDegrees());
-    //     }
+  public void addBasicVisionMeasurement(String limelight) {
       LimelightHelpers.SetRobotOrientation(limelight, getHeading(), 0,
               0, 0, 0, 0);
       if (LimelightHelpers.getTV(limelight)) {
@@ -256,7 +287,9 @@ public class DriveSubsystem extends SubsystemBase {
     return m_kinematics.toChassisSpeeds(m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState());
   }
 
-
+  public Pose2d getRefinedPoseVision(){
+    return refinedVisionPose;
+  }
 
   //Drive !ROBOT! Centric for Auto
   public void driveRobotRelative(ChassisSpeeds speeds) {
@@ -398,7 +431,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /** Zeroes the heading of the robot. */
-  public static void zeroHeading() {
+  public void zeroHeading() {
     Nav_x.reset();
   }
 

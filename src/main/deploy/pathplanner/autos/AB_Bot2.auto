@@ -7,6 +7,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "AB_BotStart"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "AB_BotL2"
           }
         }

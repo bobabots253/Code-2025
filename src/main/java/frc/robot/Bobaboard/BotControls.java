@@ -1,10 +1,13 @@
 package frc.robot.Bobaboard;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
+import frc.robot.Autonomous.DefaultCommands.StandStillCommand;
 //import frc.robot.subsystems.TestSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -15,6 +18,8 @@ public class BotControls {
     ControlHub controlHub = ControlHub.getInstance();
     //TestSubsystem m_TestSubsystem = TestSubsystem.getInstance();
     boolean interruptedPPLib = false;
+    boolean interruptedElevatorForward = false;
+    boolean interruptedElevatorBackward = false;
 
     final static SendableChooser<Boolean> ControllerMode = new SendableChooser<>();
     public boolean OneControllerQuery = true;
@@ -36,75 +41,133 @@ public class BotControls {
     }
 
     public final void o_reportBotControlData(){
-        SmartDashboard.putBoolean("m_ControllerSelected", OneControllerQuery);
-        SmartDashboard.putBoolean("Driver A Button", controlHub.driverController.A_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Driver B Button", controlHub.driverController.X_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Driver X Button", controlHub.driverController.X_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Driver Y Button", controlHub.driverController.Y_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Operator X Button", controlHub.operatorController.X_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Operator Y Button", controlHub.operatorController.Y_Button.isBeingPressed());
-        SmartDashboard.putBoolean("Driver LBumper", controlHub.driverController.L_Bumper.isBeingPressed());
-        SmartDashboard.putBoolean("Driver RBumper", controlHub.driverController.R_Bumper.isBeingPressed());
+        SmartDashboard.putBoolean("BotCTRL/isDebugMode:", OneControllerQuery);
+        SmartDashboard.putBoolean("DRV/A_Button", controlHub.driverController.A_Button.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/B_Button", controlHub.driverController.B_Button.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/X_Button", controlHub.driverController.X_Button.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/Y_Button", controlHub.driverController.Y_Button.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/A_Button", controlHub.operatorController.A_Button.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/B_Button", controlHub.operatorController.B_Button.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/X_Button", controlHub.operatorController.X_Button.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/Y_Button", controlHub.operatorController.Y_Button.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/LBumper", controlHub.driverController.L_Bumper.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/RBumper", controlHub.driverController.R_Bumper.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/LBumper", controlHub.operatorController.L_Bumper.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/RBumper", controlHub.operatorController.R_Bumper.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/LTrigger", controlHub.driverController.L_Trigger.isBeingPressed());
+        SmartDashboard.putBoolean("DRV/RTrigger", controlHub.driverController.R_Trigger.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/LTrigger", controlHub.operatorController.L_Trigger.isBeingPressed());
+        SmartDashboard.putBoolean("OPR/RTrigger", controlHub.operatorController.R_Trigger.isBeingPressed());
     }
 
     public void RunRobot(){
     if (OneControllerQuery == true){
-            if (controlHub.driverController.A_Button.wasActivated()) {
-                System.out.println("A Button Detected");
-                //rContainer.Score().schedule();
+            if (controlHub.driverController.L_Bumper.wasActivated()) {
+                rContainer.m_robotDrive.zeroHeading();
+            }
+            
+            if(controlHub.driverController.A_Button.wasReleased() || controlHub.driverController.B_Button.wasReleased()
+            || controlHub.driverController.A_Button.isNotBeingPressed() || controlHub.driverController.B_Button.isNotBeingPressed()){
+                rContainer.m_Elevator.setSafePercentageOpenLoop(0.05);
             }
 
-            if (controlHub.driverController.X_Button.wasActivated()){
-                interruptedPPLib = !interruptedPPLib;
-                RobotContainer.PathFindAmp(interruptedPPLib).schedule();
-            }
-                // if(interruptedPPLib == false){
-                //     interruptedPPLib = true;
-                //     try {RobotContainer.PathFindAmp(interruptedPPLib);}
-                //         catch (Exception e){
-                //             System.out.println("Failed To Start PPLib Command");
-                //         }
-                //     interruptedPPLib = false;
-                // }else {interruptedPPLib = false;
-                //     RobotContainer.PathFindAmp(false).end(true);;
-                // }            }
-            
-                if (controlHub.driverController.Y_Button.wasActivated()){
-                //rContainer.Score().schedule();
+            if (controlHub.driverController.A_Button.isBeingPressed() || controlHub.driverController.B_Button.isBeingPressed()) {
+                if(controlHub.driverController.A_Button.isBeingPressed() && !controlHub.driverController.B_Button.isBeingPressed()){
+                    rContainer.m_Elevator.setSafePercentageOpenLoop(-0.075);
+                } 
+                else if (controlHub.driverController.B_Button.isBeingPressed() && !controlHub.driverController.A_Button.isBeingPressed()){
+                    rContainer.m_Elevator.setSafePercentageOpenLoop(0.15);
                 }
-            
-            if (controlHub.driverController.L_Bumper.isBeingPressed()){
-            }
-    
-            if (controlHub.driverController.R_Bumper.isBeingPressed()){
-                //rContainer.IntakeNoteStow().schedule();
-                //rContainer.RunNegative();
             }
 
-            // if(controlHub.driverController.POV0.isBeingPressed()){
-            //     rContainer.RunArmPositive();
-            // }
-            // if (controlHub.driverController.POV180.isBeingPressed()){
-            //     rContainer.RunArmNegative();
-            // }
-            
+            if(controlHub.driverController.Y_Button.wasReleased() || controlHub.driverController.X_Button.wasReleased()
+                || controlHub.driverController.Y_Button.isNotBeingPressed() || controlHub.driverController.X_Button.isNotBeingPressed()){
+                    rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
+                }
+            if (controlHub.driverController.X_Button.isBeingPressed() && !controlHub.driverController.Y_Button.isBeingPressed()){
+                    rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.9);
+                } else if (controlHub.driverController.Y_Button.isBeingPressed() && !controlHub.driverController.X_Button.isBeingPressed()){
+                    rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(-0.9);
+            }
+
         }else{
-            // if (controlHub.operatorController.L_Bumper.wasActivated()) {
-            //     rContainer.FallOffChain().schedule();
-            // }else if (controlHub.operatorController.R_Bumper.wasActivated()){
-            //     rContainer.ClimbChain().schedule();
-            // }else if (controlHub.operatorController.X_Button.wasActivated()){
-            //     rContainer.StowArm().schedule();
-            // }else if (controlHub.operatorController.Y_Button.wasActivated()){
-            //     rContainer.ScoreNote().schedule();
-            // }else if (controlHub.driverController.L_Bumper.wasActivated()){
-            //     rContainer.IntakeNotePrep().schedule();
-            // }else if (controlHub.driverController.R_Bumper.wasActivated()){
-            //     rContainer.IntakeNoteStow().schedule();
+// 2 Controller Here
+        
+        if (controlHub.driverController.Y_Button.wasActivated()) {
+                rContainer.m_robotDrive.zeroHeading();
+            }
+            
+            // if(controlHub.driverController.A_Button.wasReleased() || controlHub.driverController.B_Button.wasReleased()
+            // || controlHub.driverController.A_Button.isNotBeingPressed() || controlHub.driverController.B_Button.isNotBeingPressed()){
+            //     rContainer.m_Elevator.setSafePercentageOpenLoop(0.05);
             // }
+
+            // if (controlHub.driverController.A_Button.isBeingPressed() || controlHub.driverController.B_Button.isBeingPressed()) {
+            //     if(controlHub.driverController.A_Button.isBeingPressed() && !controlHub.driverController.B_Button.isBeingPressed()){
+            //         rContainer.m_Elevator.setSafePercentageOpenLoop(-0.075);
+            //     } 
+            //     else if (controlHub.driverController.B_Button.isBeingPressed() && !controlHub.driverController.A_Button.isBeingPressed()){
+            //         rContainer.m_Elevator.setSafePercentageOpenLoop(0.15);
+            //     }
+            // }
+
+            // if(controlHub.driverController.Y_Button.wasReleased() || controlHub.driverController.X_Button.wasReleased()
+            //     || controlHub.driverController.Y_Button.isNotBeingPressed() || controlHub.driverController.X_Button.isNotBeingPressed()){
+            //         rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
+            //     }
+            // if (controlHub.driverController.X_Button.isBeingPressed() && !controlHub.driverController.Y_Button.isBeingPressed()){
+            //         rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.35);
+            //     } else if (controlHub.driverController.Y_Button.isBeingPressed() && !controlHub.driverController.X_Button.isBeingPressed()){
+            //         rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(-0.35);
+            // }
+
+
+            // Operator Side
+            //
+
+        if(controlHub.operatorController.L_Bumper.wasReleased() || controlHub.operatorController.R_Bumper.wasReleased()
+                && controlHub.operatorController.L_Bumper.isNotBeingPressed() && controlHub.operatorController.R_Bumper.isNotBeingPressed()){
+                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
+        } else{
+            if (controlHub.operatorController.L_Bumper.isBeingPressed() && !controlHub.operatorController.R_Bumper.isBeingPressed()) {
+                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.7);
+                }else if (controlHub.operatorController.R_Bumper.isBeingPressed() && !controlHub.operatorController.L_Bumper.isBeingPressed()) {
+                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.5);
+            }
         }
-    }
-    
+
+            if (!controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.X_Button.isBeingPressed() 
+            && !controlHub.operatorController.Y_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()){
+                rContainer.m_Elevator.setSafePercentageOpenLoop(0.0);
+            }else{
+
+            if (controlHub.operatorController.B_Button.wasActivated()){
+                rContainer.stowElevatorCommand().schedule();
+            }else if (controlHub.operatorController.A_Button.wasActivated() && !controlHub.operatorController.B_Button.isBeingPressed()
+                        && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()) {
+                    rContainer.tierOneElevatorCommand().schedule();
+            }else if (controlHub.operatorController.X_Button.wasActivated() && !controlHub.operatorController.A_Button.isBeingPressed()
+                        && !controlHub.operatorController.B_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()){
+                        rContainer.tierTwoElevatorCommand().schedule();
+                        System.out.println("x");
+            }else if (controlHub.operatorController.Y_Button.wasActivated() && !controlHub.operatorController.B_Button.isBeingPressed()
+                        && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.A_Button.isBeingPressed()){
+                    rContainer.tierThreeElevatorCommand().schedule();
+                }
+            }
+
+            // if (controlHub.operatorController.L_Bumper.isBeingPressed()){
+            //     rContainer.intakeCoralCommand().schedule();
+            // }
+            
+            // if (controlHub.operatorController.R_Bumper.isBeingPressed()){
+            //     rContainer.extakeCoralCommand().schedule();
+            // }
 
 
-}
+
+
+        }
+  }
+    } 
+
