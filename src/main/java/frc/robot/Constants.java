@@ -103,7 +103,7 @@ public final class Constants {
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
 
-    public static final double kDrivingP = 0.04; //0.4 is 1/2 speed
+    public static final double kDrivingP = 0.01; //0.4 is 1/2 speed
     public static final double kDrivingI = 0;
     public static final double kDrivingD = 0;
     public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
@@ -168,12 +168,12 @@ public final class Constants {
 
     public static final double idealHomingLinearPosition = 0.000; //revs
     public static final double softZeroLinearPosition = 0.000; //revs
-    public static final double L1Score = 8.430; // 2/21/25
+    public static final double L1Score = 8.470; // 2/24/25
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Elevator 
-    public static final double L2Score = 12.857; // 2/21/25
+    public static final double L2Score = 12.760; // 2/24/25
     public static final double L2Algae = 0.120;
     public static final double L2Misc = 0.120;
-    public static final double L3Score = 19.143; // 2/21/25
+    public static final double L3Score = 18.75; // 2/24/25 18.9
     public static final double L3Algae = 0.120;
     public static final double L3Misc = 0.120;
     public static final double pos1 = 0.120; 
@@ -186,9 +186,9 @@ public final class Constants {
     public static final double pidOutputLow = -1; //max output is capped @ 1
     public static final double pidOutputHigh = 1;
 
-    public static final double kIncrementalPostionP = 0.1; //5:1
-    public static final double kIncrementalPostionI = 0.01; //5:1
-    public static final double kIncrementalPositionD = 0; //5:1
+    public static final double kIncrementalPostionP = 0.008; //5:1 //safe: 0.005;
+    public static final double kIncrementalPostionI = 0.0065; //5:1 //0.001
+    public static final double kIncrementalPositionD = 0.09; //5:1 // 0.05
     public static final double kIncrementalPositionFF = 0.0005; //5:1
 
     //Universal Elevator Current Limits
@@ -198,8 +198,8 @@ public final class Constants {
     //Universal Elevator Output Limits
     public static final double kUniversalPIDOutputLow = -1; //max output is capped @ 1
     public static final double kUniversalPIDOutputHigh = 1;
-    public static final double ELEVATOR_MAX_TRAVEL = 18.50000; //heuristic
-    public static final double ELEVATOR_MIN_TRAVEL = -0.05000; //heuristic
+    public static final double ELEVATOR_MAX_TRAVEL = 19.2000; //heuristic
+    public static final double ELEVATOR_MIN_TRAVEL = -0.075000; //heuristic
     public static final double ELEVATOR_OUTPUT_LOW = -0.75;
     public static final double ELEVATOR_OUTPUT_HIGH = 0.75;
     public static final double arbFFVolatge = 0.05;

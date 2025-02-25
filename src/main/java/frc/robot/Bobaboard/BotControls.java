@@ -62,7 +62,7 @@ public class BotControls {
 
     public void RunRobot(){
     if (OneControllerQuery == true){
-            if (controlHub.driverController.Y_Button.wasActivated()) {
+            if (controlHub.driverController.L_Bumper.wasActivated()) {
                 rContainer.m_robotDrive.zeroHeading();
             }
             
@@ -85,9 +85,9 @@ public class BotControls {
                     rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
                 }
             if (controlHub.driverController.X_Button.isBeingPressed() && !controlHub.driverController.Y_Button.isBeingPressed()){
-                    rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.35);
+                    rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.9);
                 } else if (controlHub.driverController.Y_Button.isBeingPressed() && !controlHub.driverController.X_Button.isBeingPressed()){
-                    rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(-0.35);
+                    rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(-0.9);
             }
 
         }else{
