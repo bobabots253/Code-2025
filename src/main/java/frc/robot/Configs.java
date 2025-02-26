@@ -73,6 +73,10 @@ public final class Configs {
                          ElevatorConstants.kIncrementalPostionI,
                          ElevatorConstants.kIncrementalPositionD)
                     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh);
+        masterLiftingConfig.closedLoop.maxMotion
+                        .maxVelocity(0)
+                        .maxAcceleration(0);
+                        //.allowedClosedLoopError(0);
 
         slaveLiftingConfig
                     .follow(ElevatorConstants.masterLiftingCANId, true)

@@ -4,11 +4,13 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -34,7 +36,8 @@ public static final String KTunable_I = "Tunable_I";
 public static final String KTunable_D = "Tunable_D";
 public int currentIntSetpointElevator;
 private static ElevatorSubsystem instance;
-
+public static ElevatorFeedforward feedForwarding = new ElevatorFeedforward(0, 0, 0, 0);
+public double volting;
 public static ElevatorSubsystem getInstance() {
     if(instance == null) instance = new ElevatorSubsystem();
     return instance;
@@ -59,6 +62,7 @@ private ElevatorSubsystem() {
     slaveHallEffectSensor = new DigitalInput(ElevatorConstants.pivotSlaveHallEffectDIO);
     //Preferences.putDouble(kTunableP , ElevatorConstants.kIncrementalPostionP);
     resetEncoders();
+    volting = feedForwarding.calculateWithVelocities(0.0, 10.0);
 }
 
 @Override
@@ -148,7 +152,8 @@ public void periodic() {
     public void setLazyPositionSetpoint(double requestedSetpoint) {
         SmartDashboard.putNumber("Elevator /requestedSetpoint", requestedSetpoint);
         if (isWithinExtensionRange()) {
-            m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition);
+            m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kMAXMotionPositionControl);
+            //m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition, ClosedLoopSlot.kSlot0, volting);
         } else {
             System.out.println("ELEVATOR POSITION OUT OF TOLERANCE - SETPOINT REQUEST");
         }
