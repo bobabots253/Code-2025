@@ -212,8 +212,8 @@ public final class Constants {
     public static final int algaeRollerCANId = 13;
 
     //EF DIO Port
-    public static final int masterHallEffectSensor = 2;
-    public static final int slaveHallEffectSensor = 3;
+    public static final int frontBeamBreakSensor = 2;
+    public static final int backBeamBreakSensor = 3;
 
     //INTAKE/ROLLERS
     public static final double idealHoldingIntakeVelocity = 0.000; //RPM

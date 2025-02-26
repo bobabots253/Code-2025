@@ -112,6 +112,14 @@ public void periodic() {
         m_LiftingEncoder.setPosition(0.0);
     }
 
+    public boolean getPrimarySensor(){
+        return masterHallEffectSensor.get();
+    }
+
+    public boolean getSecondarySensor(){
+        return slaveHallEffectSensor.get();
+    }
+
     public boolean isWithinExtensionRange(){
         if (m_LiftingEncoder.getPosition() < ElevatorConstants.ELEVATOR_MAX_TRAVEL 
             && m_LiftingEncoder.getPosition() > ElevatorConstants.ELEVATOR_MIN_TRAVEL){
@@ -176,7 +184,6 @@ public void periodic() {
                 break;
             case L2Score:
                 setLazyPositionSetpoint(ElevatorConstants.L2Score);
-                System.out.println("level@");
                 break;
             case L3Score:
                 setLazyPositionSetpoint(ElevatorConstants.L3Score);

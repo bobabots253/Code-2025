@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.ejml.data.DGrowArray;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -9,6 +11,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -29,6 +32,8 @@ private final AbsoluteEncoder m_pivotEncoder;
 private final SparkClosedLoopController m_pivotPIDController;
 private final SparkClosedLoopController m_intakeRollerPIDController;
 private final SparkClosedLoopController m_algaeRollerPIDController;
+private final DigitalInput frontIntakeBeamBreak;
+private final DigitalInput backIntakeBeamBreak;
 
 private static EndEffectorSubsystem instance;
 
@@ -56,6 +61,9 @@ private EndEffectorSubsystem(){
     PersistMode.kPersistParameters);
     m_algaeRollerSparkMax.configure(Configs.EndEffectorSubsystemConfig.algaeRollerConfig, ResetMode.kResetSafeParameters,
     PersistMode.kPersistParameters);
+
+    frontIntakeBeamBreak = new DigitalInput(EndEffectorConstants.frontBeamBreakSensor);
+    backIntakeBeamBreak = new DigitalInput(EndEffectorConstants.backBeamBreakSensor);
 }
 
     public void setPivotLazyPercentageOpenLoop(double value) {
@@ -90,6 +98,22 @@ private EndEffectorSubsystem(){
 
     public double getPivotAbsoluteEncoder(){
         return m_pivotEncoder.getPosition();
+    }
+
+    public boolean isFrontBeamBreakBlocked(){
+        return frontIntakeBeamBreak.get();
+    }
+
+    public boolean isBackBeamBreakBlocked(){
+        return backIntakeBeamBreak.get();
+    }
+    
+    public boolean isCoralInsideIntake(){
+        if (isFrontBeamBreakBlocked() && isBackBeamBreakBlocked() != isBackBeamBreakBlocked()){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public boolean isWithinPivotRange(){
