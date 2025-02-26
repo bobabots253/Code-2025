@@ -67,16 +67,16 @@ public final class Configs {
                     .inverted(false)
                     .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
-        masterLiftingConfig.closedLoop
+        masterLiftingConfig
+                .closedLoop
                     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                     .pid(ElevatorConstants.kIncrementalPostionP,
                          ElevatorConstants.kIncrementalPostionI,
                          ElevatorConstants.kIncrementalPositionD)
-                    .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh);
-        masterLiftingConfig.closedLoop.maxMotion
-                        .maxVelocity(0)
-                        .maxAcceleration(0);
-                        //.allowedClosedLoopError(0);
+                    .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh)
+                .maxMotion
+                    .maxVelocity(4200)
+                    .maxAcceleration(6000);
 
         slaveLiftingConfig
                     .follow(ElevatorConstants.masterLiftingCANId, true)
