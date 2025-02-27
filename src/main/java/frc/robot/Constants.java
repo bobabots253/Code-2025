@@ -173,7 +173,7 @@ public final class Constants {
     public static final double L2Score = 13.760; // 2/24/25 //works
     public static final double L2Algae = 0.120;
     public static final double L2Misc = 0.120;
-    public static final double L3Score = 18.85; // 2/24/25 18.9
+    public static final double L3Score = 18.9; // 2/24/25 18.9
     public static final double L3Algae = 0.120;
     public static final double L3Misc = 0.120;
     public static final double pos1 = 0.120; 
@@ -186,7 +186,7 @@ public final class Constants {
     public static final double pidOutputLow = -1; //max output is capped @ 1
     public static final double pidOutputHigh = 1;
 
-    public static final double kIncrementalPostionP = 0.1; //5:1 //safe: 0.005; //008 //0.25
+    public static final double kIncrementalPostionP = 0.25; //5:1 //safe: 0.005; //008 //0.25
     public static final double kIncrementalPostionI = 0.000; //5:1 //0.001 //0065
     public static final double kIncrementalPositionD = 0.0; //5:1 // 0.05 //09 //3.2
     public static final double kIncrementalPositionFF = 0.75; //5:1 /0.75 -locked in
