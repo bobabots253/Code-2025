@@ -76,8 +76,8 @@ public final class Configs {
                     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh)
                     .velocityFF(0) //1/ElevatorConstants.kV
                 .maxMotion
-                    .maxVelocity(4200) //rpm
-                    .maxAcceleration(6000) //rpm
+                    .maxVelocity(2000) //rpm
+                    .maxAcceleration(2000) //rpm
                     .allowedClosedLoopError(0.05);
 
         slaveLiftingConfig

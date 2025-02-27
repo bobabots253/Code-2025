@@ -93,9 +93,9 @@ public class BotControls {
         }else{
 // 2 Controller Here
         
-        if (controlHub.driverController.Y_Button.wasActivated()) {
-                rContainer.m_robotDrive.zeroHeading();
-            }
+        // if (controlHub.driverController.Y_Button.wasActivated()) {
+        //         rContainer.m_robotDrive.zeroHeading();
+        //     }
             
             // if(controlHub.driverController.A_Button.wasReleased() || controlHub.driverController.B_Button.wasReleased()
             // || controlHub.driverController.A_Button.isNotBeingPressed() || controlHub.driverController.B_Button.isNotBeingPressed()){

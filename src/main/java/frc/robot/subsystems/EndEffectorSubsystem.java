@@ -170,7 +170,6 @@ private EndEffectorSubsystem(){
         switch (requestedState) {
             case STOW:
                 setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
-                setIntakeLazyPercentageOpenLoop(0.00);
                 setAlgaeLazyPercentageOpenLoop(0.0);
                 break;
             case L1Score:

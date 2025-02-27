@@ -201,8 +201,9 @@ public void periodic() {
             case L2Score:
                 setLazyPositionSetpoint(ElevatorConstants.L2Score);
                 break;
-            case L3Score:
+            case L3SCORE:
                 setLazyPositionSetpoint(ElevatorConstants.L3Score);
+                break;
             default:
                 setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
                 break;

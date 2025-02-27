@@ -167,13 +167,13 @@ public final class Constants {
     public static final int pivotSlaveHallEffectDIO = 1;
 
     public static final double idealHomingLinearPosition = 0.000; //revs
-    public static final double softZeroLinearPosition = 5.000; //revs
-    public static final double L1Score = 8.470; // 2/24/25
+    public static final double softZeroLinearPosition = 0.1200; //revs
+    public static final double L1Score = 9.470; // 2/24/25
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Elevator 
-    public static final double L2Score = 12.760; // 2/24/25
+    public static final double L2Score = 13.760; // 2/24/25 //works
     public static final double L2Algae = 0.120;
     public static final double L2Misc = 0.120;
-    public static final double L3Score = 18.75; // 2/24/25 18.9
+    public static final double L3Score = 18.85; // 2/24/25 18.9
     public static final double L3Algae = 0.120;
     public static final double L3Misc = 0.120;
     public static final double pos1 = 0.120; 
@@ -186,9 +186,9 @@ public final class Constants {
     public static final double pidOutputLow = -1; //max output is capped @ 1
     public static final double pidOutputHigh = 1;
 
-    public static final double kIncrementalPostionP = 1.5; //5:1 //safe: 0.005; //008
+    public static final double kIncrementalPostionP = 0.1; //5:1 //safe: 0.005; //008 //0.25
     public static final double kIncrementalPostionI = 0.000; //5:1 //0.001 //0065
-    public static final double kIncrementalPositionD = 1.25; //5:1 // 0.05 //09
+    public static final double kIncrementalPositionD = 0.0; //5:1 // 0.05 //09 //3.2
     public static final double kIncrementalPositionFF = 0.75; //5:1 /0.75 -locked in
 
 
