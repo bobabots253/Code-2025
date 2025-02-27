@@ -36,7 +36,7 @@ public static final String KTunable_I = "Tunable_I";
 public static final String KTunable_D = "Tunable_D";
 public int currentIntSetpointElevator;
 private static ElevatorSubsystem instance;
-public static ElevatorFeedforward feedForwarding = new ElevatorFeedforward(0, 0, 0, 0);
+public static ElevatorFeedforward feedForwarding = new ElevatorFeedforward(0.01, 0.95, 2.5, 0.12);
 public double volting;
 public static ElevatorSubsystem getInstance() {
     if(instance == null) instance = new ElevatorSubsystem();
@@ -62,7 +62,6 @@ private ElevatorSubsystem() {
     slaveHallEffectSensor = new DigitalInput(ElevatorConstants.pivotSlaveHallEffectDIO);
     //Preferences.putDouble(kTunableP , ElevatorConstants.kIncrementalPostionP);
     resetEncoders();
-    volting = feedForwarding.calculateWithVelocities(0.0, 10.0);
 }
 
 @Override
@@ -73,13 +72,14 @@ public void periodic() {
         System.out.println("Elevator Hitting Code Stop");
         stopElevator();
     }
+
+    SmartDashboard.putNumber("Elevator /elevatorVel",getElevatorVelocity());
     
     SmartDashboard.putNumber("Elevator /relativePosition", m_LiftingEncoder.getPosition());
     SmartDashboard.putNumber("Elevator /masterCurrent", m_masterLiftingSparkMax.getOutputCurrent());
     SmartDashboard.putNumber("Elevator /followerCurrent", m_slaveLiftingSparkMax.getOutputCurrent());
     SmartDashboard.putBoolean("Elevator /withinExtensionRange", isWithinExtensionRange());
     SmartDashboard.putNumber("Elevator /requestedPosition", currentIntSetpointElevator);
-
 }
 
     public void setLazyPercentageOpenLoop(double OpenLoopPercentage) {
@@ -101,6 +101,10 @@ public void periodic() {
                 m_masterLiftingSparkMax.set(-0.05);
                 m_slaveLiftingSparkMax.set(-0.05);
                 }
+            while(MathUtil.isNear(-0.1, getEncoder(), 0.05)){
+                m_masterLiftingSparkMax.set(0.05);
+                m_slaveLiftingSparkMax.set(0.05);
+            }
             }        
         }
 
@@ -123,6 +127,11 @@ public void periodic() {
     public boolean getSecondarySensor(){
         return slaveHallEffectSensor.get();
     }
+
+    public double getElevatorVelocity(){
+        return m_LiftingEncoder.getVelocity();
+    }
+
 
     public boolean isWithinExtensionRange(){
         if (m_LiftingEncoder.getPosition() < ElevatorConstants.ELEVATOR_MAX_TRAVEL 
@@ -160,7 +169,9 @@ public void periodic() {
     public void setLazyPositionSetpoint(double requestedSetpoint) {
         SmartDashboard.putNumber("Elevator /requestedSetpoint", requestedSetpoint);
         if (isWithinExtensionRange()) {
-            m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kMAXMotionPositionControl);
+            m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kMAXMotionPositionControl,
+             ClosedLoopSlot.kSlot0, ElevatorConstants.kIncrementalPositionFF,
+             SparkClosedLoopController.ArbFFUnits.kVoltage);
             //m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition, ClosedLoopSlot.kSlot0, volting);
         } else {
             System.out.println("ELEVATOR POSITION OUT OF TOLERANCE - SETPOINT REQUEST");

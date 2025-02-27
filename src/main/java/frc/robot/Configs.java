@@ -74,15 +74,16 @@ public final class Configs {
                          ElevatorConstants.kIncrementalPostionI,
                          ElevatorConstants.kIncrementalPositionD)
                     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh)
+                    .velocityFF(0) //1/ElevatorConstants.kV
                 .maxMotion
-                    .maxVelocity(4200)
-                    .maxAcceleration(6000);
+                    .maxVelocity(4200) //rpm
+                    .maxAcceleration(6000) //rpm
+                    .allowedClosedLoopError(0.05);
 
         slaveLiftingConfig
                     .follow(ElevatorConstants.masterLiftingCANId, true)
                     .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
-
         masterLiftingCoastModeConfig
                     .idleMode(IdleMode.kCoast)
                     .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);

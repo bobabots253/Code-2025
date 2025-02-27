@@ -167,7 +167,7 @@ public final class Constants {
     public static final int pivotSlaveHallEffectDIO = 1;
 
     public static final double idealHomingLinearPosition = 0.000; //revs
-    public static final double softZeroLinearPosition = 0.000; //revs
+    public static final double softZeroLinearPosition = 5.000; //revs
     public static final double L1Score = 8.470; // 2/24/25
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Elevator 
     public static final double L2Score = 12.760; // 2/24/25
@@ -186,10 +186,11 @@ public final class Constants {
     public static final double pidOutputLow = -1; //max output is capped @ 1
     public static final double pidOutputHigh = 1;
 
-    public static final double kIncrementalPostionP = 0.008; //5:1 //safe: 0.005;
-    public static final double kIncrementalPostionI = 0.0065; //5:1 //0.001
-    public static final double kIncrementalPositionD = 0.09; //5:1 // 0.05
-    public static final double kIncrementalPositionFF = 0.0005; //5:1
+    public static final double kIncrementalPostionP = 1.5; //5:1 //safe: 0.005; //008
+    public static final double kIncrementalPostionI = 0.000; //5:1 //0.001 //0065
+    public static final double kIncrementalPositionD = 1.25; //5:1 // 0.05 //09
+    public static final double kIncrementalPositionFF = 0.75; //5:1 /0.75 -locked in
+
 
     //Universal Elevator Current Limits
     public static final int kUniversalSoftLimit = 40; 
@@ -203,6 +204,7 @@ public final class Constants {
     public static final double ELEVATOR_OUTPUT_LOW = -0.75;
     public static final double ELEVATOR_OUTPUT_HIGH = 0.75;
     public static final double arbFFVolatge = 0.05;
+    public static final double kV = 473;
   }
 
   public static final class EndEffectorConstants {
