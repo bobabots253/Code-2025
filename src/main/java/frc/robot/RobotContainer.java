@@ -202,10 +202,32 @@ public class RobotContainer {
             );
         }
 
-        public Command extakeCoralCommand(){
+        public Command hardExtakeCoralCommand(){
           return new SequentialCommandGroup(
                 new InstantCommand(() -> 
                   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.HARD_REMOVE))
+                  // new RunCommand(() -> {
+                  //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+                  //     m_Effector),
+                 
+                );
+            }
+
+          public Command softExtakeCoralCommand(){
+          return new SequentialCommandGroup(
+                new InstantCommand(() -> 
+                  m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SOFT_REMOVE))
+                  // new RunCommand(() -> {
+                  //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+                  //     m_Effector),
+                 
+                );
+            }
+
+          public Command smartIntakeCoralCommand(){
+          return new SequentialCommandGroup(
+                new InstantCommand(() -> 
+                  m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SMART_INTAKE))
                   // new RunCommand(() -> {
                   //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
                   //     m_Effector),

@@ -198,9 +198,16 @@ public void periodic() {
             case FLY_BIRDY_FLY: //Scoring Enum
                 setIntakeLazyPercentageOpenLoop(-0.6);
             case HARD_REMOVE:
-            setIntakeLazyPercentageOpenLoop(0.85);
+            setIntakeLazyPercentageOpenLoop(1.0);
                 break;
-
+            case SMART_INTAKE:
+                if (!isCoralInsideIntake()){
+                    setIntakeLazyPercentageOpenLoop(1.0);
+                }else{
+                    setIntakeLazyPercentageOpenLoop(0);
+                }
+            case SOFT_REMOVE:
+                setIntakeLazyPercentageOpenLoop(0.7);
             default:
                 setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
                 break;

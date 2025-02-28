@@ -130,10 +130,12 @@ public class BotControls {
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
         } else{
             if (controlHub.operatorController.L_Bumper.isBeingPressed() && !controlHub.operatorController.R_Bumper.isBeingPressed()) {
-                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.7);
+                rContainer.softExtakeCoralCommand().schedule();
                 }else if (controlHub.operatorController.R_Bumper.isBeingPressed() && !controlHub.operatorController.L_Bumper.isBeingPressed()) {
-                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
-            }
+                rContainer.hardExtakeCoralCommand().schedule();
+                }else if (controlHub.operatorController.POV90.isBeingPressed()){
+                rContainer.smartIntakeCoralCommand().schedule();
+                }
         }
 
             if (!controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.X_Button.isBeingPressed() 
