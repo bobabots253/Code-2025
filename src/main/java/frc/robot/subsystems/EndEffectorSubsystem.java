@@ -66,6 +66,13 @@ private EndEffectorSubsystem(){
     backIntakeBeamBreak = new DigitalInput(EndEffectorConstants.backBeamBreakSensor);
 }
 
+@Override
+public void periodic() {
+
+    SmartDashboard.putNumber("Algae /relativePosition", m_algaeRollerEncoder.getPosition());
+    SmartDashboard.putNumber("Algae /masterCurrent", m_algaeRollerSparkMax.getOutputCurrent());
+}
+
     public void setPivotLazyPercentageOpenLoop(double value) {
             SmartDashboard.putNumber("Pivot Running Speed", value);
             m_pivotSparkMax.set(value);

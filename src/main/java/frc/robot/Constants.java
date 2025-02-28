@@ -170,10 +170,10 @@ public final class Constants {
     public static final double softZeroLinearPosition = 0.1200; //revs
     public static final double L1Score = 9.470; // 2/24/25
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Elevator 
-    public static final double L2Score = 13.760; // 2/24/25 //works
+    public static final double L2Score = 14.05; // 2/24/25 //works
     public static final double L2Algae = 0.120;
     public static final double L2Misc = 0.120;
-    public static final double L3Score = 18.9; // 2/24/25 18.9
+    public static final double L3Score = 19.585; // 2/24/25 18.9
     public static final double L3Algae = 0.120;
     public static final double L3Misc = 0.120;
     public static final double pos1 = 0.120; 
@@ -199,7 +199,7 @@ public final class Constants {
     //Universal Elevator Output Limits
     public static final double kUniversalPIDOutputLow = -1; //max output is capped @ 1
     public static final double kUniversalPIDOutputHigh = 1;
-    public static final double ELEVATOR_MAX_TRAVEL = 19.2000; //heuristic
+    public static final double ELEVATOR_MAX_TRAVEL = 19.39500; //heuristic
     public static final double ELEVATOR_MIN_TRAVEL = -0.075000; //heuristic
     public static final double ELEVATOR_OUTPUT_LOW = -0.75;
     public static final double ELEVATOR_OUTPUT_HIGH = 0.75;

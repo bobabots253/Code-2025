@@ -62,6 +62,7 @@ private ElevatorSubsystem() {
     slaveHallEffectSensor = new DigitalInput(ElevatorConstants.pivotSlaveHallEffectDIO);
     //Preferences.putDouble(kTunableP , ElevatorConstants.kIncrementalPostionP);
     resetEncoders();
+    // setCoastMode(true);
 }
 
 @Override
@@ -166,9 +167,17 @@ public void periodic() {
         setCoastMode(true);
       }
 
+      public boolean isHomed(){
+        return MathUtil.isNear(ElevatorConstants.softZeroLinearPosition,
+                 m_LiftingEncoder.getPosition(), 0.05);
+      }
+    
     public void setLazyPositionSetpoint(double requestedSetpoint) {
         SmartDashboard.putNumber("Elevator /requestedSetpoint", requestedSetpoint);
         if (isWithinExtensionRange()) {
+            if(isHomed()){
+                m_LiftingPIDController.setIAccum(0);
+            }
             m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kMAXMotionPositionControl,
              ClosedLoopSlot.kSlot0, ElevatorConstants.kIncrementalPositionFF,
              SparkClosedLoopController.ArbFFUnits.kVoltage);
