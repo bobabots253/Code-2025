@@ -69,8 +69,9 @@ private EndEffectorSubsystem(){
 @Override
 public void periodic() {
 
-    SmartDashboard.putNumber("Algae /relativePosition", m_algaeRollerEncoder.getPosition());
+    SmartDashboard.putNumber("Algae /absolutePosition", m_pivotEncoder.getPosition());
     SmartDashboard.putNumber("Algae /masterCurrent", m_algaeRollerSparkMax.getOutputCurrent());
+    SmartDashboard.putBoolean("EndEffector /isIntakedDIO", isCoralInsideIntake());
 }
 
     public void setPivotLazyPercentageOpenLoop(double value) {
@@ -84,7 +85,7 @@ public void periodic() {
     }
 
     public void setSafePercentagePivotOpenLoop(double OpenLoopPercentage){
-        SmartDashboard.putNumber("Elevator / Safe Output Speed (#.##)", OpenLoopPercentage);
+        SmartDashboard.putNumber("Algae / Safe Output Speed (#.##)", OpenLoopPercentage);
         if (isWithinPivotRange() && !MathUtil.isNear(EndEffectorConstants.PIVOT_MAX_TRAVEL, getPivotAbsoluteEncoder(), 0.15)){
             m_pivotSparkMax.set(
                 MathUtil.clamp(OpenLoopPercentage,

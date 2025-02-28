@@ -132,9 +132,9 @@ public class RobotContainer {
           // new RunCommand(() -> {
           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
           //     m_Effector),
-          new RunCommand(() -> {
-            m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-              m_Effector),
+          // new RunCommand(() -> {
+          //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
+          //     m_Effector),
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.STOW);
             }, m_Elevator)
@@ -143,12 +143,12 @@ public class RobotContainer {
 
    public Command tierOneElevatorCommand(){
     return new ParallelCommandGroup(
-          new SequentialCommandGroup(
-            new WaitCommand(.2),
-            new RunCommand(() -> {
-              m_Effector.setLazyEndEffectorState(States.EndEffectorPos.L1Score);
-            }, m_Effector)
-          ),
+          // new SequentialCommandGroup(
+          //   new WaitCommand(.2),
+          //   new RunCommand(() -> {
+          //     m_Effector.setLazyEndEffectorState(States.EndEffectorPos.L1Score);
+          //   }, m_Effector)
+          // ),
           // new RunCommand(() -> {
           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
           //     m_Effector),
@@ -163,26 +163,26 @@ public class RobotContainer {
     return new ParallelCommandGroup(
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
-            }, m_Elevator),
-          new SequentialCommandGroup(
-            new WaitCommand(.2),
-            new RunCommand(() -> {
-            m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);
-            }, m_Effector)
-          )
+            }, m_Elevator));
+          // new SequentialCommandGroup(
+          //   new WaitCommand(.2),
+          //   new RunCommand(() -> {
+          //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);
+          //   }, m_Effector)
+          // )
 
-        );
+        
     }
 
     public Command tierThreeElevatorCommand(){
       return new ParallelCommandGroup(
 
-            new SequentialCommandGroup(
-              new WaitCommand(0.2),
-              new RunCommand(() -> {
-              m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-                m_Effector)
-            ),
+            // new SequentialCommandGroup(
+            //   new WaitCommand(0.2),
+            //   new RunCommand(() -> {
+            //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
+            //     m_Effector)
+            // ),
 
             new RunCommand(() -> {
               m_Elevator.setLazyElevatorState(States.ElevatorPos.L3SCORE);
@@ -234,6 +234,18 @@ public class RobotContainer {
                  
                 );
             }
+
+            // public Command deployAlgaeRollers(){
+            //   return new SequentialCommandGroup(
+            //     new RunCommand(() -> {
+            //       m_Effector.setLazyEndEffectorState(States.EndEffectorPos.DEPLOY);
+            //     }, m_Effector),
+            //     new WaitCommand(.2),
+            //     new RunCommand(() -> {
+            //             m_Effector.setLazyEndEffectorState(States.EndEffectorPos.L1Score);
+            //           }, m_Effector)
+            //     );
+            //   }
 
   // public void permissibleForward(BooleanSupplier permission){
   //   new ConditionalCommand(RunElevatorPositive(), StopElevator(), permission);

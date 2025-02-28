@@ -130,11 +130,9 @@ public class BotControls {
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
         } else{
             if (controlHub.operatorController.L_Bumper.isBeingPressed() && !controlHub.operatorController.R_Bumper.isBeingPressed()) {
-                rContainer.softExtakeCoralCommand().schedule();
+                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.45);
                 }else if (controlHub.operatorController.R_Bumper.isBeingPressed() && !controlHub.operatorController.L_Bumper.isBeingPressed()) {
-                rContainer.hardExtakeCoralCommand().schedule();
-                }else if (controlHub.operatorController.POV90.isBeingPressed()){
-                rContainer.smartIntakeCoralCommand().schedule();
+                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
                 }
         }
 
@@ -156,7 +154,20 @@ public class BotControls {
                     rContainer.tierThreeElevatorCommand().schedule();
                 }
             }
+
+            // if (!controlHub.operatorController.POV0.isBeingPressed()){
+            //     rContainer.m_Effector.
+            // }else{
+
+            // if (controlHub.operatorController.POV0.wasActivated()){
+            //         rContainer.stowElevatorCommand().schedule();
+            // }else if (controlHub.operatorController.POV90.wasActivated() && !controlHub.operatorController.B_Button.isBeingPressed()
+            //             && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()) {
+            //         rContainer.tierOneElevatorCommand().schedule();
+            // }
         }
   }
     } 
+
+
 

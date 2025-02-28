@@ -170,10 +170,10 @@ public final class Constants {
     public static final double softZeroLinearPosition = 0.1200; //revs
     public static final double L1Score = 9.470; // 2/24/25
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Elevator 
-    public static final double L2Score = 14.05; // 2/24/25 //works
+    public static final double L2Score = 13.35; // 2/24/25 //works
     public static final double L2Algae = 0.120;
     public static final double L2Misc = 0.120;
-    public static final double L3Score = 19.585; // 2/24/25 18.9
+    public static final double L3Score = 19.38; // 2/24/25 18.9
     public static final double L3Algae = 0.120;
     public static final double L3Misc = 0.120;
     public static final double pos1 = 0.120; 
@@ -249,7 +249,7 @@ public final class Constants {
     public static final double Test1 = 0.120; //degrees
     public static final double Test2 = 0.120;
     public static final double Test3 = 0.120;
-    public static final double kPivotAbsolutePositionP = 0.05; //25:1
+    public static final double kPivotAbsolutePositionP = 0.1; //25:1
     public static final double kPivotAbsolutePositionI = 0.0; 
     public static final double kPivotAbsolutePositionD = 0.0005; 
     public static final double kPivotAbsolutePositionFF = 0.0005; 
