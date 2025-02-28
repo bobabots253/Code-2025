@@ -129,12 +129,12 @@ public class RobotContainer {
 
    public Command stowElevatorCommand(){
     return new ParallelCommandGroup(
-          new RunCommand(() -> {
-            m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-              m_Effector),
           // new RunCommand(() -> {
           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
           //     m_Effector),
+          new RunCommand(() -> {
+            m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
+              m_Effector),
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.STOW);
             }, m_Elevator)
@@ -185,7 +185,7 @@ public class RobotContainer {
             ),
 
             new RunCommand(() -> {
-              m_Elevator.setLazyElevatorState(States.ElevatorPos.L3Score);
+              m_Elevator.setLazyElevatorState(States.ElevatorPos.L3SCORE);
               }, m_Elevator)
           );
       }

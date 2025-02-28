@@ -167,13 +167,13 @@ public final class Constants {
     public static final int pivotSlaveHallEffectDIO = 1;
 
     public static final double idealHomingLinearPosition = 0.000; //revs
-    public static final double softZeroLinearPosition = 0.000; //revs
-    public static final double L1Score = 8.470; // 2/24/25
+    public static final double softZeroLinearPosition = 0.1200; //revs
+    public static final double L1Score = 9.470; // 2/24/25
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Elevator 
-    public static final double L2Score = 12.760; // 2/24/25
+    public static final double L2Score = 14.05; // 2/24/25 //works
     public static final double L2Algae = 0.120;
     public static final double L2Misc = 0.120;
-    public static final double L3Score = 18.75; // 2/24/25 18.9
+    public static final double L3Score = 19.585; // 2/24/25 18.9
     public static final double L3Algae = 0.120;
     public static final double L3Misc = 0.120;
     public static final double pos1 = 0.120; 
@@ -186,10 +186,11 @@ public final class Constants {
     public static final double pidOutputLow = -1; //max output is capped @ 1
     public static final double pidOutputHigh = 1;
 
-    public static final double kIncrementalPostionP = 0.008; //5:1 //safe: 0.005;
-    public static final double kIncrementalPostionI = 0.0065; //5:1 //0.001
-    public static final double kIncrementalPositionD = 0.09; //5:1 // 0.05
-    public static final double kIncrementalPositionFF = 0.0005; //5:1
+    public static final double kIncrementalPostionP = 0.25; //5:1 //safe: 0.005; //008 //0.25
+    public static final double kIncrementalPostionI = 0.000; //5:1 //0.001 //0065
+    public static final double kIncrementalPositionD = 0.0; //5:1 // 0.05 //09 //3.2
+    public static final double kIncrementalPositionFF = 0.75; //5:1 /0.75 -locked in
+
 
     //Universal Elevator Current Limits
     public static final int kUniversalSoftLimit = 40; 
@@ -198,11 +199,12 @@ public final class Constants {
     //Universal Elevator Output Limits
     public static final double kUniversalPIDOutputLow = -1; //max output is capped @ 1
     public static final double kUniversalPIDOutputHigh = 1;
-    public static final double ELEVATOR_MAX_TRAVEL = 19.2000; //heuristic
+    public static final double ELEVATOR_MAX_TRAVEL = 19.39500; //heuristic
     public static final double ELEVATOR_MIN_TRAVEL = -0.075000; //heuristic
     public static final double ELEVATOR_OUTPUT_LOW = -0.75;
     public static final double ELEVATOR_OUTPUT_HIGH = 0.75;
     public static final double arbFFVolatge = 0.05;
+    public static final double kV = 473;
   }
 
   public static final class EndEffectorConstants {
@@ -212,8 +214,8 @@ public final class Constants {
     public static final int algaeRollerCANId = 13;
 
     //EF DIO Port
-    public static final int masterHallEffectSensor = 2;
-    public static final int slaveHallEffectSensor = 3;
+    public static final int frontBeamBreakSensor = 2;
+    public static final int backBeamBreakSensor = 3;
 
     //INTAKE/ROLLERS
     public static final double idealHoldingIntakeVelocity = 0.000; //RPM
