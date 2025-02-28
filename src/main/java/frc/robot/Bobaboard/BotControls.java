@@ -132,7 +132,7 @@ public class BotControls {
             if (controlHub.operatorController.L_Bumper.isBeingPressed() && !controlHub.operatorController.R_Bumper.isBeingPressed()) {
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.7);
                 }else if (controlHub.operatorController.R_Bumper.isBeingPressed() && !controlHub.operatorController.L_Bumper.isBeingPressed()) {
-                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.5);
+                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
             }
         }
 
@@ -142,31 +142,18 @@ public class BotControls {
             }else{
 
             if (controlHub.operatorController.B_Button.wasActivated()){
-                rContainer.stowElevatorCommand().schedule();
+                    rContainer.stowElevatorCommand().schedule();
             }else if (controlHub.operatorController.A_Button.wasActivated() && !controlHub.operatorController.B_Button.isBeingPressed()
                         && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()) {
                     rContainer.tierOneElevatorCommand().schedule();
             }else if (controlHub.operatorController.X_Button.wasActivated() && !controlHub.operatorController.A_Button.isBeingPressed()
                         && !controlHub.operatorController.B_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()){
-                        rContainer.tierTwoElevatorCommand().schedule();
-                        System.out.println("x");
+                    rContainer.tierTwoElevatorCommand().schedule();
             }else if (controlHub.operatorController.Y_Button.wasActivated() && !controlHub.operatorController.B_Button.isBeingPressed()
                         && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.A_Button.isBeingPressed()){
                     rContainer.tierThreeElevatorCommand().schedule();
                 }
             }
-
-            // if (controlHub.operatorController.L_Bumper.isBeingPressed()){
-            //     rContainer.intakeCoralCommand().schedule();
-            // }
-            
-            // if (controlHub.operatorController.R_Bumper.isBeingPressed()){
-            //     rContainer.extakeCoralCommand().schedule();
-            // }
-
-
-
-
         }
   }
     } 
