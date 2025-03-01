@@ -163,6 +163,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     SmartDashboard.putString("ALLIANCE", RobotContainer.isRedAlliance().get().toString());
+    SmartDashboard.putNumber("MATCH TIME", DriverStation.getMatchTime());
     mControlBoard.verifyControllerIntegrity();
     mControlBoard.update();
     mDriveControls.RunRobot();

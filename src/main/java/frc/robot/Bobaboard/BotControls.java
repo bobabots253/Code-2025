@@ -154,6 +154,11 @@ public class BotControls {
                     rContainer.tierThreeElevatorCommand().schedule();
                 }
             }
+            if(controlHub.operatorController.POV0.isBeingPressed()){
+                rContainer.algaeRollerCommand().schedule();
+            }else if(controlHub.operatorController.POV90.isBeingPressed()){
+                rContainer.algaeExtendCommand().schedule();
+            }
 
             // if (!controlHub.operatorController.POV0.isBeingPressed()){
             //     rContainer.m_Effector.

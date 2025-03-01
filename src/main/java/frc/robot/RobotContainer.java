@@ -236,6 +236,26 @@ public class RobotContainer {
                  
                 );
             }
+            public Command algaeExtendCommand(){
+              return new SequentialCommandGroup(
+                    new InstantCommand(() -> 
+                      m_Effector.setLazyEndEffectorState(States.EndEffectorPos.EXTENDED_PIVOT))
+                      // new RunCommand(() -> {
+                      //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+                      //     m_Effector),
+                     
+                    );
+            }
+            public Command algaeRollerCommand(){
+              return new SequentialCommandGroup(
+                    new InstantCommand(() -> 
+                      m_Effector.setLazyEndEffectorState(States.EndEffectorPos.PIVOT_ROLLERS))
+                      // new RunCommand(() -> {
+                      //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+                      //     m_Effector),
+                     
+                    );
+            }
 
             // public Command deployAlgaeRollers(){
             //   return new SequentialCommandGroup(

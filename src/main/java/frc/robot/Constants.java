@@ -230,6 +230,7 @@ public final class Constants {
 
     //PIVOT
     public static final double softZeroPivotPosition = 0.000; //degress
+    public static final double extendedPIvotPosition = 0.000;
     public static final double idealStowAngle = 0.000; //degrees
     public static final double alternateStowAngle = 0.000; //degress
     public static final double L1Score = 0.120; //find when finished building
