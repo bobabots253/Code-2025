@@ -49,6 +49,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -342,6 +343,10 @@ public class RobotContainer {
   
   public static Command PathFindReef21(boolean permission){
     return new PathfindToPose(FieldSetup.allianceReefFarSupplier, FieldSetup.kReefFarEntranceTolerance, permission);
+  }
+
+  public static Command PathfindClosest(boolean permission) {
+    return new 
   }
 
 }

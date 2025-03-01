@@ -148,7 +148,7 @@ public class DriveSubsystem extends SubsystemBase {
       RobotConfig config = RobotConfig.fromGUISettings();
       //getPoseVision
     AutoBuilder.configure(
-      this::getPose, // Robot pose supplier
+      this::getRefinedPoseVision, // Robot pose supplier
       this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
       this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
@@ -217,12 +217,12 @@ public class DriveSubsystem extends SubsystemBase {
     //VisionSubsystem.getInstance().notifierLoop();
     
     /*Refined Vision Pose Estimator */
-    // refinedVisionPose = VisionSubsystem.getInstance().getEstimatedPose();
-    // try{
-    //   refinedodometryVision.addVisionMeasurement(refinedVisionPose, Timer.getFPGATimestamp() - NTlatency);
-    // } catch ( Exception err){
-    //   System.out.println("Couldn't Return Refined Vision");
-    // }
+    refinedVisionPose = VisionSubsystem.getInstance().getEstimatedPose();
+    try{
+      refinedodometryVision.addVisionMeasurement(refinedVisionPose, Timer.getFPGATimestamp() - NTlatency);
+    } catch ( Exception err){
+      System.out.println("Couldn't Return Refined Vision");
+    }
 
     /*Basic Vision Pose Estimator */
     try {
