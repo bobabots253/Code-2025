@@ -148,7 +148,7 @@ public class DriveSubsystem extends SubsystemBase {
       RobotConfig config = RobotConfig.fromGUISettings();
       //getPoseVision
     AutoBuilder.configure(
-      this::getRefinedPoseVision, // Robot pose supplier
+      this::getPoseVision, // Robot pose supplier
       this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
       this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
@@ -214,23 +214,23 @@ public class DriveSubsystem extends SubsystemBase {
         });
 
     //VisionSubsystem.notifierLoop();
-    //VisionSubsystem.getInstance().notifierLoop();
+    // VisionSubsystem.getInstance().notifierLoop();
     
-    /*Refined Vision Pose Estimator */
-    refinedVisionPose = VisionSubsystem.getInstance().getEstimatedPose();
-    try{
-      refinedodometryVision.addVisionMeasurement(refinedVisionPose, Timer.getFPGATimestamp() - NTlatency);
-    } catch ( Exception err){
-      System.out.println("Couldn't Return Refined Vision");
-    }
+    // /*Refined Vision Pose Estimator */
+    // refinedVisionPose = VisionSubsystem.getInstance().getEstimatedPose();
+    // try{
+    //   refinedodometryVision.addVisionMeasurement(refinedVisionPose, Timer.getFPGATimestamp() - NTlatency);
+    // } catch ( Exception err){
+    //   System.out.println("Couldn't Return Refined Vision");
+    // }
 
     /*Basic Vision Pose Estimator */
-    // try {
-    //   addBasicVisionMeasurement("limelight");
-    // }
-    // catch(Exception erException) {
-    //   System.out.println("No Valid Limelight Targets");
-    // }
+    try {
+      addBasicVisionMeasurement("limelight-green");
+    }
+    catch(Exception erException) {
+      System.out.println("No Valid Limelight Targets");
+    }
 
     SmartDashboard.putData("Field Gyro", m_fieldGyro);
     SmartDashboard.putData("Field Vision", m_fieldVision);
@@ -258,7 +258,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
   
   public void addBasicVisionMeasurement(String limelight) {
-      LimelightHelpers.SetRobotOrientation(limelight, getHeading(), 0,
+      LimelightHelpers.SetRobotOrientation("limelight-green", getHeading(), 0,
               0, 0, 0, 0);
       if (LimelightHelpers.getTV(limelight)) {
           LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight);
