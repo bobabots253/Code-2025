@@ -29,6 +29,7 @@ import frc.robot.Bobaboard.BotControls;
 import frc.robot.Bobaboard.ControlHub;
 import frc.robot.subsystems.EndEffectorSubsystem;
 import frc.robot.commands.DriveToPose;
+import frc.robot.commands.PathfindClosest;
 import frc.robot.commands.PathfindToPose;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -346,7 +347,7 @@ public class RobotContainer {
   }
 
   public static Command PathfindClosest(boolean permission) {
-    return new 
+    return new PathfindClosest(permission);
   }
 
 }

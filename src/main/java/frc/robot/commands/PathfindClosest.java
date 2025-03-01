@@ -46,23 +46,10 @@ public class PathfindClosest extends Command {
     //Note: Possibel Fix for Invalid Static Reference to DriveSubsys which has been causing the runtime crash
     // Vision Pose Estimation works but gets interefered by "estimated velocities"
     // Sometimes the position gets flipped which is unideal (find fix later)
-    public PathfindClosest(Pose2d target, Pose2d tolerance, boolean runCommand) {
+    public PathfindClosest(boolean runCommand) {
         this.target = target;
         this.tolerance = tolerance;
         this.runCommand = runCommand;
-            List<Pose2d> reefTags = new ArrayList<Pose2d>();
-        reefTags.add(FieldSetup.allianceReefASupplier.get());
-        reefTags.add(FieldSetup.allianceReefBSupplier.get());
-        reefTags.add(FieldSetup.allianceReefCSupplier.get());
-        reefTags.add(FieldSetup.allianceReefDSupplier.get());
-        reefTags.add(FieldSetup.allianceReefESupplier.get());
-        reefTags.add(FieldSetup.allianceReefFSupplier.get());
-        reefTags.add(FieldSetup.allianceReefGSupplier.get());
-        reefTags.add(FieldSetup.allianceReefHSupplier.get());
-        reefTags.add(FieldSetup.allianceReefISupplier.get());
-        reefTags.add(FieldSetup.allianceReefJSupplier.get());
-        reefTags.add(FieldSetup.allianceReefKSupplier.get());
-        reefTags.add(FieldSetup.allianceReefLSupplier.get());
             // xController = new PIDController(.1, 0, 0);
         // yController = new PIDController(.1, 0, 0);
 
@@ -76,13 +63,26 @@ public class PathfindClosest extends Command {
     @Override
     public void execute() {
         currentTrajectory = null;
+        List<Pose2d> reefTags = new ArrayList<Pose2d>();
+        reefTags.add(FieldSetup.allianceReefASupplier.get());
+        reefTags.add(FieldSetup.allianceReefBSupplier.get());
+        reefTags.add(FieldSetup.allianceReefCSupplier.get());
+        reefTags.add(FieldSetup.allianceReefDSupplier.get());
+        reefTags.add(FieldSetup.allianceReefESupplier.get());
+        reefTags.add(FieldSetup.allianceReefFSupplier.get());
+        reefTags.add(FieldSetup.allianceReefGSupplier.get());
+        reefTags.add(FieldSetup.allianceReefHSupplier.get());
+        reefTags.add(FieldSetup.allianceReefISupplier.get());
+        reefTags.add(FieldSetup.allianceReefJSupplier.get());
+        reefTags.add(FieldSetup.allianceReefKSupplier.get());
+        reefTags.add(FieldSetup.allianceReefLSupplier.get());
         timeOffset = 0;
         PathConstraints constraints = new PathConstraints(3.0, 4.0,
         Units.degreesToRadians(540),
         Units.degreesToRadians(720));
-        Pose2d currentPose = driveRequire.getRefinedPoseVision();
-        Pose2d closestRealPose2d = new Pose2d();
-        reefTags.closest
+        Pose2d closestRealPose2d = driveRequire.getRefinedPoseVision();
+        target = closestRealPose2d.nearest(reefTags);
+
         Command pathfindingCommand = AutoBuilder.pathfindToPose(
         target,
         constraints,

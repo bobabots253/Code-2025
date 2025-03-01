@@ -225,12 +225,12 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /*Basic Vision Pose Estimator */
-    try {
-      addBasicVisionMeasurement("limelight");
-    }
-    catch(Exception erException) {
-      System.out.println("No Valid Limelight Targets");
-    }
+    // try {
+    //   addBasicVisionMeasurement("limelight");
+    // }
+    // catch(Exception erException) {
+    //   System.out.println("No Valid Limelight Targets");
+    // }
 
     SmartDashboard.putData("Field Gyro", m_fieldGyro);
     SmartDashboard.putData("Field Vision", m_fieldVision);
