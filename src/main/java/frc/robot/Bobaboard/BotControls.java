@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.RobotContainer;
 import frc.robot.Autonomous.DefaultCommands.StandStillCommand;
 //import frc.robot.subsystems.TestSubsystem;
@@ -130,7 +131,7 @@ public class BotControls {
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
         } else{
             if (controlHub.operatorController.L_Bumper.isBeingPressed() && !controlHub.operatorController.R_Bumper.isBeingPressed()) {
-                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.45);
+                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.80);
                 }else if (controlHub.operatorController.R_Bumper.isBeingPressed() && !controlHub.operatorController.L_Bumper.isBeingPressed()) {
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
                 }
@@ -154,11 +155,17 @@ public class BotControls {
                     rContainer.tierThreeElevatorCommand().schedule();
                 }
             }
-            if(controlHub.operatorController.POV0.isBeingPressed()){
-                rContainer.algaeRollerCommand().schedule();
+
+            if (!controlHub.operatorController.POV0.isBeingPressed() && !controlHub.operatorController.POV90.isBeingPressed()){
+                rContainer.stowAlgaeCommand().schedule();
+            }else{
+                if(controlHub.operatorController.POV0.isBeingPressed()){
+                rContainer.stowAlgaeCommand().schedule();
             }else if(controlHub.operatorController.POV90.isBeingPressed()){
                 rContainer.algaeExtendCommand().schedule();
+                rContainer.m_Effector.setLazyPivotPositionSetpoint(EndEffectorConstants.extendedPIvotPosition);
             }
+        }
 
             // if (!controlHub.operatorController.POV0.isBeingPressed()){
             //     rContainer.m_Effector.

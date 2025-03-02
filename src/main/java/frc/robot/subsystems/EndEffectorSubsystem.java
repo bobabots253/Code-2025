@@ -210,10 +210,7 @@ public void periodic() {
             case SOFT_REMOVE:
                 setIntakeLazyPercentageOpenLoop(0.7);
             case EXTENDED_PIVOT:
-                setLazyPivotPositionSetpoint(EndEffectorConstants.extendedPIvotPosition);
-            case PIVOT_ROLLERS:
-                setAlgaeLazyPercentageOpenLoop(.5);
-                break;
+                setAlgaeLazyPercentageOpenLoop(0.8);
             default:
                 setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
                 break;

@@ -117,7 +117,7 @@ public final class Configs {
                          EndEffectorConstants.kPivotAbsolutePositionI,
                          EndEffectorConstants.kPivotAbsolutePositionD)
                     .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh)
-                    .positionWrappingEnabled(false);
+                    .positionWrappingEnabled(true);
         pivotConfig.absoluteEncoder
                     .inverted(false);
 

@@ -148,7 +148,7 @@ public class DriveSubsystem extends SubsystemBase {
       RobotConfig config = RobotConfig.fromGUISettings();
       //getPoseVision
     AutoBuilder.configure(
-      this::getPoseVision, // Robot pose supplier
+      this::getPose, // Robot pose supplier
       this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
       this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds

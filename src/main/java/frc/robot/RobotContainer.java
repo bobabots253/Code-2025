@@ -134,9 +134,9 @@ public class RobotContainer {
           // new RunCommand(() -> {
           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
           //     m_Effector),
-          // new RunCommand(() -> {
-          //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-          //     m_Effector),
+          new RunCommand(() -> {
+            m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
+              m_Effector),
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.STOW);
             }, m_Elevator)
@@ -246,16 +246,19 @@ public class RobotContainer {
                      
                     );
             }
-            public Command algaeRollerCommand(){
+
+            public Command stowAlgaeCommand(){
               return new SequentialCommandGroup(
                     new InstantCommand(() -> 
-                      m_Effector.setLazyEndEffectorState(States.EndEffectorPos.PIVOT_ROLLERS))
+                      m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW))
                       // new RunCommand(() -> {
                       //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
                       //     m_Effector),
                      
                     );
             }
+
+
 
             // public Command deployAlgaeRollers(){
             //   return new SequentialCommandGroup(

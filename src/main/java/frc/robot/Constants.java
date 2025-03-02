@@ -230,9 +230,9 @@ public final class Constants {
 
     //PIVOT
     public static final double softZeroPivotPosition = 0.000; //degress
-    public static final double extendedPIvotPosition = 0.000;
+    public static final double extendedPIvotPosition = 0.65;
     public static final double idealStowAngle = 0.000; //degrees
-    public static final double alternateStowAngle = 0.000; //degress
+    public static final double alternateStowAngle = 0.245; //degress
     public static final double L1Score = 0.120; //find when finished building
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Wrist
     public static final double L2Score = 0.120; //degrees
@@ -250,7 +250,7 @@ public final class Constants {
     public static final double Test1 = 0.120; //degrees
     public static final double Test2 = 0.120;
     public static final double Test3 = 0.120;
-    public static final double kPivotAbsolutePositionP = 0.1; //25:1
+    public static final double kPivotAbsolutePositionP = 0.5; //25:1
     public static final double kPivotAbsolutePositionI = 0.0; 
     public static final double kPivotAbsolutePositionD = 0.0005; 
     public static final double kPivotAbsolutePositionFF = 0.0005; 
