@@ -25,7 +25,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     private static volatile VisionSubsystem instance;
     private static Object mutex = new Object();
-    public static synchronized VisionSubsystem getInstance() {
+    public static VisionSubsystem getInstance() {
         VisionSubsystem result = instance;
         if (result == null) {
             synchronized (mutex) {
@@ -58,7 +58,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     private volatile Timer lastDataTimer;
 
-    public VisionSubsystem() {
+    private VisionSubsystem() {
     super("VisionSubsystem");
     this.lastDataTimer = new Timer();
     this.lastDataTimer.start();
@@ -76,18 +76,18 @@ public class VisionSubsystem extends SubsystemBase {
     
         //loop overrun warnings
         for (VisionData data : filteredLimelightDatas) {
-            // if (data.canTrustRotation) { //data.canTrustRotation
-            //     // Only trust rotational data when adding this pose.
-            //     driveRequire.refinedodometryVision.setVisionMeasurementStdDevs(VecBuilder.fill(
-            //         9999999,
-            //         9999999,
-            //         recentVisionData() ? 1 : 0.5
-            //     ));
-            //     driveRequire.refinedodometryVision.addVisionMeasurement(
-            //         data.MegaTag.pose,
-            //         data.MegaTag.timestampSeconds
-            //     );
-            // }
+            if (data.canTrustRotation) { //data.canTrustRotation
+                // Only trust rotational data when adding this pose.
+                driveRequire.refinedodometryVision.setVisionMeasurementStdDevs(VecBuilder.fill(
+                    9999999,
+                    9999999,
+                    recentVisionData() ? 1 : 0.5
+                ));
+                driveRequire.refinedodometryVision.addVisionMeasurement(
+                    data.MegaTag.pose,
+                    data.MegaTag.timestampSeconds
+                );
+            }
 
             if (data.canTrustPosition) {
                 if (driveRequire.refinedodometryVision.getEstimatedPosition().getTranslation()
@@ -375,7 +375,9 @@ public class VisionSubsystem extends SubsystemBase {
         }
     }
 
+    @Override
     public void periodic() {
+        // Uses a Notifier for separate-thread Vision processing
     }
 
 

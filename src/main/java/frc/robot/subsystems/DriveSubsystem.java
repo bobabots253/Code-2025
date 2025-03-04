@@ -216,13 +216,15 @@ public class DriveSubsystem extends SubsystemBase {
     //VisionSubsystem.notifierLoop();
     // VisionSubsystem.getInstance().notifierLoop();
     
-    // /*Refined Vision Pose Estimator */
-    // refinedVisionPose = VisionSubsystem.getInstance().getEstimatedPose();
-    // try{
-    //   refinedodometryVision.addVisionMeasurement(refinedVisionPose, Timer.getFPGATimestamp() - NTlatency);
-    // } catch ( Exception err){
-    //   System.out.println("Couldn't Return Refined Vision");
-    // }
+    /*Refined Vision Pose Estimator */
+    refinedVisionPose = VisionSubsystem.getInstance().getEstimatedPose();
+    try{
+      if (!refinedVisionPose.equals(new Pose2d())) {
+      refinedodometryVision.addVisionMeasurement(refinedVisionPose, Timer.getFPGATimestamp() - NTlatency);
+      }
+    } catch ( Exception err){
+      System.out.println("Couldn't Return Refined Vision");
+    }
 
     /*Basic Vision Pose Estimator */
     try {
