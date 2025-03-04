@@ -29,6 +29,7 @@ import frc.robot.Bobaboard.BotControls;
 import frc.robot.Bobaboard.ControlHub;
 import frc.robot.subsystems.EndEffectorSubsystem;
 import frc.robot.commands.DriveToPose;
+import frc.robot.commands.PathfindClosest;
 import frc.robot.commands.PathfindToPose;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -49,6 +50,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -143,12 +145,12 @@ public class RobotContainer {
 
    public Command tierOneElevatorCommand(){
     return new ParallelCommandGroup(
-          new SequentialCommandGroup(
-            new WaitCommand(.2),
-            new RunCommand(() -> {
-              m_Effector.setLazyEndEffectorState(States.EndEffectorPos.L1Score);
-            }, m_Effector)
-          ),
+          // new SequentialCommandGroup(
+          //   new WaitCommand(.2),
+          //   new RunCommand(() -> {
+          //     m_Effector.setLazyEndEffectorState(States.EndEffectorPos.L1Score);
+          //   }, m_Effector)
+          // ),
           // new RunCommand(() -> {
           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
           //     m_Effector),
@@ -163,26 +165,26 @@ public class RobotContainer {
     return new ParallelCommandGroup(
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
-            }, m_Elevator),
-          new SequentialCommandGroup(
-            new WaitCommand(.2),
-            new RunCommand(() -> {
-            m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);
-            }, m_Effector)
-          )
+            }, m_Elevator));
+          // new SequentialCommandGroup(
+          //   new WaitCommand(.2),
+          //   new RunCommand(() -> {
+          //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);
+          //   }, m_Effector)
+          // )
 
-        );
+        
     }
 
     public Command tierThreeElevatorCommand(){
       return new ParallelCommandGroup(
 
-            new SequentialCommandGroup(
-              new WaitCommand(0.2),
-              new RunCommand(() -> {
-              m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-                m_Effector)
-            ),
+            // new SequentialCommandGroup(
+            //   new WaitCommand(0.2),
+            //   new RunCommand(() -> {
+            //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
+            //     m_Effector)
+            // ),
 
             new RunCommand(() -> {
               m_Elevator.setLazyElevatorState(States.ElevatorPos.L3SCORE);
@@ -202,7 +204,7 @@ public class RobotContainer {
             );
         }
 
-        public Command extakeCoralCommand(){
+        public Command hardExtakeCoralCommand(){
           return new SequentialCommandGroup(
                 new InstantCommand(() -> 
                   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.HARD_REMOVE))
@@ -212,6 +214,63 @@ public class RobotContainer {
                  
                 );
             }
+
+          public Command softExtakeCoralCommand(){
+          return new SequentialCommandGroup(
+                new InstantCommand(() -> 
+                  m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SOFT_REMOVE))
+                  // new RunCommand(() -> {
+                  //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+                  //     m_Effector),
+                 
+                );
+            }
+
+          public Command smartIntakeCoralCommand(){
+          return new SequentialCommandGroup(
+                new InstantCommand(() -> 
+                  m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SMART_INTAKE))
+                  // new RunCommand(() -> {
+                  //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+                  //     m_Effector),
+                 
+                );
+            }
+            public Command algaeExtendCommand(){
+              return new SequentialCommandGroup(
+                    new InstantCommand(() -> 
+                      m_Effector.setLazyEndEffectorState(States.EndEffectorPos.EXTENDED_PIVOT))
+                      // new RunCommand(() -> {
+                      //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+                      //     m_Effector),
+                     
+                    );
+            }
+
+            public Command stowAlgaeCommand(){
+              return new SequentialCommandGroup(
+                    new InstantCommand(() -> 
+                      m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW))
+                      // new RunCommand(() -> {
+                      //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+                      //     m_Effector),
+                     
+                    );
+            }
+
+
+
+            // public Command deployAlgaeRollers(){
+            //   return new SequentialCommandGroup(
+            //     new RunCommand(() -> {
+            //       m_Effector.setLazyEndEffectorState(States.EndEffectorPos.DEPLOY);
+            //     }, m_Effector),
+            //     new WaitCommand(.2),
+            //     new RunCommand(() -> {
+            //             m_Effector.setLazyEndEffectorState(States.EndEffectorPos.L1Score);
+            //           }, m_Effector)
+            //     );
+            //   }
 
   // public void permissibleForward(BooleanSupplier permission){
   //   new ConditionalCommand(RunElevatorPositive(), StopElevator(), permission);
@@ -308,6 +367,10 @@ public class RobotContainer {
   
   public static Command PathFindReef21(boolean permission){
     return new PathfindToPose(FieldSetup.allianceReefFarSupplier, FieldSetup.kReefFarEntranceTolerance, permission);
+  }
+
+  public static Command PathfindClosest(boolean permission) {
+    return new PathfindClosest(permission);
   }
 
 }

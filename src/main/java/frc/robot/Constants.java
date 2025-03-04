@@ -103,7 +103,7 @@ public final class Constants {
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
 
-    public static final double kDrivingP = 0.01; //0.4 is 1/2 speed
+    public static final double kDrivingP = 0.02; //0.4 is 1/2 speed
     public static final double kDrivingI = 0;
     public static final double kDrivingD = 0;
     public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
@@ -170,6 +170,7 @@ public final class Constants {
     public static final double softZeroLinearPosition = 0.1200; //revs
     public static final double L1Score = 9.470; // 2/24/25
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Elevator 
+
     public static final double L2Score = 14.05; // 2/24/25 //works
     public static final double L2Algae = 0.120;
     public static final double L2Misc = 0.120;
@@ -230,8 +231,9 @@ public final class Constants {
 
     //PIVOT
     public static final double softZeroPivotPosition = 0.000; //degress
+    public static final double extendedPIvotPosition = 0.65;
     public static final double idealStowAngle = 0.000; //degrees
-    public static final double alternateStowAngle = 0.000; //degress
+    public static final double alternateStowAngle = 0.245; //degress
     public static final double L1Score = 0.120; //find when finished building
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Wrist
     public static final double L2Score = 0.120; //degrees
@@ -249,7 +251,7 @@ public final class Constants {
     public static final double Test1 = 0.120; //degrees
     public static final double Test2 = 0.120;
     public static final double Test3 = 0.120;
-    public static final double kPivotAbsolutePositionP = 0.05; //25:1
+    public static final double kPivotAbsolutePositionP = 0.5; //25:1
     public static final double kPivotAbsolutePositionI = 0.0; 
     public static final double kPivotAbsolutePositionD = 0.0005; 
     public static final double kPivotAbsolutePositionFF = 0.0005; 

@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.function.Supplier;
 
@@ -103,7 +105,7 @@ public class FieldSetup {
         public static final Pose2d kReefFarEntranceTolerance = new Pose2d(new Translation2d(0.0, 0.0),
                 Rotation2d.fromDegrees(0));
 
-
+        // }
         //Centered with the Tag
         //Use this format for examples.
         public static Supplier<Pose2d> allianceTopFeedingStationSupplier = () -> DriverStation.getAlliance()
@@ -220,7 +222,7 @@ public class FieldSetup {
                         : new Pose2d (getTagTranslation(kRedReefPosGId)
                         .plus(new Translation2d(11.745, 4.189)), new Rotation2d());
 
-        public static Supplier<Pose2d> allianceHSupplier = () -> DriverStation.getAlliance()
+        public static Supplier<Pose2d> allianceReefHSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
                         ? new Pose2d((new Translation2d(5.798, 4.189)), 
                         new Rotation2d())

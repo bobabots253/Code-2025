@@ -62,7 +62,7 @@ private ElevatorSubsystem() {
     slaveHallEffectSensor = new DigitalInput(ElevatorConstants.pivotSlaveHallEffectDIO);
     //Preferences.putDouble(kTunableP , ElevatorConstants.kIncrementalPostionP);
     resetEncoders();
-    // setCoastMode(true);
+    //setCoastMode(true);
 }
 
 @Override
