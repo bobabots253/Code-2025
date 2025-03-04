@@ -106,6 +106,7 @@ public class BotControls {
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.7);
                 }else if (controlHub.operatorController.R_Bumper.isBeingPressed() && !controlHub.operatorController.L_Bumper.isBeingPressed()) {
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+
                 }
         }
             //Polls for Controller Input, if a button is being pressed deliver selected Elevator height
@@ -127,6 +128,7 @@ public class BotControls {
                     rContainer.tierThreeElevatorCommand().schedule();
                 }
             }
+
 
             //Polls for Controller Input, if a button is being pressed deliver selected algae pivot angle
             if (!controlHub.operatorController.POV0.isBeingPressed() && !controlHub.operatorController.POV90.isBeingPressed()){
@@ -150,6 +152,7 @@ public class BotControls {
             //             && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()) {
             //         rContainer.tierOneElevatorCommand().schedule();
             // }
+
         }
   }
     } 
