@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Bobaboard.BotControls;
 import frc.robot.Bobaboard.ControlHub;
+import frc.robot.subsystems.EndEffectorSubsystem;
 import frc.robot.commands.DriveToPose;
 import frc.robot.commands.PathfindToPose;
 import frc.robot.Constants.AutoConstants;
@@ -77,6 +78,7 @@ public class RobotContainer {
   public final ControlHub m_ControlHub;
   public final DriveSubsystem m_robotDrive;
   public final ElevatorSubsystem m_Elevator;
+  public final EndEffectorSubsystem m_Effector;
    /*READ ME:
   A static instance of the Robot Container with all its contents
   */
@@ -94,7 +96,7 @@ public class RobotContainer {
     m_AutoModeManager = new AutoModeManager();
     m_ControlHub = ControlHub.getInstance();
     m_Elevator = ElevatorSubsystem.getInstance();
-  
+    m_Effector = EndEffectorSubsystem.getInstance();
     // Configure default commands
     SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
     m_robotDrive.setDefaultCommand(new RunCommand(
@@ -118,18 +120,98 @@ public class RobotContainer {
    * {@link JoystickButton}.
       * @return 
       */
-   
-  public Command RunElevatorPositive(){
-    return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(.1), m_Elevator);
-  }
 
-  public Command RunElevatorNegative(){
-    return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(.1), m_Elevator);
-  }
+  // public Command stowElevatorCommand(){
+  //   return new RunCommand(() -> 
+  //     m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW),
+  //       m_Effector);
+  // }
 
-  public Command StopElevator(){
-    return new RunCommand(() -> m_Elevator.setLazyPercentageOpenLoop(0.0), m_Elevator);
-  }
+   public Command stowElevatorCommand(){
+    return new ParallelCommandGroup(
+          new RunCommand(() -> {
+            m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
+              m_Effector),
+          // new RunCommand(() -> {
+          //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
+          //     m_Effector),
+          new RunCommand(() -> {
+            m_Elevator.setLazyElevatorState(States.ElevatorPos.STOW);
+            }, m_Elevator)
+        );
+    }
+
+   public Command tierOneElevatorCommand(){
+    return new ParallelCommandGroup(
+          new SequentialCommandGroup(
+            new WaitCommand(.2),
+            new RunCommand(() -> {
+              m_Effector.setLazyEndEffectorState(States.EndEffectorPos.L1Score);
+            }, m_Effector)
+          ),
+          // new RunCommand(() -> {
+          //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
+          //     m_Effector),
+          
+          new RunCommand(() -> {
+            m_Elevator.setLazyElevatorState(States.ElevatorPos.L1Score);
+            }, m_Elevator)
+        );
+    }
+
+   public Command tierTwoElevatorCommand(){
+    return new ParallelCommandGroup(
+          new RunCommand(() -> {
+            m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
+            }, m_Elevator),
+          new SequentialCommandGroup(
+            new WaitCommand(.2),
+            new RunCommand(() -> {
+            m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);
+            }, m_Effector)
+          )
+
+        );
+    }
+
+    public Command tierThreeElevatorCommand(){
+      return new ParallelCommandGroup(
+
+            new SequentialCommandGroup(
+              new WaitCommand(0.2),
+              new RunCommand(() -> {
+              m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
+                m_Effector)
+            ),
+
+            new RunCommand(() -> {
+              m_Elevator.setLazyElevatorState(States.ElevatorPos.L3Score);
+              }, m_Elevator)
+          );
+      }
+
+    public Command intakeCoralCommand(){
+      return new SequentialCommandGroup(
+            new InstantCommand(() -> {
+              m_Effector.setLazyEndEffectorState(States.EndEffectorPos.INTAKE);},
+                  m_Effector)
+              // new RunCommand(() -> {
+              //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+              //     m_Effector),
+             
+            );
+        }
+
+        public Command extakeCoralCommand(){
+          return new SequentialCommandGroup(
+                new InstantCommand(() -> 
+                  m_Effector.setLazyEndEffectorState(States.EndEffectorPos.HARD_REMOVE))
+                  // new RunCommand(() -> {
+                  //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+                  //     m_Effector),
+                 
+                );
+            }
 
   // public void permissibleForward(BooleanSupplier permission){
   //   new ConditionalCommand(RunElevatorPositive(), StopElevator(), permission);

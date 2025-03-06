@@ -1,9 +1,12 @@
 package frc.robot;
 
+import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.*;
 
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -55,9 +58,13 @@ public final class Configs {
     public static final class ElevatorSubsystem {
         public static final SparkMaxConfig masterLiftingConfig = new SparkMaxConfig(); //Left (relative to swerve)
         public static final SparkMaxConfig slaveLiftingConfig = new SparkMaxConfig(); ////Right (relative to swerve)
+        //public static final SparkBaseConfig baseMasterLiftingConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig masterLiftingCoastModeConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig slaveLiftingCoastModeConfig = new SparkMaxConfig();
 
         static{
         masterLiftingConfig
+                    .inverted(false)
                     .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
         masterLiftingConfig.closedLoop
@@ -67,20 +74,50 @@ public final class Configs {
                          ElevatorConstants.kIncrementalPositionD)
                     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh);
 
-        slaveLiftingConfig.follow(ElevatorConstants.masterLiftingCANId);
         slaveLiftingConfig
+                    .follow(ElevatorConstants.masterLiftingCANId, true)
                     .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
+
+        masterLiftingCoastModeConfig
+                    .idleMode(IdleMode.kCoast)
+                    .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
+        masterLiftingCoastModeConfig.closedLoop
+                    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                    .pid(ElevatorConstants.kIncrementalPostionP,
+                         ElevatorConstants.kIncrementalPostionI,
+                         ElevatorConstants.kIncrementalPositionD)
+                    .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh);
+
+        slaveLiftingCoastModeConfig.follow(ElevatorConstants.masterLiftingCANId);
+        slaveLiftingCoastModeConfig
+                    .inverted(true)
+                    .idleMode(IdleMode.kCoast)
                     .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
         }
     }
-    public static final class EndEffectorSubsystem {
+    public static final class EndEffectorSubsystemConfig {
         public static final SparkMaxConfig pivotConfig = new SparkMaxConfig();
         public static final SparkMaxConfig intakeRollerConfig = new SparkMaxConfig();
         public static final SparkMaxConfig algaeRollerConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig pivotCoastModeConfig = new SparkMaxConfig();
 
         static{
         pivotConfig
                     .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(EndEffectorConstants.kUniversalSoftLimit);
+        pivotConfig.closedLoop
+                    .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                    .pid(EndEffectorConstants.kPivotAbsolutePositionP,
+                         EndEffectorConstants.kPivotAbsolutePositionI,
+                         EndEffectorConstants.kPivotAbsolutePositionD)
+                    .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh)
+                    .positionWrappingEnabled(false);
+        pivotConfig.absoluteEncoder
+                    .inverted(false);
+
+        pivotConfig
+                    .idleMode(IdleMode.kCoast)
                     .smartCurrentLimit(EndEffectorConstants.kUniversalSoftLimit);
         pivotConfig.closedLoop
                     .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)

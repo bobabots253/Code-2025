@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.revrobotics.spark.*;
+import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -102,7 +103,7 @@ public final class Constants {
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
 
-    public static final double kDrivingP = 0.04; //0.4 is 1/2 speed
+    public static final double kDrivingP = 0.01; //0.4 is 1/2 speed
     public static final double kDrivingI = 0;
     public static final double kDrivingD = 0;
     public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
@@ -167,12 +168,12 @@ public final class Constants {
 
     public static final double idealHomingLinearPosition = 0.000; //revs
     public static final double softZeroLinearPosition = 0.000; //revs
-    public static final double L1Score = 0.120; //find when finished building
+    public static final double L1Score = 8.470; // 2/24/25
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Elevator 
-    public static final double L2Score = 0.120;
+    public static final double L2Score = 12.760; // 2/24/25
     public static final double L2Algae = 0.120;
     public static final double L2Misc = 0.120;
-    public static final double L3Score = 0.120;
+    public static final double L3Score = 18.75; // 2/24/25 18.9
     public static final double L3Algae = 0.120;
     public static final double L3Misc = 0.120;
     public static final double pos1 = 0.120; 
@@ -185,9 +186,9 @@ public final class Constants {
     public static final double pidOutputLow = -1; //max output is capped @ 1
     public static final double pidOutputHigh = 1;
 
-    public static final double kIncrementalPostionP = 0.001; //5:1
-    public static final double kIncrementalPostionI = 0.0; //5:1
-    public static final double kIncrementalPositionD = 0.0005; //5:1
+    public static final double kIncrementalPostionP = 0.008; //5:1 //safe: 0.005;
+    public static final double kIncrementalPostionI = 0.0065; //5:1 //0.001
+    public static final double kIncrementalPositionD = 0.09; //5:1 // 0.05
     public static final double kIncrementalPositionFF = 0.0005; //5:1
 
     //Universal Elevator Current Limits
@@ -197,8 +198,11 @@ public final class Constants {
     //Universal Elevator Output Limits
     public static final double kUniversalPIDOutputLow = -1; //max output is capped @ 1
     public static final double kUniversalPIDOutputHigh = 1;
-    public static final double ELEVATOR_MAX_TRAVEL = 20; //heuristic
-    public static final double ELEVATOR_MIN_TRAVEL = -0.5; //heuristic
+    public static final double ELEVATOR_MAX_TRAVEL = 19.2000; //heuristic
+    public static final double ELEVATOR_MIN_TRAVEL = -0.075000; //heuristic
+    public static final double ELEVATOR_OUTPUT_LOW = -0.75;
+    public static final double ELEVATOR_OUTPUT_HIGH = 0.75;
+    public static final double arbFFVolatge = 0.05;
   }
 
   public static final class EndEffectorConstants {
@@ -243,10 +247,10 @@ public final class Constants {
     public static final double Test1 = 0.120; //degrees
     public static final double Test2 = 0.120;
     public static final double Test3 = 0.120;
-    public static final double kPivotAbsolutePositionP = 0.001; //1:1
-    public static final double kPivotAbsolutePositionI = 0.0; //1:1
-    public static final double kPivotAbsolutePositionD = 0.0005; //1:1
-    public static final double kPivotAbsolutePositionFF = 0.0005; //1:1
+    public static final double kPivotAbsolutePositionP = 0.05; //25:1
+    public static final double kPivotAbsolutePositionI = 0.0; 
+    public static final double kPivotAbsolutePositionD = 0.0005; 
+    public static final double kPivotAbsolutePositionFF = 0.0005; 
 
     //ALGAE 
     public static final double idealHoldingAlgaeVelocity = 0.000; //RPM
@@ -254,10 +258,10 @@ public final class Constants {
     public static final double idealStallAlgaeVelocity = 0.000; //RPM
     public static final double idealSlowAlgaeVelocity = 0.000; //RPM
     public static final double idealGroundAlgaeVelocity = 0.000; //RPM
-    public static final double kAlgaeVelocityP = 0.001; //1:1
-    public static final double kAlgaeVelocityI = 0.0; //1:1
-    public static final double kAlgaeVelocityD = 0.0005; //1:1
-    public static final double kAlgaeVelocityFF = 0.0005; //1:1
+    public static final double kAlgaeVelocityP = 0.001; //12:1
+    public static final double kAlgaeVelocityI = 0.0; 
+    public static final double kAlgaeVelocityD = 0.0005; 
+    public static final double kAlgaeVelocityFF = 0.0005; 
     
     //Universal EF Current Limits
     public static final int kUniversalSoftLimit = 40; 
@@ -265,6 +269,10 @@ public final class Constants {
     //Universal EF Output Limits
     public static final double kUniversalPIDOutputLow = -1; //max output is capped @ 1
     public static final double kUniversalPIDOutputHigh = 1;
+    public static final double PIVOT_MAX_TRAVEL = 0.710;
+    public static final double PIVOT_MIN_TRAVEL = 0.000;
+    public static final double PIVOT_OUTPUT_HIGH = 0.3;
+    public static final double PIVOT_OUTPUT_LOW = -0.2;
   }
 
   public static final class VisionConstants{

@@ -8,14 +8,18 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import frc.robot.Configs;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
+import frc.robot.States;
 
-public class EndEffectorSubsystem {
+public class EndEffectorSubsystem extends SubsystemBase{
 private static SparkMax m_pivotSparkMax;
 private static SparkMax m_intakeRollerSparkMax;
 private static SparkMax m_algaeRollerSparkMax;
@@ -46,11 +50,11 @@ private EndEffectorSubsystem(){
     m_intakeRollerPIDController = m_intakeRollerSparkMax.getClosedLoopController();
     m_algaeRollerPIDController = m_algaeRollerSparkMax.getClosedLoopController();
 
-    m_pivotSparkMax.configure(Configs.EndEffectorSubsystem.pivotConfig, ResetMode.kResetSafeParameters,
+    m_pivotSparkMax.configure(Configs.EndEffectorSubsystemConfig.pivotConfig, ResetMode.kResetSafeParameters,
     PersistMode.kPersistParameters);
-    m_intakeRollerSparkMax.configure(Configs.EndEffectorSubsystem.intakeRollerConfig, ResetMode.kResetSafeParameters,
+    m_intakeRollerSparkMax.configure(Configs.EndEffectorSubsystemConfig.intakeRollerConfig, ResetMode.kResetSafeParameters,
     PersistMode.kPersistParameters);
-    m_algaeRollerSparkMax.configure(Configs.EndEffectorSubsystem.algaeRollerConfig, ResetMode.kResetSafeParameters,
+    m_algaeRollerSparkMax.configure(Configs.EndEffectorSubsystemConfig.algaeRollerConfig, ResetMode.kResetSafeParameters,
     PersistMode.kPersistParameters);
 }
 
@@ -64,9 +68,37 @@ private EndEffectorSubsystem(){
             m_algaeRollerSparkMax.set(value);
     }
 
+    public void setSafePercentagePivotOpenLoop(double OpenLoopPercentage){
+        SmartDashboard.putNumber("Elevator / Safe Output Speed (#.##)", OpenLoopPercentage);
+        if (isWithinPivotRange() && !MathUtil.isNear(EndEffectorConstants.PIVOT_MAX_TRAVEL, getPivotAbsoluteEncoder(), 0.15)){
+            m_pivotSparkMax.set(
+                MathUtil.clamp(OpenLoopPercentage,
+                EndEffectorConstants.PIVOT_OUTPUT_LOW, EndEffectorConstants.PIVOT_OUTPUT_HIGH));
+            }else{
+            while(MathUtil.isNear(EndEffectorConstants.PIVOT_MAX_TRAVEL, getPivotAbsoluteEncoder(), 0.15)){
+            m_pivotSparkMax.set(
+                MathUtil.clamp(-0.075,
+                EndEffectorConstants.PIVOT_OUTPUT_LOW, EndEffectorConstants.PIVOT_OUTPUT_HIGH));
+                }
+            }        
+        }
+    
     public void setIntakeLazyPercentageOpenLoop(double value) {
             SmartDashboard.putNumber("Intake Running Speed", value);
             m_intakeRollerSparkMax.set(value);
+    }
+
+    public double getPivotAbsoluteEncoder(){
+        return m_pivotEncoder.getPosition();
+    }
+
+    public boolean isWithinPivotRange(){
+        if (m_pivotEncoder.getPosition() < EndEffectorConstants.PIVOT_MAX_TRAVEL 
+            && m_pivotEncoder.getPosition() > EndEffectorConstants.PIVOT_MIN_TRAVEL){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public void stopPivot(){
@@ -92,9 +124,11 @@ private EndEffectorSubsystem(){
         m_algaeRollerEncoder.setPosition(0.0);
     }
 
-    public void setLazyPositionSetpoint(double position) {
-        m_pivotPIDController.setReference(position, ControlType.kPosition);
-        SmartDashboard.putNumber("Pivot SetPoint", position);
+    public void setLazyPivotPositionSetpoint(double PositionSetpoint){
+        double correctedSetpoint = MathUtil.clamp(PositionSetpoint,
+                 EndEffectorConstants.PIVOT_MIN_TRAVEL, EndEffectorConstants.PIVOT_MAX_TRAVEL);
+        m_pivotPIDController.setReference(correctedSetpoint, ControlType.kPosition);
+        SmartDashboard.putNumber("Pivot Setpoint", PositionSetpoint);
     }
 
     public void setLazyIntakeVelocitySetpoint(double velocity){
@@ -105,5 +139,41 @@ private EndEffectorSubsystem(){
     public void setLazyAlgaeVelocitySetpoint(double velocity){
         m_intakeRollerPIDController.setReference(velocity, ControlType.kVelocity);
         SmartDashboard.putNumber("Algae SetPoint", velocity);
+    }
+
+    public void setLazyEndEffectorState(States.EndEffectorPos requestedState) {
+        SmartDashboard.putNumber("Elevator /requestedPosition", requestedState.val);
+        switch (requestedState) {
+            case STOW:
+                setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
+                setIntakeLazyPercentageOpenLoop(0.00);
+                setAlgaeLazyPercentageOpenLoop(0.0);
+                break;
+            case L1Score:
+                setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
+                break;
+            case L2Score:
+                setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
+                break;
+            case L3Score:
+                setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
+            case INTAKE:
+                setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
+                setIntakeLazyPercentageOpenLoop(0.5);
+                break;
+            case PUSH:
+                setLazyPivotPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
+                setIntakeLazyPercentageOpenLoop(0.2);
+                break;
+            case FLY_BIRDY_FLY: //Scoring Enum
+                setIntakeLazyPercentageOpenLoop(-0.6);
+            case HARD_REMOVE:
+            setIntakeLazyPercentageOpenLoop(0.85);
+                break;
+
+            default:
+                setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
+                break;
+        }
     }
 }
