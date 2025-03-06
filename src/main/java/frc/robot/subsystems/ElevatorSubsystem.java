@@ -9,6 +9,8 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Configs;
+import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.States;
 
@@ -29,6 +32,7 @@ private final RelativeEncoder m_followerEncoder;
 private static DigitalInput masterHallEffectSensor;
 private static DigitalInput slaveHallEffectSensor;
 private static SparkClosedLoopController m_LiftingPIDController;
+private static ProfiledPIDController m_profiledPIDController;
 
 //Tunable Values
 public final String kTunableP = "Tunable_P";
@@ -52,6 +56,8 @@ private ElevatorSubsystem() {
     m_LiftingEncoder = m_masterLiftingSparkMax.getEncoder();
     m_followerEncoder = m_slaveLiftingSparkMax.getEncoder();
     m_LiftingPIDController = m_masterLiftingSparkMax.getClosedLoopController();
+
+    m_profiledPIDController = new ProfiledPIDController(Constants.ElevatorConstants.profiledP, Constants.ElevatorConstants.profiledI, Constants.ElevatorConstants.profiledD, new TrapezoidProfile.Constraints(Constants.ElevatorConstants.elevatorMaxVelocity, Constants.ElevatorConstants.elevaotrMaxAccerleration));
 
     m_masterLiftingSparkMax.configure(Configs.ElevatorSubsystem.masterLiftingConfig, ResetMode.kResetSafeParameters,
     PersistMode.kPersistParameters);
@@ -164,6 +170,9 @@ public void periodic() {
         //     }
         // }
     }
+    public void profiledPIDCalculation(double goalPosition){
+        m_masterLiftingSparkMax.set(m_profiledPIDController.calculate(m_LiftingEncoder.getPosition(), goalPosition));
+    }
 
 
     //Add the Rest & Add Button Bindings
@@ -188,15 +197,15 @@ public void periodic() {
                 break;
         }
     }
-
-public void setPIDParameters(double P, double I, double D){
-    Configs.ElevatorSubsystem.masterLiftingConfig.closedLoop
-    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    .pid(P,
-         I,
-         D)
-    .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh);
-    m_masterLiftingSparkMax.configure(Configs.ElevatorSubsystem.masterLiftingConfig,com.revrobotics.spark.SparkBase.ResetMode.kResetSafeParameters,PersistMode.kNoPersistParameters);
-}
+ // Possible PID tuner but Currently merging.
+// public void setPIDParameters(double P, double I, double D){
+//     Configs.ElevatorSubsystem.masterLiftingConfig.closedLoop
+//     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+//     .pid(P,
+//          I,
+//          D)
+//     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh);
+//     m_masterLiftingSparkMax.configure(Configs.ElevatorSubsystem.masterLiftingConfig,com.revrobotics.spark.SparkBase.ResetMode.kResetSafeParameters,PersistMode.kNoPersistParameters);
+// }
 
 }

@@ -166,6 +166,14 @@ public final class Constants {
     public static final int pivotMasterHallEffectDIO = 0;
     public static final int pivotSlaveHallEffectDIO = 1;
 
+    //Elevator trapezoidal profile
+    /** In meters per second. Used for Profiled PID controller*/
+    public static final int elevatorMaxVelocity = 0;
+    public static final int elevaotrMaxAccerleration = 0;
+    public static final double profiledP = 0;
+    public static final double profiledI = 0;
+    public static final double profiledD = 0;
+
     public static final double idealHomingLinearPosition = 0.000; //revs
     public static final double softZeroLinearPosition = 0.000; //revs
     public static final double L1Score = 8.470; // 2/24/25

@@ -128,7 +128,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Set P Value",ElevatorConstants.kIncrementalPostionP);
     SmartDashboard.putNumber("Set I Value",ElevatorConstants.kIncrementalPostionI);
     SmartDashboard.putNumber("Set D Value",ElevatorConstants.kIncrementalPositionD);
-   
+  }
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
@@ -165,7 +165,7 @@ public class Robot extends TimedRobot {
     double Pval = SmartDashboard.getNumber("Set P Value", 0);
     double Ival = SmartDashboard.getNumber("Set I Value", 0);
     double Dval = SmartDashboard.getNumber("Set D Value", 0);
-    m_robotContainer.m_Elevator.setPIDParameters(Pval, Ival, Dval);
+    //m_robotContainer.m_Elevator.setPIDParameters(Pval, Ival, Dval);
   
     
   }
