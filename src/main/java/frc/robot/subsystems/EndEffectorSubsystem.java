@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.ejml.data.DGrowArray;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -9,6 +11,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -29,6 +32,8 @@ private final AbsoluteEncoder m_pivotEncoder;
 private final SparkClosedLoopController m_pivotPIDController;
 private final SparkClosedLoopController m_intakeRollerPIDController;
 private final SparkClosedLoopController m_algaeRollerPIDController;
+private final DigitalInput frontIntakeBeamBreak;
+private final DigitalInput backIntakeBeamBreak;
 
 private static EndEffectorSubsystem instance;
 
@@ -56,6 +61,17 @@ private EndEffectorSubsystem(){
     PersistMode.kPersistParameters);
     m_algaeRollerSparkMax.configure(Configs.EndEffectorSubsystemConfig.algaeRollerConfig, ResetMode.kResetSafeParameters,
     PersistMode.kPersistParameters);
+
+    frontIntakeBeamBreak = new DigitalInput(EndEffectorConstants.frontBeamBreakSensor);
+    backIntakeBeamBreak = new DigitalInput(EndEffectorConstants.backBeamBreakSensor);
+}
+
+@Override
+public void periodic() {
+
+    SmartDashboard.putNumber("Algae /absolutePosition", m_pivotEncoder.getPosition());
+    SmartDashboard.putNumber("Algae /masterCurrent", m_algaeRollerSparkMax.getOutputCurrent());
+    SmartDashboard.putBoolean("EndEffector /isIntakedDIO", isCoralInsideIntake());
 }
 
     public void setPivotLazyPercentageOpenLoop(double value) {
@@ -69,7 +85,7 @@ private EndEffectorSubsystem(){
     }
 
     public void setSafePercentagePivotOpenLoop(double OpenLoopPercentage){
-        SmartDashboard.putNumber("Elevator / Safe Output Speed (#.##)", OpenLoopPercentage);
+        SmartDashboard.putNumber("Algae / Safe Output Speed (#.##)", OpenLoopPercentage);
         if (isWithinPivotRange() && !MathUtil.isNear(EndEffectorConstants.PIVOT_MAX_TRAVEL, getPivotAbsoluteEncoder(), 0.15)){
             m_pivotSparkMax.set(
                 MathUtil.clamp(OpenLoopPercentage,
@@ -90,6 +106,22 @@ private EndEffectorSubsystem(){
 
     public double getPivotAbsoluteEncoder(){
         return m_pivotEncoder.getPosition();
+    }
+
+    public boolean isFrontBeamBreakBlocked(){
+        return frontIntakeBeamBreak.get();
+    }
+
+    public boolean isBackBeamBreakBlocked(){
+        return backIntakeBeamBreak.get();
+    }
+    
+    public boolean isCoralInsideIntake(){
+        if (isFrontBeamBreakBlocked() && isBackBeamBreakBlocked() != isBackBeamBreakBlocked()){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public boolean isWithinPivotRange(){
@@ -146,7 +178,6 @@ private EndEffectorSubsystem(){
         switch (requestedState) {
             case STOW:
                 setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
-                setIntakeLazyPercentageOpenLoop(0.00);
                 setAlgaeLazyPercentageOpenLoop(0.0);
                 break;
             case L1Score:
@@ -168,9 +199,18 @@ private EndEffectorSubsystem(){
             case FLY_BIRDY_FLY: //Scoring Enum
                 setIntakeLazyPercentageOpenLoop(-0.6);
             case HARD_REMOVE:
-            setIntakeLazyPercentageOpenLoop(0.85);
+            setIntakeLazyPercentageOpenLoop(1.0);
                 break;
-
+            case SMART_INTAKE:
+                if (!isCoralInsideIntake()){
+                    setIntakeLazyPercentageOpenLoop(1.0);
+                }else{
+                    setIntakeLazyPercentageOpenLoop(0);
+                }
+            case SOFT_REMOVE:
+                setIntakeLazyPercentageOpenLoop(0.7);
+            case EXTENDED_PIVOT:
+                setAlgaeLazyPercentageOpenLoop(0.8);
             default:
                 setLazyPivotPositionSetpoint(EndEffectorConstants.softZeroPivotPosition);
                 break;

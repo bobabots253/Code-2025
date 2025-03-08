@@ -23,11 +23,17 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class VisionSubsystem extends SubsystemBase {
 
-    private static VisionSubsystem instance;
-
+    private static volatile VisionSubsystem instance;
+    private static Object mutex = new Object();
     public static synchronized VisionSubsystem getInstance() {
-        if (instance == null) {
-            instance = new VisionSubsystem();
+        VisionSubsystem result = instance;
+        if (result == null) {
+            synchronized (mutex) {
+                result = instance;
+                if (result == null) {
+                    instance = result = new VisionSubsystem();
+                }
+            }
         }
         return instance;
     }
@@ -53,6 +59,7 @@ public class VisionSubsystem extends SubsystemBase {
     private volatile Timer lastDataTimer;
 
     public VisionSubsystem() {
+    super("VisionSubsystem");
     this.lastDataTimer = new Timer();
     this.lastDataTimer.start();
     this.notifier = new Notifier(() -> notifierLoop());
@@ -371,6 +378,7 @@ public class VisionSubsystem extends SubsystemBase {
     public void periodic() {
     }
 
+
      public Pose2d getEstimatedPose() {
         VisionData[] filteredLimelightDatas = getFilteredLimelightData(true);
 
@@ -393,7 +401,7 @@ public class VisionSubsystem extends SubsystemBase {
             if (filteredLimelightDatas[0].MegaTag2.tagCount == 0 || filteredLimelightDatas[1].MegaTag2.tagCount == 0) {
                 return new Pose2d();
             }
-
+            
             // Average them for best accuracy
             return new Pose2d(
                 // (First translation + Second translation) / 2
@@ -408,7 +416,8 @@ public class VisionSubsystem extends SubsystemBase {
                     driveRequire.getRotation2DHeading()
             );
         }
-    }
 
+        
+    } 
 
 }
