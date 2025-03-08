@@ -37,9 +37,9 @@ private static SparkClosedLoopController m_LiftingPIDController;
 private static ProfiledPIDController m_profiledPIDController;
 
 //Tunable Values
-public final String kTunableP = "Tunable_P";
-public final String kTunableI = "Tunable_I";
-public final String kTunableD = "Tunable_D";
+// public final String kTunableP = "Tunable_P";
+// public final String kTunableI = "Tunable_I";
+// public final String kTunableD = "Tunable_D";
 public int currentIntSetpointElevator;
 private static ElevatorSubsystem instance;
 public static ElevatorFeedforward feedForwarding = new ElevatorFeedforward(0.01, 0.95, 2.5, 0.12);
