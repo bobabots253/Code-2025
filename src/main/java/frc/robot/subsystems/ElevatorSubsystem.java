@@ -58,7 +58,12 @@ private ElevatorSubsystem() {
     m_followerEncoder = m_slaveLiftingSparkMax.getEncoder();
     m_LiftingPIDController = m_masterLiftingSparkMax.getClosedLoopController();
 
-    m_profiledPIDController = new ProfiledPIDController(Constants.ElevatorConstants.profiledP, Constants.ElevatorConstants.profiledI, Constants.ElevatorConstants.profiledD, new TrapezoidProfile.Constraints(Constants.ElevatorConstants.elevatorMaxVelocity, Constants.ElevatorConstants.elevaotrMaxAccerleration));
+    m_profiledPIDController = new ProfiledPIDController(
+        Constants.ElevatorConstants.profiledP, 
+        Constants.ElevatorConstants.profiledI, 
+        Constants.ElevatorConstants.profiledD, 
+        new TrapezoidProfile.Constraints(Constants.ElevatorConstants.elevatorMaxVelocity, Constants.ElevatorConstants.elevaotrMaxAccerleration), 0.0
+    );
 
     m_masterLiftingSparkMax.configure(Configs.ElevatorSubsystem.masterLiftingConfig, ResetMode.kResetSafeParameters,
     PersistMode.kPersistParameters);
