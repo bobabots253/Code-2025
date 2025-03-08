@@ -389,10 +389,10 @@ public class VisionSubsystem extends SubsystemBase {
             return new Pose2d();
         }
         else if (filteredLimelightDatas.length == 1) {
-            if (filteredLimelightDatas[0].MegaTag2.tagCount == 0) {
+            if (filteredLimelightDatas[0].MegaTag.tagCount == 0) {
                 return new Pose2d();
             }
-
+            System.out.println("POSEMT2:"+filteredLimelightDatas[0].MegaTag2.pose.getTranslation()+"\nROT:"+filteredLimelightDatas[0].MegaTag.pose.getRotation());
             return new Pose2d(
                 filteredLimelightDatas[0].MegaTag2.pose.getTranslation(),
                 filteredLimelightDatas[0].canTrustRotation ?

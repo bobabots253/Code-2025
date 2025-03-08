@@ -284,8 +284,8 @@ public final class Constants {
       public static final double AVG_MT2_TAG_DIST = 3;
       public static final double TRUSTWORTHY_DISTANCE = 4; //Meters
       public static final double MAX_ANGULAR = 180; //Degrees
-      public static final String FRONT_LEFT_APRIL_TAG_LL = "limelight-green";
-      public static final String FRONT_RIGHT_APRIL_TAG_LL = "limelight-blue";
+      public static final String FRONT_LEFT_APRIL_TAG_LL = "limelight-left";
+      public static final String FRONT_RIGHT_APRIL_TAG_LL = "limelight-right";
       public static final double DEFAULT_CROP_SIZE = 0.85;
       public static final double FOV_X = 82; //for 3G's
       public static final double FOV_Y = 56.2;
