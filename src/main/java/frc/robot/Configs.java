@@ -1,9 +1,14 @@
 package frc.robot;
 
+import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.*;
 
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.ModuleConstants;
 
 public final class Configs {
@@ -13,6 +18,7 @@ public final class Configs {
 
         static {
             // Use module constants to calculate conversion factors and feed forward gain.
+            //DO NOT TOUCH THESE CONSTANTS UNLESS YOU KNOW WHAT YOU ARE DOING
             double drivingFactor = ModuleConstants.kWheelDiameterMeters * Math.PI
                     / ModuleConstants.kDrivingMotorReduction;
             double turningFactor = 2 * Math.PI;
@@ -50,56 +56,127 @@ public final class Configs {
     }
 
     public static final class ElevatorSubsystem {
-        public static final SparkMaxConfig motorRConfig = new SparkMaxConfig();
-        public static final SparkMaxConfig motorLConfig = new SparkMaxConfig();
-        
-        static{
-                motorLConfig.follow(Constants.ElevatorConstants.rightMotorID);
-                motorLConfig
-                                .idleMode(IdleMode.kBrake)
-                                .smartCurrentLimit(45);
-                motorLConfig.closedLoop
-                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                                .pid(0, 0, 0)
-                                .outputRange(-1, 1);
-                motorRConfig
-                                .idleMode(IdleMode.kBrake)
-                                .smartCurrentLimit(45);
-                motorRConfig.closedLoop
-                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                                .pid(0, 0, 0)
-                                .outputRange(-1, 1);
-        }
-        
-    }
-
-    public static final class TestSubsystem {
-        public static final SparkMaxConfig TestConfig = new SparkMaxConfig();
-        public static final SparkMaxConfig TestConfig2 = new SparkMaxConfig();
+        public static final SparkMaxConfig masterLiftingConfig = new SparkMaxConfig(); //Left (relative to swerve)
+        public static final SparkMaxConfig slaveLiftingConfig = new SparkMaxConfig(); ////Right (relative to swerve)
+        //public static final SparkBaseConfig baseMasterLiftingConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig masterLiftingCoastModeConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig slaveLiftingCoastModeConfig = new SparkMaxConfig();
 
         static{
-        TestConfig.follow(Constants.TestSubsystemConstants.rightArmMotorID);
-        TestConfig
+        masterLiftingConfig
+                    .inverted(false)
                     .idleMode(IdleMode.kBrake)
-                    .smartCurrentLimit(45);
-        TestConfig.closedLoop
+                    .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
+        masterLiftingConfig.closedLoop
                     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                    .pid(1.2, 0, 0.75)
-                    .outputRange(-1, 1);
-        TestConfig2
+                    .pid(ElevatorConstants.kIncrementalPostionP,
+                         ElevatorConstants.kIncrementalPostionI,
+                         ElevatorConstants.kIncrementalPositionD)
+                    .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh);
+
+        slaveLiftingConfig
+                    .follow(ElevatorConstants.masterLiftingCANId, true)
                     .idleMode(IdleMode.kBrake)
-                    .smartCurrentLimit(25);
-        TestConfig2.absoluteEncoder
-                    // Invert the turning encoder, since the output shaft rotates in the opposite
-                    // direction of the steering motor in the MAXSwerve Module.
-                    .inverted(false);
-        TestConfig2.closedLoop
-                    .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                    // These are example gains you may need to them for your own robot!
-                    .pid(1, 0, .5)
-                    .outputRange(-1, 1)
-                    .positionWrappingEnabled(false);
+                    .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
+
+        masterLiftingCoastModeConfig
+                    .idleMode(IdleMode.kCoast)
+                    .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
+        masterLiftingCoastModeConfig.closedLoop
+                    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                    .pid(ElevatorConstants.kIncrementalPostionP,
+                         ElevatorConstants.kIncrementalPostionI,
+                         ElevatorConstants.kIncrementalPositionD)
+                    .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh);
+
+        slaveLiftingCoastModeConfig.follow(ElevatorConstants.masterLiftingCANId);
+        slaveLiftingCoastModeConfig
+                    .inverted(true)
+                    .idleMode(IdleMode.kCoast)
+                    .smartCurrentLimit(ElevatorConstants.kUniversalSoftLimit);
         }
     }
+    public static final class EndEffectorSubsystemConfig {
+        public static final SparkMaxConfig pivotConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig intakeRollerConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig algaeRollerConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig pivotCoastModeConfig = new SparkMaxConfig();
+
+        static{
+        pivotConfig
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(EndEffectorConstants.kUniversalSoftLimit);
+        pivotConfig.closedLoop
+                    .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                    .pid(EndEffectorConstants.kPivotAbsolutePositionP,
+                         EndEffectorConstants.kPivotAbsolutePositionI,
+                         EndEffectorConstants.kPivotAbsolutePositionD)
+                    .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh)
+                    .positionWrappingEnabled(false);
+        pivotConfig.absoluteEncoder
+                    .inverted(false);
+
+        pivotConfig
+                    .idleMode(IdleMode.kCoast)
+                    .smartCurrentLimit(EndEffectorConstants.kUniversalSoftLimit);
+        pivotConfig.closedLoop
+                    .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                    .pid(EndEffectorConstants.kPivotAbsolutePositionP,
+                         EndEffectorConstants.kPivotAbsolutePositionI,
+                         EndEffectorConstants.kPivotAbsolutePositionD)
+                    .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh)
+                    .positionWrappingEnabled(false);
+        pivotConfig.absoluteEncoder
+                    .inverted(false);
+
+        intakeRollerConfig
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(EndEffectorConstants.kUniversalSoftLimit);
+        intakeRollerConfig.closedLoop
+                    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                    .pid(EndEffectorConstants.kIntakeVelocityP, 
+                         EndEffectorConstants.kIntakeVelocityI, 
+                         EndEffectorConstants.kIntakeVelocityD)
+                    .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh);
+        
+        algaeRollerConfig
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(EndEffectorConstants.kUniversalSoftLimit);
+        algaeRollerConfig.closedLoop
+                    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                    .pid(EndEffectorConstants.kAlgaeVelocityP, 
+                         EndEffectorConstants.kAlgaeVelocityI, 
+                         EndEffectorConstants.kAlgaeVelocityD)
+                    .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh);
+        }
+    }
+//     public static final class TestSubsystem {
+//         public static final SparkMaxConfig TestConfig = new SparkMaxConfig();
+//         public static final SparkMaxConfig TestConfig2 = new SparkMaxConfig();
+
+//         static{
+//         TestConfig.follow(Constants.TestSubsystemConstants.rightArmMotorID);
+//         TestConfig
+//                     .idleMode(IdleMode.kBrake)
+//                     .smartCurrentLimit(45);
+//         TestConfig.closedLoop
+//                     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+//                     .pid(1.2, 0, 0.75)
+//                     .outputRange(-1, 1);
+//         TestConfig2
+//                     .idleMode(IdleMode.kBrake)
+//                     .smartCurrentLimit(25);
+//         TestConfig2.absoluteEncoder
+//                     // Invert the turning encoder, since the output shaft rotates in the opposite
+//                     // direction of the steering motor in the MAXSwerve Module.
+//                     .inverted(false);
+//         TestConfig2.closedLoop
+//                     .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+//                     // These are example gains you may need to them for your own robot!
+//                     .pid(1, 0, .5)
+//                     .outputRange(-1, 1)
+//                     .positionWrappingEnabled(false);
+//         }
+//     }
 
 }

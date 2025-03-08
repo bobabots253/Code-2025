@@ -98,11 +98,16 @@ public class DriveSubsystem extends SubsystemBase {
   private double m_currentTranslationDir = 0.0;
   private double m_currentTranslationMag = 0.0;
 
+  //Basic Vision Measurement Constants
+  double yaw;
+  double NTlatency = 0.003;
+
   private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
   final Field2d m_fieldGyro = new Field2d();
   final Field2d m_fieldVision = new Field2d();
+  final Field2d m_refinedVision = new Field2d();
   public static Pose2d refinedVisionPose;
 
   // Odometry class for tracking robot pose
@@ -117,6 +122,16 @@ public class DriveSubsystem extends SubsystemBase {
       });
       
       SwerveDrivePoseEstimator odometryVision = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
+      (fieldFlipped ? getInitialFlippeRotation2d(): getRotation2DHeading()), new SwerveModulePosition[] {
+              m_frontLeft.getPosition(),
+              m_frontRight.getPosition(),
+              m_rearLeft.getPosition(),
+              m_rearRight.getPosition()
+      }, new Pose2d(),
+      VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(5)),
+      VecBuilder.fill(0.75, 0.75, 99999999));
+
+      public SwerveDrivePoseEstimator refinedodometryVision = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
       (fieldFlipped ? getInitialFlippeRotation2d(): getRotation2DHeading()), new SwerveModulePosition[] {
               m_frontLeft.getPosition(),
               m_frontRight.getPosition(),
@@ -167,6 +182,7 @@ public class DriveSubsystem extends SubsystemBase {
 }
   @Override
   public void periodic() {
+    
     SmartDashboard.putBoolean("NavX Exists", Nav_x.isConnected());
     // Update the odometry in the periodic block
     //Main Odometry Update
@@ -187,26 +203,41 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
       });
+    
+      refinedodometryVision.update(
+        Rotation2d.fromDegrees(-Nav_x.getAngle()),
+        new SwerveModulePosition[] {
+              m_frontLeft.getPosition(),
+              m_frontRight.getPosition(),
+              m_rearLeft.getPosition(),
+              m_rearRight.getPosition()
+        });
 
-    refinedVisionPose = VisionSubsystem.getInstance().getEstimatedPose();
+    //VisionSubsystem.notifierLoop();
+    //VisionSubsystem.getInstance().notifierLoop();
+    
+    /*Refined Vision Pose Estimator */
+    // refinedVisionPose = VisionSubsystem.getInstance().getEstimatedPose();
+    // try{
+    //   refinedodometryVision.addVisionMeasurement(refinedVisionPose, Timer.getFPGATimestamp() - NTlatency);
+    // } catch ( Exception err){
+    //   System.out.println("Couldn't Return Refined Vision");
+    // }
 
-    SmartDashboard.putData("Field Gyro", m_fieldGyro);
-    SmartDashboard.putData("Field Vision", m_fieldVision);
-    m_fieldGyro.setRobotPose(m_odometry.getPoseMeters());
-    // m_fieldVision.setRobotPose(
-    //   odometryVision.getEstimatedPosition().getX(),
-    //   odometryVision.getEstimatedPosition().getY(),
-    //   (Nav_x.getRotation2d())
-    // );
-    m_fieldVision.setRobotPose(odometryVision.getEstimatedPosition());
-
+    /*Basic Vision Pose Estimator */
     try {
-      addVisionMeasurement("limelight");
+      addBasicVisionMeasurement("limelight");
     }
     catch(Exception erException) {
       System.out.println("No Valid Limelight Targets");
     }
 
+    SmartDashboard.putData("Field Gyro", m_fieldGyro);
+    SmartDashboard.putData("Field Vision", m_fieldVision);
+    SmartDashboard.putData("Refined Vision", m_refinedVision);
+    m_fieldGyro.setRobotPose(m_odometry.getPoseMeters());
+    m_fieldVision.setRobotPose(odometryVision.getEstimatedPosition());
+    m_refinedVision.setRobotPose(refinedodometryVision.getEstimatedPosition());
 
     double[] driveMotorCurrent = {
       m_frontLeft.getDriveCurrent(), m_frontRight.getDriveCurrent(),
@@ -226,9 +257,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
   
-  double yaw;
-  double NTlatency = 0.003;
-  public void addVisionMeasurement(String limelight) {
+  public void addBasicVisionMeasurement(String limelight) {
       LimelightHelpers.SetRobotOrientation(limelight, getHeading(), 0,
               0, 0, 0, 0);
       if (LimelightHelpers.getTV(limelight)) {

@@ -3,10 +3,18 @@ package frc.robot;
 // Class to refer to all arm and hook states
 public final class States {
     public enum ElevatorPos {
-        STOW(0), L1(1), L2(2), L3(3);
-        public int level;
+        STOW(0), L1Score(1), L2Score(2), L3Score (3), NOTHING(99); //Add All Pos Later
+        public int val;
         private ElevatorPos(int val) {
-            this.level = val;
+            this.val = val;
+        }
+    }
+
+    public enum EndEffectorPos {
+        STOW(0), L1Score(1), L2Score(2), L3Score (3), INTAKE(4), PUSH(5), FLY_BIRDY_FLY(6), HARD_REMOVE(7), NOTHING(99); //Add All Pos Later
+        public int val;
+        private EndEffectorPos(int val) {
+            this.val = val;
         }
     }
 
