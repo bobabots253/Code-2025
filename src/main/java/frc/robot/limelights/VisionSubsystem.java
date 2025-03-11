@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -64,7 +65,7 @@ public class VisionSubsystem extends SubsystemBase {
     this.lastDataTimer.start();
     this.notifier = new Notifier(() -> notifierLoop());
     this.notifier.setName("Vision Notifier");
-    this.notifier.startPeriodic(0.020); //20ms
+    this.notifier.startPeriodic(0.02631578947368421); //20ms
     }
 
     public boolean recentVisionData() {
@@ -392,11 +393,11 @@ public class VisionSubsystem extends SubsystemBase {
             if (filteredLimelightDatas[0].MegaTag.tagCount == 0) {
                 return new Pose2d();
             }
-            System.out.println("POSEMT2:"+filteredLimelightDatas[0].MegaTag2.pose.getTranslation()+"\nROT:"+filteredLimelightDatas[0].MegaTag.pose.getRotation());
+            //System.out.println("POSEMT2:"+filteredLimelightDatas[0].MegaTag2.pose.getTranslation()+"\nROT:"+filteredLimelightDatas[0].MegaTag2.pose.getRotation());
             return new Pose2d(
                 filteredLimelightDatas[0].MegaTag2.pose.getTranslation(),
                 filteredLimelightDatas[0].canTrustRotation ?
-                    filteredLimelightDatas[0].MegaTag.pose.getRotation() : driveRequire.getRotation2DHeading()
+                    filteredLimelightDatas[0].MegaTag2.pose.getRotation() : driveRequire.getRotation2DHeading()
             );
         }
         else {

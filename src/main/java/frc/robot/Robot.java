@@ -43,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Autonomous.AutoModeManager.DesiredMode;
 import frc.robot.Bobaboard.BotControls;
@@ -136,10 +137,14 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 1);
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 1);
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override

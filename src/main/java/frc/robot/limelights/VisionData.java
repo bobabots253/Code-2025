@@ -38,7 +38,7 @@ public class VisionData {
         //     && this.MegaTag.tagCount >= Constants.VisionConstants.MIN_MT_TAG_COUNT
         //     && Units.radiansToDegrees(robotChassisSpeeds.omegaRadiansPerSecond) <= Constants.VisionConstants.MAX_ANGULAR
         //     && currentVelocity <= 2;
-        return false;
+        return true;
     }
 
     /**

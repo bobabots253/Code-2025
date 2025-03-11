@@ -103,7 +103,7 @@ public final class Constants {
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
 
-    public static final double kDrivingP = 0.02; //0.4 is 1/2 speed
+    public static final double kDrivingP = 0.04; //0.4 is 1/2 speed
     public static final double kDrivingI = 0;
     public static final double kDrivingD = 0;
     public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
@@ -284,8 +284,8 @@ public final class Constants {
       public static final double AVG_MT2_TAG_DIST = 3;
       public static final double TRUSTWORTHY_DISTANCE = 4; //Meters
       public static final double MAX_ANGULAR = 180; //Degrees
-      public static final String FRONT_LEFT_APRIL_TAG_LL = "limelight-left";
-      public static final String FRONT_RIGHT_APRIL_TAG_LL = "limelight-right";
+      public static final String FRONT_LEFT_APRIL_TAG_LL = "limelight-orange";
+      public static final String FRONT_RIGHT_APRIL_TAG_LL = "limelight-purple";
       public static final double DEFAULT_CROP_SIZE = 0.85;
       public static final double FOV_X = 82; //for 3G's
       public static final double FOV_Y = 56.2;

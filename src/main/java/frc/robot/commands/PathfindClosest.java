@@ -42,17 +42,24 @@ public class PathfindClosest extends Command {
     private PathPlannerTrajectory currentTrajectory;
     private double timeOffset = 0;
     public RunCommand newCommand;
+    private final HolonomicDriveController holonomicDriveController;
+    private final PIDController xController;
+    private final PIDController yController;
+    private final ProfiledPIDController rotController;
 
     //Note: Possibel Fix for Invalid Static Reference to DriveSubsys which has been causing the runtime crash
     // Vision Pose Estimation works but gets interefered by "estimated velocities"
     // Sometimes the position gets flipped which is unideal (find fix later)
     public PathfindClosest(boolean runCommand) {
-        this.target = target;
-        this.tolerance = tolerance;
         this.runCommand = runCommand;
             // xController = new PIDController(.1, 0, 0);
         // yController = new PIDController(.1, 0, 0);
+        xController = new PIDController(.1, 0, 0);
+        yController = new PIDController(.1, 0, 0);
 
+        rotController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(3.5, 3.5));
+        holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
+        holonomicDriveController.setTolerance(FieldSetup.kReefFarEntranceTolerance);
         // rotController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(3.5, 3.5));
         // holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
         // holonomicDriveController.setTolerance(this.tolerance);
@@ -119,6 +126,11 @@ public class PathfindClosest extends Command {
     @Override
     public void end(boolean interrupted) {
         driveRequire.Xmode();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return holonomicDriveController.atReference();
     }
 }
 

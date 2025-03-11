@@ -48,6 +48,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.limelights.VisionSubsystem;
 import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
@@ -148,7 +149,7 @@ public class DriveSubsystem extends SubsystemBase {
       RobotConfig config = RobotConfig.fromGUISettings();
       //getPoseVision
     AutoBuilder.configure(
-      this::getPose, // Robot pose supplier
+      this::getRefinedPoseVision, // Robot pose supplier
       this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
       this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
@@ -218,6 +219,8 @@ public class DriveSubsystem extends SubsystemBase {
     
     /*Refined Vision Pose Estimator */
     refinedVisionPose = VisionSubsystem.getInstance().getEstimatedPose();
+    boolean isTeleOp = DriverStation.isTeleopEnabled();
+
     try{
       if (!refinedVisionPose.equals(new Pose2d())) {
       refinedodometryVision.addVisionMeasurement(refinedVisionPose, Timer.getFPGATimestamp() - NTlatency);

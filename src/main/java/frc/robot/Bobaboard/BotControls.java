@@ -17,6 +17,7 @@ public class BotControls {
 
 	RobotContainer rContainer = RobotContainer.getInstance();
     ControlHub controlHub = ControlHub.getInstance();
+    boolean interruptedPPLib;
 
     final static SendableChooser<Boolean> ControllerMode = new SendableChooser<>();
     public boolean OneControllerQuery = true;
@@ -60,6 +61,11 @@ public class BotControls {
     if (OneControllerQuery == true){
             if (controlHub.driverController.L_Bumper.wasActivated()) {
                 rContainer.m_robotDrive.zeroHeading();
+            }
+
+            if (controlHub.driverController.X_Button.wasActivated()){
+                interruptedPPLib = !interruptedPPLib;
+                RobotContainer.PathfindClosest(interruptedPPLib).schedule();
             }
             
             // if(controlHub.driverController.A_Button.wasReleased() || controlHub.driverController.B_Button.wasReleased()
