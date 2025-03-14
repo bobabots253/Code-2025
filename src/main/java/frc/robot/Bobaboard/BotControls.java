@@ -63,10 +63,10 @@ public class BotControls {
                 rContainer.m_robotDrive.zeroHeading();
             }
 
-            if (controlHub.driverController.X_Button.wasActivated()){
-                interruptedPPLib = !interruptedPPLib;
-                RobotContainer.PathfindClosest(interruptedPPLib).schedule();
-            }
+            // if (controlHub.driverController.X_Button.wasActivated()){
+            //     interruptedPPLib = !interruptedPPLib;
+            //     RobotContainer.PathfindClosest(interruptedPPLib).schedule();
+            // }
             
             // if(controlHub.driverController.A_Button.wasReleased() || controlHub.driverController.B_Button.wasReleased()
             // || controlHub.driverController.A_Button.isNotBeingPressed() || controlHub.driverController.B_Button.isNotBeingPressed()){
