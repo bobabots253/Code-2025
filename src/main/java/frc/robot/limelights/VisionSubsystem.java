@@ -65,7 +65,7 @@ public class VisionSubsystem extends SubsystemBase {
     this.lastDataTimer.start();
     this.notifier = new Notifier(() -> notifierLoop());
     this.notifier.setName("Vision Notifier");
-    this.notifier.startPeriodic(0.02631578947368421); //20ms
+    this.notifier.startPeriodic(0.020); //20ms
     }
 
     public boolean recentVisionData() {
@@ -100,8 +100,8 @@ public class VisionSubsystem extends SubsystemBase {
 
                 // Only trust positional data when adding this pose.
                 driveRequire.refinedodometryVision.setVisionMeasurementStdDevs(VecBuilder.fill(
-                    recentVisionData() ? 0.7 : 0.1,
-                    recentVisionData() ? 0.7 : 0.1,
+                    recentVisionData() ? 0.7 : 0.2,
+                    recentVisionData() ? 0.7 : 0.2,
                     9999999
                 ));
                 driveRequire.refinedodometryVision.addVisionMeasurement(
@@ -112,7 +112,7 @@ public class VisionSubsystem extends SubsystemBase {
         }
 
         // This method is suprprisingly efficient, generally below 1 ms.
-        optimizeLimelights();
+        //optimizeLimelights();
     }
 
     private VisionData[] getFilteredLimelightData(boolean useStored) {

@@ -109,6 +109,7 @@ public class DriveSubsystem extends SubsystemBase {
   final Field2d m_fieldGyro = new Field2d();
   final Field2d m_fieldVision = new Field2d();
   final Field2d m_refinedVision = new Field2d();
+  final Field2d m_pureVisionEstimation = new Field2d();
   public static Pose2d refinedVisionPose;
 
   // Odometry class for tracking robot pose
@@ -139,8 +140,8 @@ public class DriveSubsystem extends SubsystemBase {
               m_rearLeft.getPosition(),
               m_rearRight.getPosition()
       }, new Pose2d(),
-      VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(5)),
-      VecBuilder.fill(0.75, 0.75, 99999999));
+      VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(5)),
+      VecBuilder.fill(0.5, 0.5, 99999999));
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -240,9 +241,11 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putData("Field Gyro", m_fieldGyro);
     SmartDashboard.putData("Field Vision", m_fieldVision);
     SmartDashboard.putData("Refined Vision", m_refinedVision);
+    SmartDashboard.putData("Field Pure Vision", m_pureVisionEstimation);
     m_fieldGyro.setRobotPose(m_odometry.getPoseMeters());
     m_fieldVision.setRobotPose(odometryVision.getEstimatedPosition());
     m_refinedVision.setRobotPose(refinedodometryVision.getEstimatedPosition());
+    m_pureVisionEstimation.setRobotPose(refinedVisionPose);
 
     double[] driveMotorCurrent = {
       m_frontLeft.getDriveCurrent(), m_frontRight.getDriveCurrent(),

@@ -102,7 +102,7 @@ public class FieldSetup {
         public static final int kRedReefPosKId = 6;
         public static final int kRedReefPosLId = 6;
 
-        public static final Pose2d kReefFarEntranceTolerance = new Pose2d(new Translation2d(0.1, 0.1),
+        public static final Pose2d kReefFarEntranceTolerance = new Pose2d(new Translation2d(0.25, 0.25),
                 Rotation2d.fromDegrees(0));
 
         // }
