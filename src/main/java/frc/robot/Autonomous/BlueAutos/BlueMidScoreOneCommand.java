@@ -10,23 +10,16 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.commands.ElevateL3Command;
 
-public final class BlueMidSafetyCommand extends Command{
+public final class BlueMidScoreOneCommand{
 
-    public static Command getPathPlannerCommand_MidLeave() {
-        return new PathPlannerAuto("AB_MidLeave");
-    }
-    public static Command getPathPlannerCommand_MidScore1() {
+    public static Command getPathPlannerCommand_Score1() {
         return new PathPlannerAuto("AB_MidScore1");
     }
 
     public static Command runDefaultedAutoCommand(){
         return new SequentialCommandGroup(
-        getPathPlannerCommand_MidLeave()
+            getPathPlannerCommand_Score1()
         );
     }
-    public static Command runScoreOneAutoCommand(){
-        return new SequentialCommandGroup(
-        getPathPlannerCommand_MidScore1()
-        );
-    }
+
 }

@@ -4,14 +4,17 @@ import java.util.Optional;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Autonomous.BlueAutos.BlueBottomCommand;
 import frc.robot.Autonomous.BlueAutos.BlueMidSafetyCommand;
+import frc.robot.Autonomous.BlueAutos.BlueMidScoreOneCommand;
 import frc.robot.Autonomous.BlueAutos.CrossLineCommand;
 //import frc.robot.subsystems.TestSubsystem;
 import frc.robot.Autonomous.DefaultCommands.DoNothingCommand;
 import frc.robot.Autonomous.DefaultCommands.GoAutoCommand;
 import frc.robot.Autonomous.DefaultCommands.ReturnAutoCommand;
 import frc.robot.Autonomous.DefaultCommands.StandStillCommand;
+import frc.robot.commands.ElevateL3Command;
 
 public final class AutoModeManager{
     public enum DesiredMode {
@@ -76,7 +79,7 @@ public final class AutoModeManager{
                 m_autonomousCommand = BlueMidSafetyCommand.runDefaultedAutoCommand();
                 break;
             case AB_MIDSCOREONE:
-                m_autonomousCommand = BlueMidSafetyCommand.runScoreOneAutoCommand();
+                m_autonomousCommand = blueSafetyAutoCommand();
                 break;
             case STAND_STILL:
                 m_autonomousCommand = StandStillCommand.runDefaultedAutoCommand();  
@@ -87,6 +90,13 @@ public final class AutoModeManager{
 				break;
         }
         return m_autonomousCommand;
+    }
+
+    public static Command blueSafetyAutoCommand(){
+        return new SequentialCommandGroup(
+            BlueMidScoreOneCommand.runDefaultedAutoCommand()
+            // new ElevateL3Command()
+            );
     }
 
     

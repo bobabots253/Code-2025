@@ -204,6 +204,8 @@ public final class Constants {
     public static final double ELEVATOR_MIN_TRAVEL = -0.075000; //heuristic
     public static final double ELEVATOR_OUTPUT_LOW = -0.75;
     public static final double ELEVATOR_OUTPUT_HIGH = 0.75;
+    public static final double ELEVATOR_VOLTAGE_OUTPUT_LOW = -5;
+    public static final double ELEVATOR_VOLTAGE_OUTPUT_HIGH = 5;
     public static final double arbFFVolatge = 0.05;
     public static final double kV = 473;
   }

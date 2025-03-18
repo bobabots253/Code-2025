@@ -7,6 +7,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkLowLevel.PeriodicFrame;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
@@ -24,7 +25,7 @@ public class ElevatorSubsystem extends SubsystemBase{
 
 private static SparkMax m_masterLiftingSparkMax;
 private static SparkMax m_slaveLiftingSparkMax;
-private final RelativeEncoder m_LiftingEncoder;
+public final RelativeEncoder m_LiftingEncoder;
 private final RelativeEncoder m_followerEncoder;
 private static DigitalInput masterHallEffectSensor;
 private static DigitalInput slaveHallEffectSensor;
@@ -46,7 +47,6 @@ public static ElevatorSubsystem getInstance() {
 private ElevatorSubsystem() {
     m_masterLiftingSparkMax = new SparkMax(ElevatorConstants.masterLiftingCANId, MotorType.kBrushless);
     m_slaveLiftingSparkMax = new SparkMax(ElevatorConstants.slaveLiftingCANId, MotorType.kBrushless);
-
     // Setup encoders and PID controllers for the driving SPARKS MAX.
     m_LiftingEncoder = m_masterLiftingSparkMax.getEncoder();
     m_followerEncoder = m_slaveLiftingSparkMax.getEncoder();
@@ -108,6 +108,27 @@ public void periodic() {
             }
             }        
         }
+
+        public void setSafeVoltageOpenLoop(double OpenLoopVoltage){
+            SmartDashboard.putNumber("Elevator / Safe Output Voltage (##.#)", OpenLoopVoltage);
+            if (isWithinExtensionRange() && !MathUtil.isNear(18.85, getEncoder(), 0.15)){
+                m_masterLiftingSparkMax.setVoltage(
+                    MathUtil.clamp(OpenLoopVoltage,
+                     ElevatorConstants.ELEVATOR_VOLTAGE_OUTPUT_LOW, ElevatorConstants.ELEVATOR_VOLTAGE_OUTPUT_HIGH));
+                m_slaveLiftingSparkMax.setVoltage(
+                    MathUtil.clamp(OpenLoopVoltage,
+                     ElevatorConstants.ELEVATOR_VOLTAGE_OUTPUT_LOW, ElevatorConstants.ELEVATOR_VOLTAGE_OUTPUT_HIGH));
+                }else{
+                while(MathUtil.isNear(18.85, getEncoder(), 0.15)){
+                    m_masterLiftingSparkMax.set(-0.05);
+                    m_slaveLiftingSparkMax.set(-0.05);
+                    }
+                while(MathUtil.isNear(-0.1, getEncoder(), 0.05)){
+                    m_masterLiftingSparkMax.set(0.05);
+                    m_slaveLiftingSparkMax.set(0.05);
+                }
+                }        
+            }
 
     public void stopElevator() {
         setLazyPercentageOpenLoop(0);
@@ -195,7 +216,6 @@ public void periodic() {
         // }
     }
 
-
     //Add the Rest & Add Button Bindings
     public void setLazyElevatorState(States.ElevatorPos requestedState) {
         SmartDashboard.putNumber("Elevator /Position", requestedState.val);
@@ -203,16 +223,22 @@ public void periodic() {
         switch (requestedState) {
             case STOW:
                 setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
+                //returnLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
                 break;
             case L1Score:
                 setLazyPositionSetpoint(ElevatorConstants.L1Score);
+              //  returnLazyPositionSetpoint(ElevatorConstants.L1Score);
                 break;
             case L2Score:
                 setLazyPositionSetpoint(ElevatorConstants.L2Score);
+              //  returnLazyPositionSetpoint(ElevatorConstants.L2Score);
                 break;
             case L3SCORE:
                 setLazyPositionSetpoint(ElevatorConstants.L3Score);
+              //  returnLazyPositionSetpoint(ElevatorConstants.L3Score);
                 break;
+            case HOLD:
+                setSafeVoltageOpenLoop(ElevatorConstants.kIncrementalPositionFF);
             default:
                 setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
                 break;
