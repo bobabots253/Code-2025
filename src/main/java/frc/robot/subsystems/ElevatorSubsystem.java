@@ -62,7 +62,7 @@ private ElevatorSubsystem() {
     m_followerEncoder = m_slaveLiftingSparkMax.getEncoder();
     m_LiftingPIDController = m_masterLiftingSparkMax.getClosedLoopController();
 
-    m_feedForward = new ElevatorFeedforward(0.01, 0.95, 2.5, 0.12);
+    m_feedForward = new ElevatorFeedforward(0.01, 0.99, 7.67, 0.16);
     m_profiledPIDController = new ProfiledPIDController(
         Constants.ElevatorConstants.profiledP, 
         Constants.ElevatorConstants.profiledI, 
@@ -214,19 +214,26 @@ public void periodic() {
     }
     public void profiledPIDCalculation(double goalPosition){
         if(isWithinExtensionRange()){
+            //possible divide the feed forward by 2 because it is a 2 stage cascading elevator
             m_masterLiftingSparkMax.setVoltage(
                 MathUtil.clamp(
-                    (m_profiledPIDController.calculate(m_LiftingEncoder.getPosition(), goalPosition)
+                    (m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))
                     +m_feedForward.calculateWithVelocities(
-                    m_LiftingEncoder.getVelocity(), m_profiledPIDController.getSetpoint().velocity)),
+                    rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity)),
                     -10, 10)
                     );
         }else{
             System.out.println("Yo you're going to break the elevator. Power cycle with the elevator down.");
         }
         //m_LiftingPIDController.setReference(goalPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0, , SparkClosedLoopController.ArbFFUnits.kVoltage);
-
         SmartDashboard.putNumber("Elevator / trapezoid", goalPosition);
+    }
+    public double rpmToVelocity(double rpm){
+        // multiplied by 2 because cascading it twice as fast.
+        return 2 * ((rpm / 60) / Constants.ElevatorConstants.gearRatio) / (2*Math.PI*Constants.ElevatorConstants.gearRadius);
+    }
+    public double rotToMeters(double rot){
+        return (((rot/Constants.ElevatorConstants.gearRatio)/(Math.PI*2*Constants.ElevatorConstants.gearRadius))/2);
     }
 
 
