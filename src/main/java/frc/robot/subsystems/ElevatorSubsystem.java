@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.ResourceBundle.Control;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -12,6 +14,7 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
@@ -42,7 +45,8 @@ private static ProfiledPIDController m_profiledPIDController;
 // public final String kTunableD = "Tunable_D";
 public int currentIntSetpointElevator;
 private static ElevatorSubsystem instance;
-public static ElevatorFeedforward feedForwarding = new ElevatorFeedforward(0.01, 0.95, 2.5, 0.12);
+public static ElevatorFeedforward m_feedForward;
+
 public double volting;
 public static ElevatorSubsystem getInstance() {
     if(instance == null) instance = new ElevatorSubsystem();
@@ -58,11 +62,12 @@ private ElevatorSubsystem() {
     m_followerEncoder = m_slaveLiftingSparkMax.getEncoder();
     m_LiftingPIDController = m_masterLiftingSparkMax.getClosedLoopController();
 
+    m_feedForward = new ElevatorFeedforward(0.01, 0.95, 2.5, 0.12);
     m_profiledPIDController = new ProfiledPIDController(
         Constants.ElevatorConstants.profiledP, 
         Constants.ElevatorConstants.profiledI, 
         Constants.ElevatorConstants.profiledD, 
-        new TrapezoidProfile.Constraints(Constants.ElevatorConstants.elevatorMaxVelocity, Constants.ElevatorConstants.elevaotrMaxAccerleration), 0.0
+        new TrapezoidProfile.Constraints(Constants.ElevatorConstants.elevatorMaxVelocity, Constants.ElevatorConstants.elevaotrMaxAccerleration), 0.02
     );
 
     m_masterLiftingSparkMax.configure(Configs.ElevatorSubsystem.masterLiftingConfig, ResetMode.kResetSafeParameters,
@@ -208,7 +213,20 @@ public void periodic() {
         // }
     }
     public void profiledPIDCalculation(double goalPosition){
-        m_masterLiftingSparkMax.set(m_profiledPIDController.calculate(m_LiftingEncoder.getPosition(), goalPosition));
+        if(isWithinExtensionRange()){
+            m_masterLiftingSparkMax.setVoltage(
+                MathUtil.clamp(
+                    (m_profiledPIDController.calculate(m_LiftingEncoder.getPosition(), goalPosition)
+                    +m_feedForward.calculateWithVelocities(
+                    m_LiftingEncoder.getVelocity(), m_profiledPIDController.getSetpoint().velocity)),
+                    -10, 10)
+                    );
+        }else{
+            System.out.println("Yo you're going to break the elevator. Power cycle with the elevator down.");
+        }
+        //m_LiftingPIDController.setReference(goalPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0, , SparkClosedLoopController.ArbFFUnits.kVoltage);
+
+        SmartDashboard.putNumber("Elevator / trapezoid", goalPosition);
     }
 
 
@@ -224,13 +242,14 @@ public void periodic() {
                 setLazyPositionSetpoint(ElevatorConstants.L1Score);
                 break;
             case L2Score:
-                setLazyPositionSetpoint(ElevatorConstants.L2Score);
+                profiledPIDCalculation(ElevatorConstants.L2Score);
+                //setLazyPositionSetpoint(ElevatorConstants.L2Score);
                 break;
             case L3SCORE:
-                setLazyPositionSetpoint(ElevatorConstants.L3Score);
+                //setLazyPositionSetpoint(ElevatorConstants.L3Score);
                 break;
             default:
-                setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
+                //setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
                 break;
         }
     }
