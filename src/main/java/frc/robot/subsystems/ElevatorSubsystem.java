@@ -46,6 +46,7 @@ private static ProfiledPIDController m_profiledPIDController;
 public int currentIntSetpointElevator;
 private static ElevatorSubsystem instance;
 public static ElevatorFeedforward m_feedForward;
+public static double trapezoid;
 
 public double volting;
 public static ElevatorSubsystem getInstance() {
@@ -62,7 +63,7 @@ private ElevatorSubsystem() {
     m_followerEncoder = m_slaveLiftingSparkMax.getEncoder();
     m_LiftingPIDController = m_masterLiftingSparkMax.getClosedLoopController();
 
-    m_feedForward = new ElevatorFeedforward(0.01, 0.99, 7.67, 0.16);
+    m_feedForward = new ElevatorFeedforward(0.01, .755, .5, 0.0);
     m_profiledPIDController = new ProfiledPIDController(
         Constants.ElevatorConstants.profiledP, 
         Constants.ElevatorConstants.profiledI, 
@@ -99,6 +100,11 @@ public void periodic() {
     SmartDashboard.putNumber("Elevator /followerCurrent", m_slaveLiftingSparkMax.getOutputCurrent());
     SmartDashboard.putBoolean("Elevator /withinExtensionRange", isWithinExtensionRange());
     SmartDashboard.putNumber("Elevator /requestedPosition", currentIntSetpointElevator);
+    SmartDashboard.putNumber("Elevator / trapezoid", trapezoid);
+    SmartDashboard.putNumber("Voltage of Motors", m_masterLiftingSparkMax.getAppliedOutput());
+    //System.out.println(rotToMeters(m_LiftingEncoder.getPosition()));
+
+    
 }
 
     public void setLazyPercentageOpenLoop(double OpenLoopPercentage) {
@@ -215,18 +221,32 @@ public void periodic() {
     public void profiledPIDCalculation(double goalPosition){
         if(isWithinExtensionRange()){
             //possible divide the feed forward by 2 because it is a 2 stage cascading elevator
+            //feed forward  m_feedForward.calculateWithVelocities(rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity)
             m_masterLiftingSparkMax.setVoltage(
                 MathUtil.clamp(
                     (m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))
-                    +m_feedForward.calculateWithVelocities(
-                    rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity)),
-                    -10, 10)
+                    +m_feedForward.calculateWithVelocities(rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity)),
+                    -2, 3)
                     );
+                    
+            //System.out.println(m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition)));
         }else{
             System.out.println("Yo you're going to break the elevator. Power cycle with the elevator down.");
         }
+        System.out.println("Feed forward "+m_feedForward.calculateWithVelocities(
+            rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity));
+        System.out.println("Voltage = "+MathUtil.clamp(
+            (m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))
+            + m_feedForward.calculateWithVelocities(
+            rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity)),
+            -2, 3)
+            );
+
+        System.out.println("requester = " +rotToMeters(goalPosition));
         //m_LiftingPIDController.setReference(goalPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0, , SparkClosedLoopController.ArbFFUnits.kVoltage);
-        SmartDashboard.putNumber("Elevator / trapezoid", goalPosition);
+        trapezoid = (m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))
+            + m_feedForward.calculateWithVelocities(
+            rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity));
     }
     public double rpmToVelocity(double rpm){
         // multiplied by 2 because cascading it twice as fast.
@@ -249,6 +269,7 @@ public void periodic() {
                 setLazyPositionSetpoint(ElevatorConstants.L1Score);
                 break;
             case L2Score:
+                System.out.println();
                 profiledPIDCalculation(ElevatorConstants.L2Score);
                 //setLazyPositionSetpoint(ElevatorConstants.L2Score);
                 break;
