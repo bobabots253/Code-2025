@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.EndEffectorConstants;
+import frc.robot.States.ClimbPos;
 import frc.robot.RobotContainer;
 import frc.robot.Autonomous.DefaultCommands.StandStillCommand;
 //import frc.robot.subsystems.TestSubsystem;
@@ -141,6 +142,11 @@ public class BotControls {
                 rContainer.m_Effector.setLazyPivotPositionSetpoint(EndEffectorConstants.extendedPIvotPosition);
             }
         }
+        if (controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()){
+            rContainer.climbUp().schedule();
+        } else if (controlHub.operatorController.Y_Button.isBeingPressed() && !controlHub.operatorController.X_Button.isBeingPressed()){
+            rContainer.climbStow().schedule();
+    }
 
             // if (!controlHub.operatorController.POV0.isBeingPressed()){
             //     rContainer.m_Effector.

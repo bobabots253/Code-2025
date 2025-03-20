@@ -7,6 +7,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.*;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -153,6 +154,29 @@ public final class Configs {
                          EndEffectorConstants.kAlgaeVelocityI, 
                          EndEffectorConstants.kAlgaeVelocityD)
                     .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh);
+        }
+    }
+    public static class ClimbSubsystem {
+        public static final SparkMaxConfig climbConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig climbFollowerConfig = new SparkMaxConfig();
+        static {
+        climbConfig
+        .idleMode(IdleMode.kBrake)
+        .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
+        climbConfig.closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pid(ClimbConstants.kClimbP,
+             ClimbConstants.kClimbI,
+             ClimbConstants.kClimbD)
+        .outputRange(ClimbConstants.kUniversalPIDOutputLow, ClimbConstants.kUniversalPIDOutputHigh);
+        climbFollowerConfig.follow(ClimbConstants.masterClimbCanID);
+        climbFollowerConfig
+        .idleMode(IdleMode.kBrake)
+        .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
+        
+        
+
+        
         }
     }
 //     public static final class TestSubsystem {

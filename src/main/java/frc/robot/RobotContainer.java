@@ -34,6 +34,7 @@ import frc.robot.commands.PathfindToPose;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 //import frc.robot.subsystems.TestSubsystem;
@@ -81,6 +82,7 @@ public class RobotContainer {
   public final DriveSubsystem m_robotDrive;
   public final ElevatorSubsystem m_Elevator;
   public final EndEffectorSubsystem m_Effector;
+  public final ClimbSubsystem m_Climb;
    /*READ ME:
   A static instance of the Robot Container with all its contents
   */
@@ -99,6 +101,7 @@ public class RobotContainer {
     m_ControlHub = ControlHub.getInstance();
     m_Elevator = ElevatorSubsystem.getInstance();
     m_Effector = EndEffectorSubsystem.getInstance();
+    m_Climb = ClimbSubsystem.getInstance();
     // Configure default commands
     SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
     m_robotDrive.setDefaultCommand(new RunCommand(
@@ -257,7 +260,19 @@ public class RobotContainer {
                      
                     );
             }
+            public Command climbUp() {
+              return new SequentialCommandGroup(
+              new InstantCommand(() ->
+              m_Climb.setClimbState(States.ClimbPos.CLIMB))
+              );
+            }
 
+            public Command climbStow() {
+              return new SequentialCommandGroup(
+              new InstantCommand(() ->
+              m_Climb.setClimbState(States.ClimbPos.STOW))
+              );
+            }
 
 
             // public Command deployAlgaeRollers(){

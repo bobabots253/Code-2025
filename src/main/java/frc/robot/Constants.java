@@ -293,6 +293,20 @@ public final class Constants {
       public static final int[] ALL_TAG_IDS = new int[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22};
     public static final double RECENT_DATA_CUTOFF = 3.5;
   }
+  public static final class ClimbConstants{
+    public static final int masterClimbCanID = 0;
+    public static final int followerClimbCanID = 0;
+    public static final double kClimbP =0.0;
+    public static final double kClimbI =0.0;
+    public static final double kClimbD =0.0;
+    public static final double stow = 0.0;
+    public static final double climb = 0.0;
+    public static final int kUniversalHardLimit = 45;
+    public static final int kUniversalSoftLimit = 40;
+    public static final double kUniversalPIDOutputHigh = 1.0;
+    public static final double kUniversalPIDOutputLow = -1.0;
+
+  }
 
   
 public static final boolean tuningMode = false;
