@@ -29,15 +29,11 @@ public class PathfindToPose extends Command {
     private Supplier<Pose2d> target;
     private Pose2d tolerance;
     private boolean runCommand = false;
-    private final DriveSubsystem driveRequire = RobotContainer.getInstance().m_robotDrive;
 
     private final HolonomicDriveController holonomicDriveController;
     private final PIDController xController;
     private final PIDController yController;
     private final ProfiledPIDController rotController;
-    private PathPlannerPath currentPath;
-    private PathPlannerTrajectory currentTrajectory;
-    private double timeOffset = 0;
     public RunCommand newCommand;
 
     //Note: Possibel Fix for Invalid Static Reference to DriveSubsys which has been causing the runtime crash
@@ -45,7 +41,7 @@ public class PathfindToPose extends Command {
     // Sometimes the position gets flipped which is unideal (find fix later)
     public PathfindToPose(Supplier<Pose2d> target, Pose2d tolerance, boolean runCommand) {
         this.target = target;
-        this.tolerance = tolerance;
+        this.tolerance = tolerance; //Pose2d (m, m, theta)
         this.runCommand = runCommand;
 
         xController = new PIDController(.1, 0, 0);
@@ -54,14 +50,12 @@ public class PathfindToPose extends Command {
         rotController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(3.5, 3.5));
         holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
         holonomicDriveController.setTolerance(this.tolerance);
-        addRequirements(driveRequire);
+        addRequirements(DriveSubsystem.getInstance());
     }
 
 
     @Override
     public void execute() {
-        currentTrajectory = null;
-        timeOffset = 0;
         PathConstraints constraints = new PathConstraints(3.0, 4.0,
         Units.degreesToRadians(540),
         Units.degreesToRadians(720));
@@ -73,21 +67,6 @@ public class PathfindToPose extends Command {
         0.0
         );
         
-        // Command pathFinish;
-        // PathPlannerPath pathBFinishCommand;
-        // PathPlannerPath pathRFinishCommand;
-
-        // pathBFinishCommand = PathPlannerPath.fromPathFile("B_AmpFinish");
-        // pathRFinishCommand = PathPlannerPath.fromPathFile("R_AmpFinish");
-        // System.out.println("Failed to Fetch Amp Files");
-        
-        // var alliance = DriverStation.getAlliance();
-        // if (alliance.isPresent()) {
-        //   if (alliance.get() == DriverStation.Alliance.Blue){
-        //     pathFinish = AutoBuilder.followPath(pathBFinishCommand);
-        //   }else {
-        //     pathFinish = AutoBuilder.followPath(pathRFinishCommand);
-        //   }
 
             if (runCommand == false){
                 pathfindingCommand.end(true);
@@ -102,13 +81,11 @@ public class PathfindToPose extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        driveRequire.Xmode();
+        DriveSubsystem.getInstance().Xmode();
     }
 
     @Override
     public boolean isFinished() {
-        System.out.println(driveRequire.getCurrentPose().getX());
-        System.out.println(holonomicDriveController.atReference());
         return holonomicDriveController.atReference();
     }
 }

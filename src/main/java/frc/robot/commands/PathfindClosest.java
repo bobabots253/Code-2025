@@ -26,50 +26,33 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.FieldSetup;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.PPLibConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class PathfindClosest extends Command {
     private Pose2d target;
-    private Pose2d tolerance;
     private boolean runCommand = false;
-    private final DriveSubsystem driveRequire = RobotContainer.getInstance().m_robotDrive;
-
-    // private final HolonomicDriveController holonomicDriveController;
-    // private final PIDController xController;
-    // private final PIDController yController;
-    // private final ProfiledPIDController rotController;
-    private PathPlannerPath currentPath;
-    private PathPlannerTrajectory currentTrajectory;
-    private double timeOffset = 0;
     public RunCommand newCommand;
     private final HolonomicDriveController holonomicDriveController;
     private final PIDController xController;
     private final PIDController yController;
     private final ProfiledPIDController rotController;
+    private final DriveSubsystem driveRequire = DriveSubsystem.getInstance();
+    Command pathfindingCommand;
 
     //Note: Possibel Fix for Invalid Static Reference to DriveSubsys which has been causing the runtime crash
     // Vision Pose Estimation works but gets interefered by "estimated velocities"
     // Sometimes the position gets flipped which is unideal (find fix later)
     public PathfindClosest(boolean runCommand) {
         this.runCommand = runCommand;
-            // xController = new PIDController(.1, 0, 0);
-        // yController = new PIDController(.1, 0, 0);
         xController = new PIDController(.1, 0, 0);
         yController = new PIDController(.1, 0, 0);
 
         rotController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(3.5, 3.5));
         holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
         holonomicDriveController.setTolerance(FieldSetup.kReefFarEntranceTolerance);
-        // rotController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(3.5, 3.5));
-        // holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
-        // holonomicDriveController.setTolerance(this.tolerance);
-        addRequirements(driveRequire);
-    }
+        addRequirements(DriveSubsystem.getInstance());
 
-
-    @Override
-    public void execute() {
-        currentTrajectory = null;
         List<Pose2d> reefTags = new ArrayList<Pose2d>();
         reefTags.add(FieldSetup.allianceReefASupplier.get());
         reefTags.add(FieldSetup.allianceReefBSupplier.get());
@@ -83,54 +66,38 @@ public class PathfindClosest extends Command {
         reefTags.add(FieldSetup.allianceReefJSupplier.get());
         reefTags.add(FieldSetup.allianceReefKSupplier.get());
         reefTags.add(FieldSetup.allianceReefLSupplier.get());
-        timeOffset = 0;
-        PathConstraints constraints = new PathConstraints(3.0, 4.0,
-        Units.degreesToRadians(540),
-        Units.degreesToRadians(720));
+        
+        PathConstraints constraints = PPLibConstants.handoffReefAlignmentConstraints;
         Pose2d closestRealPose2d = driveRequire.getRefinedPoseVision();
         target = closestRealPose2d.nearest(reefTags);
 
-        Command pathfindingCommand = AutoBuilder.pathfindToPose(
-        target,
-        constraints,
-        0.0
-        );
-        
-        // Command pathFinish;
-        // PathPlannerPath pathBFinishCommand;
-        // PathPlannerPath pathRFinishCommand;
+        pathfindingCommand = AutoBuilder.pathfindToPose(
+            target,
+            constraints,
+            0.0
+            );
+    }
 
-        // pathBFinishCommand = PathPlannerPath.fromPathFile("B_AmpFinish");
-        // pathRFinishCommand = PathPlannerPath.fromPathFile("R_AmpFinish");
-        // System.out.println("Failed to Fetch Amp Files");
-        
-        // var alliance = DriverStation.getAlliance();
-        // if (alliance.isPresent()) {
-        //   if (alliance.get() == DriverStation.Alliance.Blue){
-        //     pathFinish = AutoBuilder.followPath(pathBFinishCommand);
-        //   }else {
-        //     pathFinish = AutoBuilder.followPath(pathRFinishCommand);
-        //   }
 
-            if (runCommand == false){
-                pathfindingCommand.end(true);
-                System.out.println("PathFinding_Ended_Early");
-            } else if (runCommand == true) { 
-                pathfindingCommand.schedule();
-                // pathFinish.schedule();
-            }
+    @Override
+    public void execute() {
+        if (runCommand == false){
+            pathfindingCommand.end(true);
+            System.out.println("PathFinding_Ended_Early");
+        } else if (runCommand == true) { 
+            pathfindingCommand.schedule();
         }
-
-    
+    }
 
     @Override
     public void end(boolean interrupted) {
+        runCommand = false;
         driveRequire.Xmode();
     }
 
     @Override
     public boolean isFinished() {
-        return holonomicDriveController.atReference();
+        return pathfindingCommand.isFinished();
     }
 }
 

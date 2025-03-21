@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,13 +27,13 @@ public class VisionSubsystem extends SubsystemBase {
 
     private static volatile VisionSubsystem instance;
     private static Object mutex = new Object();
-    public static VisionSubsystem getInstance() {
+    public static VisionSubsystem getInstance(DriveSubsystem driveSubsystem) {
         VisionSubsystem result = instance;
         if (result == null) {
             synchronized (mutex) {
                 result = instance;
                 if (result == null) {
-                    instance = result = new VisionSubsystem();
+                    instance = result = new VisionSubsystem(driveSubsystem);
                 }
             }
         }
@@ -44,7 +45,6 @@ public class VisionSubsystem extends SubsystemBase {
     private volatile long lastHeartbeatFrontLL = 0;
     /** Last heartbeat of the back LL (updated every frame) */
     private volatile long lastHeartbeatBackLL = 0;
-    DriveSubsystem driveRequire = RobotContainer.getInstance().m_robotDrive;
     private final Notifier notifier;
 
     //Fix these later
@@ -58,14 +58,21 @@ public class VisionSubsystem extends SubsystemBase {
     private final List<Integer> RED_PROCCESSR = Arrays.asList(2, 3, 4, 7, 8, 9, 10);
 
     private volatile Timer lastDataTimer;
-
-    private VisionSubsystem() {
+    DriveSubsystem driveRequire;
+    
+    private VisionSubsystem(DriveSubsystem driveSubsystem) {
     super("VisionSubsystem");
     this.lastDataTimer = new Timer();
     this.lastDataTimer.start();
     this.notifier = new Notifier(() -> notifierLoop());
     this.notifier.setName("Vision Notifier");
     this.notifier.startPeriodic(0.020); //20ms
+    this.driveRequire = driveSubsystem;
+
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 2);
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 2);
+    LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
+    LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
     }
 
     public boolean recentVisionData() {
@@ -73,8 +80,9 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public synchronized void notifierLoop() {
+        
         VisionData[] filteredLimelightDatas = getFilteredLimelightData(false);
-    
+        
         //loop overrun warnings
         for (VisionData data : filteredLimelightDatas) {
             if (data.canTrustRotation) { //data.canTrustRotation
@@ -82,11 +90,11 @@ public class VisionSubsystem extends SubsystemBase {
                 driveRequire.refinedodometryVision.setVisionMeasurementStdDevs(VecBuilder.fill(
                     9999999,
                     9999999,
-                    recentVisionData() ? 1 : 0.5
+                    recentVisionData() ? 1 : 0.4
                 ));
                 driveRequire.refinedodometryVision.addVisionMeasurement(
                     data.MegaTag.pose,
-                    data.MegaTag.timestampSeconds
+                    data.MegaTag.timestampSeconds //trying mt2
                 );
             }
 
@@ -97,11 +105,12 @@ public class VisionSubsystem extends SubsystemBase {
                 ) {
                     this.lastDataTimer.restart();
                 }
+                //Utils.fpgaToCurrentTime(data.MegaTag2.timestampSeconds)
 
                 // Only trust positional data when adding this pose.
                 driveRequire.refinedodometryVision.setVisionMeasurementStdDevs(VecBuilder.fill(
-                    recentVisionData() ? 0.7 : 0.2,
-                    recentVisionData() ? 0.7 : 0.2,
+                    recentVisionData() ? 0.7 : 0.1,
+                    recentVisionData() ? 0.7 : 0.1,
                     9999999
                 ));
                 driveRequire.refinedodometryVision.addVisionMeasurement(
@@ -112,7 +121,7 @@ public class VisionSubsystem extends SubsystemBase {
         }
 
         // This method is suprprisingly efficient, generally below 1 ms.
-        //optimizeLimelights();
+        optimizeLimelights();
     }
 
     private VisionData[] getFilteredLimelightData(boolean useStored) {
@@ -122,7 +131,9 @@ public class VisionSubsystem extends SubsystemBase {
         long delayRightLL = 1; //default
     
         if (!useStored) {
-            double rotationDegrees = driveRequire.getRotation2DHeading().getDegrees();
+            double rotationDegrees = DriverStation.getAlliance().get() == Alliance.Red ?
+                 driveRequire.getTrueInitialFlippeRotation2d().getDegrees():
+                 driveRequire.getTrueRotation2DHeading().getDegrees();
             LimelightHelpers.SetRobotOrientation(Constants.VisionConstants.FRONT_LEFT_APRIL_TAG_LL,
                 rotationDegrees, 0, 0, 0, 0, 0
             );
@@ -200,7 +211,7 @@ public class VisionSubsystem extends SubsystemBase {
 
         // Returns the data that's closer to its respective camera than 90% of the other's distance. (heuristic.
         if ((!useStored && this.lastHeartbeatFrontLL == delayLeftLL)
-            && frontLLDataMT2.avgTagDist < backLLDataMT2.avgTagDist * 0.9) {
+            && frontLLDataMT2.avgTagDist < backLLDataMT2.avgTagDist * 0.9) { //0.9
             return new VisionData[]{ this.limelightDatas[0] };
         }
         else if ((!useStored && this.lastHeartbeatBackLL == delayRightLL)
@@ -382,7 +393,7 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
 
-     public Pose2d getEstimatedPose() {
+     public Pose2d getEstimatedPose() { //Check your Angles First!
         VisionData[] filteredLimelightDatas = getFilteredLimelightData(true);
 
         if (filteredLimelightDatas.length == 0) {
@@ -397,7 +408,7 @@ public class VisionSubsystem extends SubsystemBase {
             return new Pose2d(
                 filteredLimelightDatas[0].MegaTag2.pose.getTranslation(),
                 filteredLimelightDatas[0].canTrustRotation ?
-                    filteredLimelightDatas[0].MegaTag2.pose.getRotation() : driveRequire.getRotation2DHeading()
+                    filteredLimelightDatas[0].MegaTag2.pose.getRotation() : driveRequire.getTrueRotation2DHeading()
             );
         }
         else {
@@ -410,13 +421,9 @@ public class VisionSubsystem extends SubsystemBase {
                 // (First translation + Second translation) / 2
                 filteredLimelightDatas[0].MegaTag2.pose.getTranslation().plus(filteredLimelightDatas[1].MegaTag2.pose.getTranslation()).div(2),
                 filteredLimelightDatas[0].canTrustRotation ?
-                    // First rotation / 2 + Second rotation / 2
-                    //
-                    // This is done to avoid problems due to Rotation2d being [0, 360) 
-                    // Ex : 180+180=0 followed by 0/2=0 when it should be 180+180=360 and 360/2=180.
                     filteredLimelightDatas[0].MegaTag.pose.getRotation().div(2)
                         .plus(filteredLimelightDatas[1].MegaTag.pose.getRotation().div(2)) :
-                    driveRequire.getRotation2DHeading()
+                    driveRequire.getTrueRotation2DHeading()
             );
         }
 

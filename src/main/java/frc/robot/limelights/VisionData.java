@@ -11,8 +11,8 @@ public class VisionData {
     public final String name;
     public final LimelightHelpers.PoseEstimate MegaTag;
     public final LimelightHelpers.PoseEstimate MegaTag2;
-    public final boolean canTrustRotation;
-    public final boolean canTrustPosition;
+    public boolean canTrustRotation;
+    public boolean canTrustPosition;
     private final DriveSubsystem driveRequire = RobotContainer.getInstance().m_robotDrive;
 
     public boolean optimized;
@@ -30,15 +30,10 @@ public class VisionData {
 
     //Makes sure: Distance <= 3 meters ; Angular <= 180 deg/s ; Translational <= 2 m/s
     private boolean canTrustRotation() {
-        //ChassisSpeeds robotChassisSpeeds = driveRequire.getRobotRelativeSpeeds();
-        //double currentVelocity = Math.sqrt(Math.pow(robotChassisSpeeds.vxMetersPerSecond, 2) + Math.pow(robotChassisSpeeds.vyMetersPerSecond, 2));
-        // return this.MegaTag2 != null
-        //     && this.MegaTag2.avgTagDist <= Constants.VisionConstants.AVG_MT2_TAG_DIST
-        //     && this.MegaTag != null
-        //     && this.MegaTag.tagCount >= Constants.VisionConstants.MIN_MT_TAG_COUNT
-        //     && Units.radiansToDegrees(robotChassisSpeeds.omegaRadiansPerSecond) <= Constants.VisionConstants.MAX_ANGULAR
-        //     && currentVelocity <= 2;
-        return true;
+        return
+            this.canTrustRotation = 
+            this.MegaTag != null
+            && this.MegaTag2 != null;   
     }
 
     /**
@@ -46,13 +41,9 @@ public class VisionData {
      * @return Whether position data can be trusted.
      */
     private boolean canTrustPosition() {
-        // ChassisSpeeds robotChassisSpeeds = driveRequire.getRobotRelativeSpeeds();
-        // double currentVelocity = Math.sqrt(Math.pow(robotChassisSpeeds.vxMetersPerSecond, 2) + Math.pow(robotChassisSpeeds.vyMetersPerSecond, 2));
-        // return this.MegaTag2 != null
-        //     && this.MegaTag2.tagCount > 0
-        //     && this.MegaTag2.avgTagDist < Constants.VisionConstants.TRUSTWORTHY_DISTANCE
-        //     && Units.radiansToDegrees(robotChassisSpeeds.omegaRadiansPerSecond) <= Constants.VisionConstants.MAX_ANGULAR
-        //     && currentVelocity <= 2;
-        return true;
+        return
+            this.canTrustRotation = 
+            this.MegaTag != null
+            && this.MegaTag2 != null;
     }
 }

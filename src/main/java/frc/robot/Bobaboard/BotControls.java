@@ -60,13 +60,13 @@ public class BotControls {
     public void RunRobot(){
     if (OneControllerQuery == true){
             if (controlHub.driverController.L_Bumper.wasActivated()) {
-                rContainer.m_robotDrive.zeroHeading();
+                DriveSubsystem.getInstance().zeroHeading();
             }
 
-            // if (controlHub.driverController.X_Button.wasActivated()){
-            //     interruptedPPLib = !interruptedPPLib;
-            //     RobotContainer.PathfindClosest(interruptedPPLib).schedule();
-            // }
+            if (controlHub.driverController.X_Button.wasActivated()){
+                interruptedPPLib = !interruptedPPLib;
+                RobotContainer.PathfindClosest(interruptedPPLib).schedule();
+            }
             
             // if(controlHub.driverController.A_Button.wasReleased() || controlHub.driverController.B_Button.wasReleased()
             // || controlHub.driverController.A_Button.isNotBeingPressed() || controlHub.driverController.B_Button.isNotBeingPressed()){

@@ -123,7 +123,11 @@ public class Robot extends TimedRobot {
     URCL.start();
     DriverStation.startDataLog(DataLogManager.getLog());
     mDriveControls.PutControllerOption();
-    m_robotContainer.m_robotDrive.zeroHeading();
+    // m_robotContainer.m_robotDrive.zeroHeading();
+    // LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 1);
+    // LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 1);
+    // LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
+    // LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
   } 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -138,8 +142,6 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 1);
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 1);
   }
 
   @Override
