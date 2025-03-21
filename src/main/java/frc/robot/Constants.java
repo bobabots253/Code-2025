@@ -170,7 +170,7 @@ public final class Constants {
     /** In meters per second. Used for Profiled PID controller*/
     public static final double elevatorMaxVelocity = .685;
     public static final double elevaotrMaxAccerleration = 2.615;
-    public static final double profiledP = 0.001;
+    public static final double profiledP = 4.96;
     public static final double profiledI = 0;
     public static final double profiledD = 0;
     public static final double gearRatio = 5.0;
