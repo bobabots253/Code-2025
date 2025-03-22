@@ -218,7 +218,7 @@ public class FieldSetup {
         public static Supplier<Pose2d> allianceReefGSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
                         ? new Pose2d((new Translation2d(5.798, 3.862)), 
-                        new Rotation2d(0))
+                        new Rotation2d(180))
                         : new Pose2d (getTagTranslation(kRedReefPosGId)
                         .plus(new Translation2d(11.745, 4.189)),
                         new Rotation2d(0));
@@ -226,7 +226,7 @@ public class FieldSetup {
         public static Supplier<Pose2d> allianceReefHSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
                         ? new Pose2d((new Translation2d(5.798, 4.189)), 
-                        new Rotation2d(0))
+                        new Rotation2d(180))
                         : new Pose2d ((new Translation2d(11.745, 3.862)), 
                         new Rotation2d(0));
 

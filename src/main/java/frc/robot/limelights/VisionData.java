@@ -32,10 +32,10 @@ public class VisionData {
     //Makes sure: Distance <= 3 meters ; Angular <= 180 deg/s ; Translational <= 2 m/s
     private boolean canTrustRotation() {
         return
-        this.MegaTag2.avgTagDist <= 3 // 3 Meters
-        && this.MegaTag != null
-        && this.MegaTag.tagCount >= 2
-        && this.MegaTag != null
+        // this.MegaTag2.avgTagDist <= 3 // 3 Meters
+        // && this.MegaTag != null
+        // && this.MegaTag.tagCount >= 2
+        this.MegaTag != null
         && this.MegaTag2 != null;   
     }
 

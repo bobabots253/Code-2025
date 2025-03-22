@@ -167,7 +167,7 @@ public class DriveSubsystem extends SubsystemBase {
     try{
       RobotConfig config = RobotConfig.fromGUISettings();
     AutoBuilder.configure(
-      this::getRefinedPoseVision, // Robot pose supplier
+      this::mono_getPoseVision_L, // Robot pose supplier
       this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
       this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
@@ -307,7 +307,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public Pose2d getRefinedPoseVision(){
-    return refinedVisionPose;
+    return refinedodometryVision.getEstimatedPosition();
   }
 
   //Drive !ROBOT! Centric for Auto

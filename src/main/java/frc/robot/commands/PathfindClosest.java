@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 import com.pathplanner.lib.util.PPLibTelemetry;
 
@@ -37,8 +39,9 @@ public class PathfindClosest extends Command {
     private final PIDController xController;
     private final PIDController yController;
     private final ProfiledPIDController rotController;
-    private final DriveSubsystem driveRequire = DriveSubsystem.getInstance();
     Command pathfindingCommand;
+    PathPlannerPath path;
+    PathConstraints constraints;
 
     //Note: Possibel Fix for Invalid Static Reference to DriveSubsys which has been causing the runtime crash
     // Vision Pose Estimation works but gets interefered by "estimated velocities"
@@ -66,33 +69,53 @@ public class PathfindClosest extends Command {
         reefTags.add(FieldSetup.allianceReefJSupplier.get());
         reefTags.add(FieldSetup.allianceReefKSupplier.get());
         reefTags.add(FieldSetup.allianceReefLSupplier.get());
-        
-        PathConstraints constraints = PPLibConstants.handoffReefAlignmentConstraints;
-        Pose2d closestRealPose2d = driveRequire.getRefinedPoseVision();
-        target = closestRealPose2d.nearest(reefTags);
 
-        pathfindingCommand = AutoBuilder.pathfindToPose(
-            target,
-            constraints,
-            0.0
-            );
+        // PathConstraints constraints = PPLibConstants.handoffReefAlignmentConstraints;
+        // Pose2d closestRealPose2d = RobotContainer.m_robotDrive.mono_getPoseVision_L();
+        // target = closestRealPose2d.nearest(reefTags);
+
+        // pathfindingCommand = AutoBuilder.pathfindToPose(
+        //     target,
+        //     constraints,
+        //     0.0
+        //     );
+
+        List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
+        new Pose2d(5.750, 4.185, Rotation2d.fromDegrees(180)),
+        new Pose2d(5.675, 4.185, Rotation2d.fromDegrees(180))
+        );
+
+        constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
+        // PathConstraints constraints = PathConstraints.unlimitedConstraints(12.0); // You can also use unlimited constraints, only limited by motor torque and nominal battery voltage
+
+// Create the path using the waypoints created above
+path = new PathPlannerPath(
+        waypoints,
+        constraints,
+        null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
+        new GoalEndState(0.0, Rotation2d.fromDegrees(0)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+);
+
+// Prevent the path from being flipped if the coordinates are already correct
+path.preventFlipping = true;
     }
 
 
     @Override
     public void execute() {
         if (runCommand == false){
-            pathfindingCommand.end(true);
+            //pathfindingCommand.end(true);
+            end(true);
             System.out.println("PathFinding_Ended_Early");
         } else if (runCommand == true) { 
-            pathfindingCommand.schedule();
+            //pathfindingCommand.schedule();
+            AutoBuilder.pathfindThenFollowPath(path, constraints);
         }
     }
 
     @Override
     public void end(boolean interrupted) {
         runCommand = false;
-        driveRequire.Xmode();
     }
 
     @Override

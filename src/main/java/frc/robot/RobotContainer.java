@@ -110,7 +110,6 @@ public class RobotContainer {
           -MathUtil.applyDeadband(m_ControlHub.driverController.getRightX(), OIConstants.kDriveDeadband),
           true, true),
       m_robotDrive));
-      //NamedCommands.registerCommand("TestCommand", new InstantCommand(() -> Score()));
   }
 
 
