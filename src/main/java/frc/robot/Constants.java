@@ -172,7 +172,7 @@ public final class Constants {
     public static final double elevaotrMaxAccerleration = 13.16;//2.615
     public static final double profiledP = 2.248;//4.96
     public static final double profiledI = 0;
-    public static final double profiledD = 0;
+    public static final double profiledD = 0.05;
     public static final double gearRatio = 5.0;
     //meters
     public static final double gearRadius = 0.0254;
