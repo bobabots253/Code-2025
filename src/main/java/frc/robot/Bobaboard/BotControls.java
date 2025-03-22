@@ -142,9 +142,13 @@ public class BotControls {
                 rContainer.m_Effector.setLazyPivotPositionSetpoint(EndEffectorConstants.extendedPIvotPosition);
             }
         }
-        if (controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()){
+        if (controlHub.operatorController.L_Trigger.isBeingPressed() && !controlHub.operatorController.R_Trigger.isBeingPressed() 
+        && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
+        && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()){
             rContainer.climbUp().schedule();
-        } else if (controlHub.operatorController.Y_Button.isBeingPressed() && !controlHub.operatorController.X_Button.isBeingPressed()){
+        } else if (controlHub.operatorController.R_Trigger.isBeingPressed() && !controlHub.operatorController.L_Trigger.isBeingPressed() 
+        && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
+        && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()){
             rContainer.climbStow().schedule();
     }
 

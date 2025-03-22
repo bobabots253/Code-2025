@@ -161,10 +161,10 @@ public final class Configs {
         public static final SparkMaxConfig climbFollowerConfig = new SparkMaxConfig();
         static {
         climbConfig
-        .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
+            .idleMode(IdleMode.kBrake)
+            .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
         climbConfig.closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .pid(ClimbConstants.kClimbP,
              ClimbConstants.kClimbI,
              ClimbConstants.kClimbD)

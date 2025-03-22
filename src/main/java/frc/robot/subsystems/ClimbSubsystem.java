@@ -6,6 +6,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -24,7 +25,8 @@ import frc.utils.Util;
 public class ClimbSubsystem extends SubsystemBase {
     private static final SparkMax masterClimbSparkMax = Util.createSparkMAX(ClimbConstants.masterClimbCanID, MotorType.kBrushless, false); //ID,MotorType
     private static final SparkMax followerClimbSparkMax = Util.createSparkMAX(ClimbConstants.followerClimbCanID, MotorType.kBrushless, false); //ID,MotorType
-    private final RelativeEncoder relativeEncoder;
+    //private final RelativeEncoder relativeEncoder;
+    private final AbsoluteEncoder absoluteEncoder;
     /* READ ME:
     * Creates a PID Controller which we use to control the motors movement
     */
@@ -39,7 +41,7 @@ public class ClimbSubsystem extends SubsystemBase {
     
     private ClimbSubsystem() {
         resetEncoders();
-        relativeEncoder = masterClimbSparkMax.getEncoder();
+        absoluteEncoder = masterClimbSparkMax.getAbsoluteEncoder();
         pidController = masterClimbSparkMax.getClosedLoopController();
         masterClimbSparkMax.configure(Configs.ClimbSubsystem.climbConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
@@ -67,12 +69,12 @@ public class ClimbSubsystem extends SubsystemBase {
      * Resets encoders to zero
      */
     public void resetEncoders() {
-        relativeEncoder.setPosition(0);
+        //relativeEncoder.setPosition(0);
     }
     
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Relative Encoder value [Rots]", relativeEncoder.getPosition());
+        SmartDashboard.putNumber("Relative Encoder value [Rots]", absoluteEncoder.getPosition());
         SmartDashboard.putNumber("Right Motor Current [Amps]", masterClimbSparkMax.getOutputCurrent());
     }
     
@@ -96,7 +98,7 @@ public class ClimbSubsystem extends SubsystemBase {
             case CLIMB:
                 setPosition(ClimbConstants.climb);
             default:
-                setPosition(ClimbConstants.climb);
+                setPosition(ClimbConstants.stow);
                 break;
         }
     }
