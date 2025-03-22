@@ -250,7 +250,7 @@ public void periodic() {
     }
     public double rpmToVelocity(double rpm){
         // multiplied by 2 because cascading it twice as fast.
-        return 2 * ((rpm / 60) / Constants.ElevatorConstants.gearRatio) / (2*Math.PI*Constants.ElevatorConstants.gearRadius);
+        return 2 * ((rpm * (2*Math.PI*Constants.ElevatorConstants.gearRadius))/60);
     }
     public double rotToMeters(double rot){
         return (((rot/Constants.ElevatorConstants.gearRatio)/(Math.PI*2*Constants.ElevatorConstants.gearRadius))/2);
@@ -276,6 +276,7 @@ public void periodic() {
                 //setLazyPositionSetpoint(ElevatorConstants.L2Score);
                 break;
             case L3SCORE:
+                profiledPIDCalculation(ElevatorConstants.L3Score);
                 //setLazyPositionSetpoint(ElevatorConstants.L3Score);
                 break;
             default:
