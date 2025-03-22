@@ -6,6 +6,7 @@ import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Constants;
+import frc.robot.Constants.VisionConstants;
 
 public class VisionData {
     public final String name;
@@ -31,9 +32,11 @@ public class VisionData {
     //Makes sure: Distance <= 3 meters ; Angular <= 180 deg/s ; Translational <= 2 m/s
     private boolean canTrustRotation() {
         return
-            this.canTrustRotation = 
-            this.MegaTag != null
-            && this.MegaTag2 != null;   
+        this.MegaTag2.avgTagDist <= 3 // 3 Meters
+        && this.MegaTag != null
+        && this.MegaTag.tagCount >= 2
+        && this.MegaTag != null
+        && this.MegaTag2 != null;   
     }
 
     /**
@@ -42,8 +45,7 @@ public class VisionData {
      */
     private boolean canTrustPosition() {
         return
-            this.canTrustRotation = 
-            this.MegaTag != null
-            && this.MegaTag2 != null;
+            this.MegaTag2.tagCount > 0
+            && this.MegaTag2.avgTagDist < VisionConstants.TRUSTWORTHY_DISTANCE;
     }
 }
