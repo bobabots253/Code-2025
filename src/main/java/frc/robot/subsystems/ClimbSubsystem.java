@@ -30,7 +30,7 @@ public class ClimbSubsystem extends SubsystemBase {
     /* READ ME:
     * Creates a PID Controller which we use to control the motors movement
     */
-    private SparkClosedLoopController pidController;
+    //private SparkClosedLoopController pidController;
     
     private static ClimbSubsystem instance;
     public static ClimbSubsystem getInstance() {
@@ -42,10 +42,10 @@ public class ClimbSubsystem extends SubsystemBase {
     private ClimbSubsystem() {
         resetEncoders();
         absoluteEncoder = masterClimbSparkMax.getAbsoluteEncoder();
-        pidController = masterClimbSparkMax.getClosedLoopController();
+        //pidController = masterClimbSparkMax.getClosedLoopController();
         masterClimbSparkMax.configure(Configs.ClimbSubsystem.climbConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
-        followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerConfig, ResetMode.kResetSafeParameters,
+       followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
         register(); //Register Subsystem for Command Scheduluer to call in periodic
     }
@@ -54,7 +54,7 @@ public class ClimbSubsystem extends SubsystemBase {
      */
     public void setOpenLoop(double value) {
         masterClimbSparkMax.set(value);
-        followerClimbSparkMax.set(value);
+        //followerClimbSparkMax.set(value);
         SmartDashboard.putNumber("Climb Open-loop Value", value);
     }
     
@@ -75,14 +75,16 @@ public class ClimbSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Relative Encoder value [Rots]", absoluteEncoder.getPosition());
-        SmartDashboard.putNumber("Right Motor Current [Amps]", masterClimbSparkMax.getOutputCurrent());
+        SmartDashboard.putNumber("Climb / Right Motor Current [Amps]", masterClimbSparkMax.getOutputCurrent());
+        SmartDashboard.putNumber("Climb / left Motor Current [Amps]", followerClimbSparkMax.getOutputCurrent());
+    
     }
     
     /* READ ME:
      * Select the Setpoint aka reference point for the PID Controller
      */
     public void setPosition(double position) {
-        pidController.setReference(position, ControlType.kPosition);
+        //pidController.setReference(position, ControlType.kPosition);
         SmartDashboard.putNumber("Current SetPoint", position);
     }
 

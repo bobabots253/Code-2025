@@ -260,19 +260,21 @@ public class RobotContainer {
                      
                     );
             }
-            public Command climbUp() {
-              return new SequentialCommandGroup(
-              new InstantCommand(() ->
-              m_Climb.setClimbState(States.ClimbPos.CLIMB))
-              );
-            }
+            // public Command climbUp() {
+            //   return new SequentialCommandGroup(
+            //   new InstantCommand(() ->
+            //   m_Climb.setOpenLoop(1))
+            //   //m_Climb.setClimbState(States.ClimbPos.CLIMB))
+            //   );
+            // }
 
-            public Command climbStow() {
-              return new SequentialCommandGroup(
-              new InstantCommand(() ->
-              m_Climb.setClimbState(States.ClimbPos.STOW))
-              );
-            }
+            // public Command climbStow() {
+            //   return new SequentialCommandGroup(
+            //   new InstantCommand(() ->
+            //   m_Climb.setOpenLoop(-1))
+            //   //m_Climb.setClimbState(States.ClimbPos.STOW))
+            //   );
+            // }
 
 
             // public Command deployAlgaeRollers(){

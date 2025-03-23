@@ -158,19 +158,19 @@ public final class Configs {
     }
     public static class ClimbSubsystem {
         public static final SparkMaxConfig climbConfig = new SparkMaxConfig();
-        public static final SparkMaxConfig climbFollowerConfig = new SparkMaxConfig();
+       public static final SparkMaxConfig climbFollowerConfig = new SparkMaxConfig();
         static {
         climbConfig
             .idleMode(IdleMode.kBrake)
             .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
-        climbConfig.closedLoop
-        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-        .pid(ClimbConstants.kClimbP,
-             ClimbConstants.kClimbI,
-             ClimbConstants.kClimbD)
-        .outputRange(ClimbConstants.kUniversalPIDOutputLow, ClimbConstants.kUniversalPIDOutputHigh);
-        climbFollowerConfig.follow(ClimbConstants.masterClimbCanID);
-        climbFollowerConfig
+        // climbConfig.closedLoop
+        // .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        // .pid(ClimbConstants.kClimbP,
+        //      ClimbConstants.kClimbI,
+        //      ClimbConstants.kClimbD)
+        // .outputRange(ClimbConstants.kUniversalPIDOutputLow, ClimbConstants.kUniversalPIDOutputHigh);
+        climbFollowerConfig.follow(ClimbConstants.masterClimbCanID, true);
+         climbFollowerConfig
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
         

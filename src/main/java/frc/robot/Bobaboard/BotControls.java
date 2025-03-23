@@ -142,15 +142,22 @@ public class BotControls {
                 rContainer.m_Effector.setLazyPivotPositionSetpoint(EndEffectorConstants.extendedPIvotPosition);
             }
         }
-        if (controlHub.operatorController.L_Trigger.isBeingPressed() && !controlHub.operatorController.R_Trigger.isBeingPressed() 
-        && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
-        && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()){
-            rContainer.climbUp().schedule();
-        } else if (controlHub.operatorController.R_Trigger.isBeingPressed() && !controlHub.operatorController.L_Trigger.isBeingPressed() 
-        && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
-        && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()){
-            rContainer.climbStow().schedule();
-    }
+        if (controlHub.operatorController.L_Trigger.isBeingPressed() //&& !controlHub.operatorController.R_Trigger.isBeingPressed() 
+        // && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
+        // && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()
+        ){
+            rContainer.m_Climb.setOpenLoop(1);
+        } else if (controlHub.operatorController.R_Trigger.isBeingPressed() //&& !controlHub.operatorController.L_Trigger.isBeingPressed() 
+        // && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
+        // && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()
+        ){
+            rContainer.m_Climb.setOpenLoop(-0.5);
+    }  else if (!controlHub.operatorController.R_Trigger.isBeingPressed() && !controlHub.operatorController.L_Trigger.isBeingPressed() 
+    // && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
+    // && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()
+    ){
+        rContainer.m_Climb.setOpenLoop(0.0);
+}
 
             // if (!controlHub.operatorController.POV0.isBeingPressed()){
             //     rContainer.m_Effector.
