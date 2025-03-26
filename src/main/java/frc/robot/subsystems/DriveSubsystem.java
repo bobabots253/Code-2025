@@ -167,9 +167,9 @@ public class DriveSubsystem extends SubsystemBase {
     try{
       RobotConfig config = RobotConfig.fromGUISettings();
     AutoBuilder.configure(
-      this::mono_getPoseVision_L, // Robot pose supplier
+      this::getRefinedPoseVision, // Robot pose supplier
       this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-      this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      this::getRobotRelativeFromFieldRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE //getRobotRelativeSpeeds
       (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
       new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
               new PIDConstants(Constants.ModuleConstants.kDrivingP, Constants.ModuleConstants.kDrivingI, Constants.ModuleConstants.kDrivingD), // Translation PID constants
@@ -236,13 +236,13 @@ public class DriveSubsystem extends SubsystemBase {
         });
 
     /*Basic Vision Pose Estimator */
-    try {
-      addBasicVisionMeasurement(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, mono_odometryVision_L);
-      addBasicVisionMeasurement(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, mono_odometryVision_R);
-    }
-    catch(Exception erException) {
-      System.out.println("No Valid Limelight Targets");
-    }
+    // try {
+    //   addBasicVisionMeasurement(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, mono_odometryVision_L);
+    //   addBasicVisionMeasurement(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, mono_odometryVision_R);
+    // }
+    // catch(Exception erException) {
+    //   System.out.println("No Valid Limelight Targets");
+    // }
 
     SmartDashboard.putData("Field Gyro", m_fieldGyro);
     SmartDashboard.putData("Field Vision LEFT", m_fieldVision_L);
@@ -272,17 +272,17 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
   
-  public void addBasicVisionMeasurement(String limelight, SwerveDrivePoseEstimator poseEstimator) {
-      // LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_LEFT_APRIL_TAG_LL,
-      // fieldFlipped ? getInitialFlippeRotation2d().getDegrees(): getRotation2DHeading().getDegrees(), 0,
-      //         0, 0, 0, 0);
-      if (LimelightHelpers.getTV(limelight)) {
-          LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight);
-          if (!(mt2.tagCount == 0)) {
-            poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds); //Timer.getFPGATimestamp()mt2.timestampSeconds
-          }
-      }
-  }
+  // public void addBasicVisionMeasurement(String limelight, SwerveDrivePoseEstimator poseEstimator) {
+  //     // LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_LEFT_APRIL_TAG_LL,
+  //     // fieldFlipped ? getInitialFlippeRotation2d().getDegrees(): getRotation2DHeading().getDegrees(), 0,
+  //     //         0, 0, 0, 0);
+  //     if (LimelightHelpers.getTV(limelight)) {
+  //         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight);
+  //         if (!(mt2.tagCount == 0)) {
+  //           poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds); //Timer.getFPGATimestamp()mt2.timestampSeconds
+  //         }
+  //     }
+  // }
 
   /**
    * Returns the currently-estimated pose of the robot.
@@ -304,6 +304,11 @@ public class DriveSubsystem extends SubsystemBase {
   // Return Chassis Speed
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return m_kinematics.toChassisSpeeds(m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState());
+  }
+
+  public ChassisSpeeds getRobotRelativeFromFieldRelativeSpeeds(){
+    
+    return ChassisSpeeds.fromFieldRelativeSpeeds(m_kinematics.toChassisSpeeds(m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()), getTrueInitialRotation2dBasedOnAlliance());
   }
 
   public Pose2d getRefinedPoseVision(){
@@ -475,6 +480,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   public Rotation2d getTrueInitialFlippeRotation2d(){
     return Rotation2d.fromDegrees(-Nav_x.getRotation2d().getDegrees()).plus(Rotation2d.fromRadians(Math.PI));
+  }
+
+  public Rotation2d getTrueInitialRotation2dBasedOnAlliance(){
+    return fieldFlipped ? getTrueRotation2DHeading() :  getTrueInitialFlippeRotation2d();
   }
 
   public Rotation2d getRotation2DHeading(){

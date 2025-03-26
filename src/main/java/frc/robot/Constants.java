@@ -296,11 +296,11 @@ public final class Constants {
   }
 
   public static final class PPLibConstants{
-    PathConstraints defaultPathfindingConstraints = new PathConstraints(3.0,4.0,
+    public static PathConstraints defaultPathfindingConstraints = new PathConstraints(3.0,4.0,
         Units.degreesToRadians(540), Units.degreesToRadians(720));
     public static PathConstraints handoffReefAlignmentConstraints = new PathConstraints(1.5, 2,
         Units.degreesToRadians(540), Units.degreesToRadians(720), 12, false);
-    PathConstraints finalAlignmentConstraints = new PathConstraints(1.5,1.75,
+    public static PathConstraints finalAlignmentConstraints = new PathConstraints(1.5,1.75,
         Units.degreesToRadians(540), Units.degreesToRadians(720), 12, false);
   }
 

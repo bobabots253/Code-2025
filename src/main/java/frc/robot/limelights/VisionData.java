@@ -12,9 +12,8 @@ public class VisionData {
     public final String name;
     public final LimelightHelpers.PoseEstimate MegaTag;
     public final LimelightHelpers.PoseEstimate MegaTag2;
-    public boolean canTrustRotation;
-    public boolean canTrustPosition;
-    private final DriveSubsystem driveRequire = RobotContainer.getInstance().m_robotDrive;
+    public Boolean canTrustRotation;
+    public Boolean canTrustPosition;
 
     public boolean optimized;
 
@@ -30,22 +29,34 @@ public class VisionData {
     }
 
     //Makes sure: Distance <= 3 meters ; Angular <= 180 deg/s ; Translational <= 2 m/s
-    private boolean canTrustRotation() {
-        return
-        // this.MegaTag2.avgTagDist <= 3 // 3 Meters
-        // && this.MegaTag != null
-        // && this.MegaTag.tagCount >= 2
-        this.MegaTag != null
-        && this.MegaTag2 != null;   
+    public boolean canTrustRotation() {
+        if (this.canTrustRotation == null) {
+            this.canTrustRotation = 
+            this.MegaTag != null
+            && this.MegaTag2 != null;  
+        // return
+        // // this.MegaTag2.avgTagDist <= 3 // 3 Meters
+        // // && this.MegaTag != null
+        // // && this.MegaTag.tagCount >= 2
+        // this.MegaTag != null
+        // && this.MegaTag2 != null;   
+        }
+        return this.canTrustRotation;
     }
 
     /**
      * Checks if the MegaTag2 Pose2d is within distance tolerance relative to the bot's position.
      * @return Whether position data can be trusted.
      */
-    private boolean canTrustPosition() {
-        return
-            this.MegaTag2.tagCount > 0
+    public boolean canTrustPosition() {
+        if (this.canTrustPosition == null) {
+            this.canTrustPosition =
+            this.MegaTag2 != null
+            && this.MegaTag2.tagCount > 0
             && this.MegaTag2.avgTagDist < VisionConstants.TRUSTWORTHY_DISTANCE;
+        }
+        return this.canTrustPosition;
+        // this.MegaTag2.tagCount > 0
+        // && this.MegaTag2.avgTagDist < VisionConstants.TRUSTWORTHY_DISTANCE;
     }
 }

@@ -85,7 +85,10 @@ public class VisionSubsystem extends SubsystemBase {
         
         //loop overrun warnings
         for (VisionData data : filteredLimelightDatas) {
-            if (data.canTrustRotation) { //data.canTrustRotation
+
+            //if (data == null) continue; // || data.optimized
+
+            if (data.canTrustRotation()) { //data.canTrustRotation
                 // Only trust rotational data when adding this pose.
                 driveRequire.refinedodometryVision.setVisionMeasurementStdDevs(VecBuilder.fill(
                     9999999,
@@ -98,7 +101,7 @@ public class VisionSubsystem extends SubsystemBase {
                 );
             }
 
-            if (data.canTrustPosition) {
+            if (data.canTrustPosition()) {
                 if (driveRequire.refinedodometryVision.getEstimatedPosition().getTranslation()
                         .getDistance(data.MegaTag2.pose.getTranslation())
                         <= 2
@@ -118,6 +121,8 @@ public class VisionSubsystem extends SubsystemBase {
                     data.MegaTag2.timestampSeconds
                 );
             }
+
+
         }
 
         // This method is suprprisingly efficient, generally below 1 ms.
@@ -423,7 +428,7 @@ public class VisionSubsystem extends SubsystemBase {
                 filteredLimelightDatas[0].canTrustRotation ?
                     filteredLimelightDatas[0].MegaTag.pose.getRotation().div(2)
                         .plus(filteredLimelightDatas[1].MegaTag.pose.getRotation().div(2)) :
-                    driveRequire.getTrueRotation2DHeading()
+                    driveRequire.getTrueInitialRotation2dBasedOnAlliance()
             );
         }
 
