@@ -102,10 +102,9 @@ public void periodic() {
     SmartDashboard.putNumber("Elevator /followerCurrent", m_slaveLiftingSparkMax.getOutputCurrent());
     SmartDashboard.putBoolean("Elevator /withinExtensionRange", isWithinExtensionRange());
     SmartDashboard.putNumber("Elevator /requestedPosition", currentIntSetpointElevator);
-    SmartDashboard.putNumber("Elevator / trapezoid", trapezoid);
-    SmartDashboard.putNumber("Elevator / Voltage of Motors", m_masterLiftingSparkMax.getAppliedOutput());
-    //System.out.println(rotToMeters(m_LiftingEncoder.getPosition()));
-    SmartDashboard.putNumber("Elevator/ Correct Vel ", rpmToVelocity(m_LiftingEncoder.getVelocity()));
+    SmartDashboard.putNumber("Elevator /trapezoid", trapezoid);
+    SmartDashboard.putNumber("Elevator /masterInputCurrent", m_masterLiftingSparkMax.getAppliedOutput());
+    SmartDashboard.putNumber("Elevator/secondStageVelocity ", rpmToVelocity(m_LiftingEncoder.getVelocity()));
 
     
 }
@@ -194,11 +193,12 @@ public void periodic() {
         setCoastMode(true);
       }
 
-      public boolean isHomed(){
+    public boolean isHomed(){
         return MathUtil.isNear(ElevatorConstants.softZeroLinearPosition,
                  m_LiftingEncoder.getPosition(), 0.05);
       }
     
+    //Back up 
     public void setLazyPositionSetpoint(double requestedSetpoint) {
         SmartDashboard.putNumber("Elevator /requestedSetpoint", requestedSetpoint);
         if (isWithinExtensionRange()) {
@@ -212,50 +212,34 @@ public void periodic() {
         } else {
             System.out.println("ELEVATOR POSITION OUT OF TOLERANCE - SETPOINT REQUEST");
         }
-        // if (isWithinExtensionRange() && !MathUtil.isNear(18.85, getEncoder(), 0.15)){
-        // m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition); //, ClosedLoopSlot.arbFFVolatge, ArbFFUnits.kVoltage
-        // } else{
-        //     while(MathUtil.isNear(18.85, getEncoder(), 0.15)){
-        //         m_masterLiftingSparkMax.set(-0.05);
-        //         m_slaveLiftingSparkMax.set(-0.05);
-        //     }
-        // }
     }
+
     public void profiledPIDCalculation(double goalPosition){
         if(isWithinExtensionRange()){
+            var unknownConstant = 0.68;
             //possible divide the feed forward by 2 because it is a 2 stage cascading elevator
             //feed forward  m_feedForward.calculateWithVelocities(rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity)
-
-            m_masterLiftingSparkMax.setVoltage(m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))+.68);
-                    //m_feedForward.calculateWithVelocities(rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity));
-                    
-            //System.out.println(m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition)));
+            m_masterLiftingSparkMax.setVoltage(
+                m_profiledPIDController.calculate(
+                    rotToMeters(m_LiftingEncoder.getPosition()),
+                    rotToMeters(goalPosition))+ unknownConstant); //What is the 0.68 for?
         }else{
-            System.out.println("Yo you're going to break the elevator. Power cycle with the elevator down.");
+            System.out.println("ELEVATOR POSITION OUT OF TOLERANCE - PROFILED PID REQUEST");
         }
-        System.out.println("calculating = "+ m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition)));
-        // System.out.println("theVELCOITY SETPOINT: "+ m_profiledPIDController.getSetpoint());
-        // System.out.println("Feed forward "+m_feedForward.calculateWithVelocities(
-        //     rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity));
-        // System.out.println("Voltage = "+MathUtil.clamp(
-        //     (m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))
-        //     + m_feedForward.calculateWithVelocities(
-        //     rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity)),
-        //     -2, 3)
-        //     );
+        //System.out.println("calculating = "+ m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition)));
+        trapezoid = m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))+ .62; // doesn't match up with the other one???
+    }
 
-        System.out.println("requester = " +rotToMeters(goalPosition));
-        //m_LiftingPIDController.setReference(goalPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0, , SparkClosedLoopController.ArbFFUnits.kVoltage);
-        trapezoid = m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))+.62;
+    private double rpmToVelocity(double rpm){
+        //multiply by 2 for 2 stage cascading elevator
+        //cascading secondary stages run 2x faster than the first stage
+        var elevatorScalar = 2;
+        return elevatorScalar * ((rpm * (2*Math.PI*Constants.ElevatorConstants.gearRadius))/60);
     }
-    public double rpmToVelocity(double rpm){
-        // multiplied by 2 because cascading it twice as fast.
-        return 2 * ((rpm * (2*Math.PI*Constants.ElevatorConstants.gearRadius))/60);
-    }
-    public double rotToMeters(double rot){
+
+    private double rotToMeters(double rot){
         return (((rot/Constants.ElevatorConstants.gearRatio)/(Math.PI*2*Constants.ElevatorConstants.gearRadius))/2);
     }
-
 
     //Add the Rest & Add Button Bindings
     public void setLazyElevatorState(States.ElevatorPos requestedState) {
