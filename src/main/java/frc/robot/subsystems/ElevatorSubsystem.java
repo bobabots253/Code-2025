@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.ResourceBundle.Control;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -11,11 +13,17 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Configs;
+import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.States;
 
@@ -29,14 +37,17 @@ private final RelativeEncoder m_followerEncoder;
 private static DigitalInput masterHallEffectSensor;
 private static DigitalInput slaveHallEffectSensor;
 private static SparkClosedLoopController m_LiftingPIDController;
+private static ProfiledPIDController m_profiledPIDController;
 
 //Tunable Values
-public final String kTunableP = "Tunable_P";
-public static final String KTunable_I = "Tunable_I";
-public static final String KTunable_D = "Tunable_D";
+// public final String kTunableP = "Tunable_P";
+// public final String kTunableI = "Tunable_I";
+// public final String kTunableD = "Tunable_D";
 public int currentIntSetpointElevator;
 private static ElevatorSubsystem instance;
-public static ElevatorFeedforward feedForwarding = new ElevatorFeedforward(0.01, 0.95, 2.5, 0.12);
+public static ElevatorFeedforward m_feedForward;
+public static double trapezoid;
+
 public double volting;
 public static ElevatorSubsystem getInstance() {
     if(instance == null) instance = new ElevatorSubsystem();
@@ -51,6 +62,15 @@ private ElevatorSubsystem() {
     m_LiftingEncoder = m_masterLiftingSparkMax.getEncoder();
     m_followerEncoder = m_slaveLiftingSparkMax.getEncoder();
     m_LiftingPIDController = m_masterLiftingSparkMax.getClosedLoopController();
+
+    m_feedForward = new ElevatorFeedforward(0.45, .75, .0, 0.0);
+    m_profiledPIDController = new ProfiledPIDController(
+        Constants.ElevatorConstants.profiledP, 
+        Constants.ElevatorConstants.profiledI, 
+        Constants.ElevatorConstants.profiledD, 
+        new TrapezoidProfile.Constraints(Constants.ElevatorConstants.elevatorMaxVelocity, Constants.ElevatorConstants.elevaotrMaxAccerleration), 0.02
+    );
+    m_profiledPIDController.setIZone(0);
 
     m_masterLiftingSparkMax.configure(Configs.ElevatorSubsystem.masterLiftingConfig, ResetMode.kResetSafeParameters,
     PersistMode.kPersistParameters);
@@ -77,10 +97,17 @@ public void periodic() {
     SmartDashboard.putNumber("Elevator /elevatorVel",getElevatorVelocity());
     
     SmartDashboard.putNumber("Elevator /relativePosition", m_LiftingEncoder.getPosition());
+    SmartDashboard.putNumber("Elevator /relativePositionMEters", rotToMeters(m_LiftingEncoder.getPosition()));
     SmartDashboard.putNumber("Elevator /masterCurrent", m_masterLiftingSparkMax.getOutputCurrent());
     SmartDashboard.putNumber("Elevator /followerCurrent", m_slaveLiftingSparkMax.getOutputCurrent());
     SmartDashboard.putBoolean("Elevator /withinExtensionRange", isWithinExtensionRange());
     SmartDashboard.putNumber("Elevator /requestedPosition", currentIntSetpointElevator);
+    SmartDashboard.putNumber("Elevator / trapezoid", trapezoid);
+    SmartDashboard.putNumber("Elevator / Voltage of Motors", m_masterLiftingSparkMax.getAppliedOutput());
+    //System.out.println(rotToMeters(m_LiftingEncoder.getPosition()));
+    SmartDashboard.putNumber("Elevator/ Correct Vel ", rpmToVelocity(m_LiftingEncoder.getVelocity()));
+
+    
 }
 
     public void setLazyPercentageOpenLoop(double OpenLoopPercentage) {
@@ -194,6 +221,40 @@ public void periodic() {
         //     }
         // }
     }
+    public void profiledPIDCalculation(double goalPosition){
+        if(isWithinExtensionRange()){
+            //possible divide the feed forward by 2 because it is a 2 stage cascading elevator
+            //feed forward  m_feedForward.calculateWithVelocities(rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity)
+
+            m_masterLiftingSparkMax.setVoltage(m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))+.68);
+                    //m_feedForward.calculateWithVelocities(rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity));
+                    
+            //System.out.println(m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition)));
+        }else{
+            System.out.println("Yo you're going to break the elevator. Power cycle with the elevator down.");
+        }
+        System.out.println("calculating = "+ m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition)));
+        // System.out.println("theVELCOITY SETPOINT: "+ m_profiledPIDController.getSetpoint());
+        // System.out.println("Feed forward "+m_feedForward.calculateWithVelocities(
+        //     rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity));
+        // System.out.println("Voltage = "+MathUtil.clamp(
+        //     (m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))
+        //     + m_feedForward.calculateWithVelocities(
+        //     rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity)),
+        //     -2, 3)
+        //     );
+
+        System.out.println("requester = " +rotToMeters(goalPosition));
+        //m_LiftingPIDController.setReference(goalPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0, , SparkClosedLoopController.ArbFFUnits.kVoltage);
+        trapezoid = m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))+.62;
+    }
+    public double rpmToVelocity(double rpm){
+        // multiplied by 2 because cascading it twice as fast.
+        return 2 * ((rpm * (2*Math.PI*Constants.ElevatorConstants.gearRadius))/60);
+    }
+    public double rotToMeters(double rot){
+        return (((rot/Constants.ElevatorConstants.gearRatio)/(Math.PI*2*Constants.ElevatorConstants.gearRadius))/2);
+    }
 
 
     //Add the Rest & Add Button Bindings
@@ -202,23 +263,36 @@ public void periodic() {
         currentIntSetpointElevator = requestedState.val;
         switch (requestedState) {
             case STOW:
-                setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
+                profiledPIDCalculation(ElevatorConstants.softZeroLinearPosition);
+                //setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
                 break;
             case L1Score:
-                setLazyPositionSetpoint(ElevatorConstants.L1Score);
+                profiledPIDCalculation(ElevatorConstants.L1Score);
+                //setLazyPositionSetpoint(ElevatorConstants.L1Score);
                 break;
             case L2Score:
-                setLazyPositionSetpoint(ElevatorConstants.L2Score);
+                System.out.println();
+                profiledPIDCalculation(ElevatorConstants.L2Score);
+                //setLazyPositionSetpoint(ElevatorConstants.L2Score);
                 break;
             case L3SCORE:
-                setLazyPositionSetpoint(ElevatorConstants.L3Score);
+                profiledPIDCalculation(ElevatorConstants.L3Score);
+                //setLazyPositionSetpoint(ElevatorConstants.L3Score);
                 break;
             default:
-                setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
+                //setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
                 break;
         }
     }
-
-
+ // Possible PID tuner but Currently merging.
+// public void setPIDParameters(double P, double I, double D){
+//     Configs.ElevatorSubsystem.masterLiftingConfig.closedLoop
+//     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+//     .pid(P,
+//          I,
+//          D)
+//     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh);
+//     m_masterLiftingSparkMax.configure(Configs.ElevatorSubsystem.masterLiftingConfig,com.revrobotics.spark.SparkBase.ResetMode.kResetSafeParameters,PersistMode.kNoPersistParameters);
+// }
 
 }
