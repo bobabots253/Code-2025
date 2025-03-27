@@ -132,26 +132,26 @@ public class BotControls {
 
 
             //Polls for Controller Input, if a button is being pressed deliver selected algae pivot angle
-            if (!controlHub.operatorController.POV0.isBeingPressed() && !controlHub.operatorController.POV90.isBeingPressed()){
-                rContainer.stowAlgaeCommand().schedule();
-            }else{
-                if(controlHub.operatorController.POV0.isBeingPressed()){
-                rContainer.stowAlgaeCommand().schedule();
-            }else if(controlHub.operatorController.POV90.isBeingPressed()){
-                rContainer.algaeExtendCommand().schedule();
-                rContainer.m_Effector.setLazyPivotPositionSetpoint(EndEffectorConstants.extendedPIvotPosition);
-            }
-        }
+            // if (!controlHub.operatorController.POV0.isBeingPressed() && !controlHub.operatorController.POV90.isBeingPressed()){
+            //     rContainer.stowAlgaeCommand().schedule();
+            // }else{
+            //     if(controlHub.operatorController.POV0.isBeingPressed()){
+            //     rContainer.stowAlgaeCommand().schedule();
+            // }else if(controlHub.operatorController.POV90.isBeingPressed()){
+            //     rContainer.algaeExtendCommand().schedule();
+            //     rContainer.m_Effector.setLazyPivotPositionSetpoint(EndEffectorConstants.extendedPIvotPosition);
+            // }
+        //}
         if (controlHub.operatorController.L_Trigger.isBeingPressed() //&& !controlHub.operatorController.R_Trigger.isBeingPressed() 
         // && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
         // && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()
         ){
-            rContainer.m_Climb.setOpenLoop(1);
+            rContainer.m_Climb.setOpenLoop(12);
         } else if (controlHub.operatorController.R_Trigger.isBeingPressed() //&& !controlHub.operatorController.L_Trigger.isBeingPressed() 
         // && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
         // && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()
         ){
-            rContainer.m_Climb.setOpenLoop(-0.5);
+            rContainer.m_Climb.setOpenLoop(-5);
     }  else if (!controlHub.operatorController.R_Trigger.isBeingPressed() && !controlHub.operatorController.L_Trigger.isBeingPressed() 
     // && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
     // && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()

@@ -37,6 +37,7 @@ public class ClimbSubsystem extends SubsystemBase {
         if(instance == null) instance = new ClimbSubsystem();
         return instance;
 
+
     }
     
     private ClimbSubsystem() {
@@ -53,7 +54,10 @@ public class ClimbSubsystem extends SubsystemBase {
      * Runs motors at a value [-1 to 1]. Log current value on SmartDashboard
      */
     public void setOpenLoop(double value) {
-        masterClimbSparkMax.set(value);
+        masterClimbSparkMax.setVoltage(value);
+        System.out.println(masterClimbSparkMax.getBusVoltage());
+        //System.out.println("Moving");
+        //masterClimbSparkMax.set(value);
         //followerClimbSparkMax.set(value);
         SmartDashboard.putNumber("Climb Open-loop Value", value);
     }
