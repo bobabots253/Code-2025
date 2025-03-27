@@ -35,45 +35,41 @@ public class PathfindClosest extends Command {
     private Pose2d target;
     private boolean runCommand = false;
     public RunCommand newCommand;
-    private final HolonomicDriveController holonomicDriveController;
-    private final PIDController xController;
-    private final PIDController yController;
-    private final ProfiledPIDController rotController;
+    private Boolean isRight;
+    Pose2d closestRealPose2d;
     Command pathfindingCommand;
     PathPlannerPath path;
     PathConstraints constraints;
     Command waypointfinder;
+    List<Pose2d> rightReefTags = new ArrayList<Pose2d>();
+    List<Pose2d> leftReefTags = new ArrayList<Pose2d>();
 
     //Note: Possibel Fix for Invalid Static Reference to DriveSubsys which has been causing the runtime crash
     // Vision Pose Estimation works but gets interefered by "estimated velocities"
     // Sometimes the position gets flipped which is unideal (find fix later)
-    public PathfindClosest(boolean runCommand) {
+    public PathfindClosest(boolean runCommand,Boolean isRight) {
+        this.isRight = isRight;
         this.runCommand = runCommand;
-        xController = new PIDController(.1, 0, 0);
-        yController = new PIDController(.1, 0, 0);
-
-        rotController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(3.5, 3.5));
-        holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
-        holonomicDriveController.setTolerance(FieldSetup.kReefFarEntranceTolerance);
+        PathConstraints constraints = PPLibConstants.handoffReefAlignmentConstraints;
+        this.closestRealPose2d = RobotContainer.m_robotDrive.getRefinedPoseVision();
         addRequirements(DriveSubsystem.getInstance());
 
-        List<Pose2d> reefTags = new ArrayList<Pose2d>();
-        reefTags.add(FieldSetup.allianceReefASupplier.get());
-        reefTags.add(FieldSetup.allianceReefBSupplier.get());
-        reefTags.add(FieldSetup.allianceReefCSupplier.get());
-        reefTags.add(FieldSetup.allianceReefDSupplier.get());
-        reefTags.add(FieldSetup.allianceReefESupplier.get());
-        reefTags.add(FieldSetup.allianceReefFSupplier.get());
-        reefTags.add(FieldSetup.allianceReefGSupplier.get());
-        reefTags.add(FieldSetup.allianceReefHSupplier.get());
-        reefTags.add(FieldSetup.allianceReefISupplier.get());
-        reefTags.add(FieldSetup.allianceReefJSupplier.get());
-        reefTags.add(FieldSetup.allianceReefKSupplier.get());
-        reefTags.add(FieldSetup.allianceReefLSupplier.get());
+        rightReefTags.add(FieldSetup.allianceReefBSupplier.get());
+        rightReefTags.add(FieldSetup.allianceReefDSupplier.get());
+        rightReefTags.add(FieldSetup.allianceReefESupplier.get());
+        rightReefTags.add(FieldSetup.allianceReefHSupplier.get());
+        rightReefTags.add(FieldSetup.allianceReefJSupplier.get());
+        rightReefTags.add(FieldSetup.allianceReefKSupplier.get());
 
-        PathConstraints constraints = PPLibConstants.handoffReefAlignmentConstraints;
-        Pose2d closestRealPose2d = RobotContainer.m_robotDrive.getRefinedPoseVision();
-        target = closestRealPose2d.nearest(reefTags);
+        leftReefTags.add(FieldSetup.allianceReefASupplier.get());
+        leftReefTags.add(FieldSetup.allianceReefCSupplier.get());
+        leftReefTags.add(FieldSetup.allianceReefFSupplier.get());
+        leftReefTags.add(FieldSetup.allianceReefGSupplier.get());
+        leftReefTags.add(FieldSetup.allianceReefISupplier.get());
+        leftReefTags.add(FieldSetup.allianceReefLSupplier.get());
+
+         target = getClosetByOrientation();
+
 
         pathfindingCommand = AutoBuilder.pathfindToPose(
             target,
@@ -105,6 +101,16 @@ public class PathfindClosest extends Command {
     }
 
 
+    public Pose2d getClosetByOrientation(){
+        if(isRight){
+            this.target = closestRealPose2d.nearest(rightReefTags);
+        }else if (!isRight){
+            this.target = closestRealPose2d.nearest(leftReefTags);
+        }
+        return this.target;
+    }
+
+
     @Override
     public void execute() {
         if (runCommand == false){
@@ -112,7 +118,7 @@ public class PathfindClosest extends Command {
             end(true);
             System.out.println("PathFinding_Ended_Early");
         } else if (runCommand == true) { 
-            waypointfinder.schedule();
+            pathfindingCommand.schedule();
         }
     }
 

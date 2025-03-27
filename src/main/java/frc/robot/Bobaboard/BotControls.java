@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.EndEffectorConstants;
+import frc.robot.commands.PathfindClosest;
 import frc.robot.RobotContainer;
 import frc.robot.Autonomous.DefaultCommands.StandStillCommand;
 //import frc.robot.subsystems.TestSubsystem;
@@ -59,15 +60,21 @@ public class BotControls {
 
     public void RunRobot(){
     if (OneControllerQuery == true){
-            if (controlHub.driverController.L_Bumper.wasActivated()) {
+            if (controlHub.driverController.Y_Button.wasActivated()) {
                 DriveSubsystem.getInstance().zeroHeading();
             }
 
-            if (controlHub.driverController.X_Button.wasActivated()){
-                interruptedPPLib = !interruptedPPLib;
-                RobotContainer.PathfindClosest(interruptedPPLib).schedule();
-            }
+        
             
+            if (controlHub.driverController.L_Bumper.wasActivated() && !controlHub.driverController.R_Bumper.wasActivated()){
+                RobotContainer.PathfindClosest(interruptedPPLib,false);
+            }
+
+            if (controlHub.driverController.R_Bumper.wasActivated() && !controlHub.driverController.L_Bumper.wasActivated()){
+                RobotContainer.PathfindClosest(interruptedPPLib,true);
+            }
+
+        }
             // if(controlHub.driverController.A_Button.wasReleased() || controlHub.driverController.B_Button.wasReleased()
             // || controlHub.driverController.A_Button.isNotBeingPressed() || controlHub.driverController.B_Button.isNotBeingPressed()){
             //     rContainer.m_Elevator.setSafePercentageOpenLoop(0.05);
@@ -91,8 +98,8 @@ public class BotControls {
             //     } else if (controlHub.driverController.Y_Button.isBeingPressed() && !controlHub.driverController.X_Button.isBeingPressed()){
             //         rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.7);
             // }
-
-        }else{
+    
+        else{
 // 2 Controller Here
         // Driver Controls
 
@@ -160,8 +167,9 @@ public class BotControls {
             // }
 
         }
-  }
-    } 
+    }
+}
+     
 
 
 

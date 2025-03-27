@@ -371,8 +371,8 @@ public class RobotContainer {
     return new PathfindToPose(FieldSetup.allianceReefFarSupplier, FieldSetup.kReefFarEntranceTolerance, permission);
   }
 
-  public static Command PathfindClosest(boolean permission) {
-    return new PathfindClosest(permission);
+  public static Command PathfindClosest(boolean permission, Boolean isRight) {
+    return new PathfindClosest(permission,isRight);
   }
 
 }
