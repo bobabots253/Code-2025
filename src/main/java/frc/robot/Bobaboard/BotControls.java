@@ -146,7 +146,7 @@ public class BotControls {
         // && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
         // && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()
         ){
-            rContainer.m_Climb.setOpenLoop(12);
+            rContainer.m_Climb.setOpenLoop(20);
         } else if (controlHub.operatorController.R_Trigger.isBeingPressed() //&& !controlHub.operatorController.L_Trigger.isBeingPressed() 
         // && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
         // && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()

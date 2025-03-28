@@ -56,9 +56,6 @@ public class ClimbSubsystem extends SubsystemBase {
     public void setOpenLoop(double value) {
         masterClimbSparkMax.setVoltage(value);
         System.out.println(masterClimbSparkMax.getBusVoltage());
-        //System.out.println("Moving");
-        //masterClimbSparkMax.set(value);
-        //followerClimbSparkMax.set(value);
         SmartDashboard.putNumber("Climb Open-loop Value", value);
     }
     
