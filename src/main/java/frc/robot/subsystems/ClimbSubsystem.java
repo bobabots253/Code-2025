@@ -26,7 +26,7 @@ public class ClimbSubsystem extends SubsystemBase {
     private static final SparkMax masterClimbSparkMax = Util.createSparkMAX(ClimbConstants.masterClimbCanID, MotorType.kBrushless, false); //ID,MotorType
     private static final SparkMax followerClimbSparkMax = Util.createSparkMAX(ClimbConstants.followerClimbCanID, MotorType.kBrushless, false); //ID,MotorType
     //private final RelativeEncoder relativeEncoder;
-    private final AbsoluteEncoder absoluteEncoder;
+    //private final AbsoluteEncoder absoluteEncoder;
     /* READ ME:
     * Creates a PID Controller which we use to control the motors movement
     */
@@ -42,7 +42,7 @@ public class ClimbSubsystem extends SubsystemBase {
     
     private ClimbSubsystem() {
         resetEncoders();
-        absoluteEncoder = masterClimbSparkMax.getAbsoluteEncoder();
+        //absoluteEncoder = masterClimbSparkMax.getAbsoluteEncoder();
         //pidController = masterClimbSparkMax.getClosedLoopController();
         masterClimbSparkMax.configure(Configs.ClimbSubsystem.climbConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
@@ -54,7 +54,7 @@ public class ClimbSubsystem extends SubsystemBase {
      * Runs motors at a value [-1 to 1]. Log current value on SmartDashboard
      */
     public void setOpenLoop(double value) {
-        masterClimbSparkMax.setVoltage(value);
+        masterClimbSparkMax.setVoltage(1);
         System.out.println(masterClimbSparkMax.getBusVoltage());
         SmartDashboard.putNumber("Climb Open-loop Value", value);
     }
@@ -75,7 +75,7 @@ public class ClimbSubsystem extends SubsystemBase {
     
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Relative Encoder value [Rots]", absoluteEncoder.getPosition());
+        //SmartDashboard.putNumber("Relative Encoder value [Rots]", absoluteEncoder.getPosition());
         SmartDashboard.putNumber("Climb / Right Motor Current [Amps]", masterClimbSparkMax.getOutputCurrent());
         SmartDashboard.putNumber("Climb / left Motor Current [Amps]", followerClimbSparkMax.getOutputCurrent());
     
