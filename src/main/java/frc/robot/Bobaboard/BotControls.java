@@ -131,16 +131,17 @@ public class BotControls {
 
 
             //Polls for Controller Input, if a button is being pressed deliver selected algae pivot angle
-            if (!controlHub.operatorController.POV0.isBeingPressed() && !controlHub.operatorController.POV90.isBeingPressed()){
-                rContainer.stowAlgaeCommand().schedule();
-            }else{
-                if(controlHub.operatorController.POV0.isBeingPressed()){
-                rContainer.stowAlgaeCommand().schedule();
-            }else if(controlHub.operatorController.POV90.isBeingPressed()){
-                rContainer.algaeExtendCommand().schedule();
-                rContainer.m_Effector.setLazyPivotPositionSetpoint(EndEffectorConstants.extendedPIvotPosition);
-            }
-        }
+            // if (!controlHub.operatorController.POV0.isBeingPressed() && !controlHub.operatorController.POV90.isBeingPressed()){
+            //     rContainer.stowAlgaeCommand().schedule();
+            // }else{
+            //     if(controlHub.operatorController.POV0.isBeingPressed()){
+            //     rContainer.stowAlgaeCommand().schedule();
+            // }else if(controlHub.operatorController.POV90.isBeingPressed()){
+            //     rContainer.algaeExtendCommand().schedule();
+            //     rContainer.m_Effector.setLazyPivotPositionSetpoint(EndEffectorConstants.extendedPIvotPosition);
+            // }
+        
+        
 
             // if (!controlHub.operatorController.POV0.isBeingPressed()){
             //     rContainer.m_Effector.

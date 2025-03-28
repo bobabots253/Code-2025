@@ -216,13 +216,12 @@ public void periodic() {
 
     public void profiledPIDCalculation(double goalPosition){
         if(isWithinExtensionRange()){
-            var unknownConstant = 0.68;
             //possible divide the feed forward by 2 because it is a 2 stage cascading elevator
             //feed forward  m_feedForward.calculateWithVelocities(rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity)
             m_masterLiftingSparkMax.setVoltage(
                 m_profiledPIDController.calculate(
                     rotToMeters(m_LiftingEncoder.getPosition()),
-                    rotToMeters(goalPosition))+ unknownConstant); //What is the 0.68 for?
+                    rotToMeters(goalPosition))+ 0.68); //What is the 0.68 for?
         }else{
             System.out.println("ELEVATOR POSITION OUT OF TOLERANCE - PROFILED PID REQUEST");
         }
