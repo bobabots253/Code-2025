@@ -157,26 +157,37 @@ public final class Configs {
         }
     }
     public static class ClimbSubsystem {
-        public static final SparkMaxConfig climbConfig = new SparkMaxConfig();
+       public static final SparkMaxConfig climbMasterConfig = new SparkMaxConfig();
        public static final SparkMaxConfig climbFollowerConfig = new SparkMaxConfig();
+       public static final SparkMaxConfig climbMasterCoastConfig = new SparkMaxConfig();
+       public static final SparkMaxConfig climbFollowerCoastConfig = new SparkMaxConfig();
         static {
-        climbConfig
-            .idleMode(IdleMode.kCoast)
+        climbMasterConfig
+            .inverted(false)
+            .idleMode(IdleMode.kBrake)
             .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
         // climbConfig.closedLoop
-        // .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-        // .pid(ClimbConstants.kClimbP,
-        //      ClimbConstants.kClimbI,
-        //      ClimbConstants.kClimbD)
-        // .outputRange(ClimbConstants.kUniversalPIDOutputLow, ClimbConstants.kUniversalPIDOutputHigh);
-        //climbFollowerConfig.follow(ClimbConstants.masterClimbCanID, true);
+        //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        //     .pid(ElevatorConstants.kIncrementalPostionP,
+        //          ElevatorConstants.kIncrementalPostionI,
+        //          ElevatorConstants.kIncrementalPositionD)
+        //     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh)
+        //     .velocityFF(0);
         climbFollowerConfig
-        .idleMode(IdleMode.kCoast)
+        .follow(ClimbConstants.masterClimbCanID, true)
+        .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
-        
+
+        climbMasterCoastConfig
+                    .idleMode(IdleMode.kCoast)
+                    .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
+        climbFollowerCoastConfig.follow(ClimbConstants.masterClimbCanID);
+        climbFollowerCoastConfig
+                    .inverted(true)
+                    .idleMode(IdleMode.kCoast)
+                    .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
         
 
-        
         }
     }
 //     public static final class TestSubsystem {

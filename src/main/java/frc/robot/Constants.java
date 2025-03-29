@@ -295,7 +295,7 @@ public final class Constants {
   }
   public static final class ClimbConstants{
     public static final int masterClimbCanID = 14;
-    public static final int followerClimbCanID = 15;
+    public static final int slaveClimbCanID = 15;
     public static final double kClimbP =0.0;
     public static final double kClimbI =0.0;
     public static final double kClimbD =0.0;

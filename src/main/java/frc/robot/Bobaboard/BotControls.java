@@ -130,6 +130,14 @@ public class BotControls {
                 }
             }
 
+            if(!controlHub.operatorController.L_Trigger.isBeingPressed() && !controlHub.operatorController.R_Trigger.isBeingPressed()){
+                rContainer.m_Climb.setLazyOpenLoop(0.0);
+            }else if (controlHub.operatorController.L_Trigger.isBeingPressed()){
+                rContainer.m_Climb.setLazyOpenLoop(0.1);
+            }else if (controlHub.operatorController.R_Trigger.isBeingPressed()){
+                rContainer.m_Climb.setLazyOpenLoop(-0.1);
+            }
+
 
             //Polls for Controller Input, if a button is being pressed deliver selected algae pivot angle
             // if (!controlHub.operatorController.POV0.isBeingPressed() && !controlHub.operatorController.POV90.isBeingPressed()){
@@ -142,21 +150,7 @@ public class BotControls {
             //     rContainer.m_Effector.setLazyPivotPositionSetpoint(EndEffectorConstants.extendedPIvotPosition);
             // }
         //}
-        if (controlHub.operatorController.L_Trigger.isBeingPressed() //&& !controlHub.operatorController.R_Trigger.isBeingPressed() 
-        // && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
-        // && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()
-        ){
-            rContainer.m_Climb.setOpenLoop(20);
-        } else if (controlHub.operatorController.R_Trigger.isBeingPressed() //&& !controlHub.operatorController.L_Trigger.isBeingPressed() 
-        // && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
-        // && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()
-        ){
-            rContainer.m_Climb.setOpenLoop(-5);
-    }  else if (!controlHub.operatorController.R_Trigger.isBeingPressed() && !controlHub.operatorController.L_Trigger.isBeingPressed() 
-    // && !controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()
-    // && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()
-    ){
-        rContainer.m_Climb.setOpenLoop(0.0);
+
 }
 
             // if (!controlHub.operatorController.POV0.isBeingPressed()){
@@ -172,7 +166,7 @@ public class BotControls {
 
         }
   }
-    } 
+
 
 
 

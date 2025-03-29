@@ -175,10 +175,10 @@ public void setDeadband(double deadband) {
 			} else {
 				switch (buttonNumber) {
 					case LEFT_TRIGGER:
-						buttonCheck = getLeftTriggerAxis() > 0;
+						buttonCheck = getLeftTriggerAxis() > 0.1;
 						break;
 					case RIGHT_TRIGGER:
-						buttonCheck = getRightTriggerAxis() > 0;
+						buttonCheck = getRightTriggerAxis() > 0.1;
 						break;
 					case POV_0:
 						buttonCheck = (MathUtil.isNear(POVButtonNorth,
