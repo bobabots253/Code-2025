@@ -165,7 +165,7 @@ public final class Configs {
         climbMasterConfig
             .inverted(false)
             .idleMode(IdleMode.kBrake)
-            .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
+            .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
         // climbConfig.closedLoop
         //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         //     .pid(ElevatorConstants.kIncrementalPostionP,
@@ -174,20 +174,16 @@ public final class Configs {
         //     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh)
         //     .velocityFF(0);
         climbFollowerConfig
-        .follow(ClimbConstants.masterClimbCanID, true)
         .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
+        .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
 
         climbMasterCoastConfig
                     .idleMode(IdleMode.kCoast)
-                    .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
-        climbFollowerCoastConfig.follow(ClimbConstants.masterClimbCanID);
+                    .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
+                    
         climbFollowerCoastConfig
-                    .inverted(true)
                     .idleMode(IdleMode.kCoast)
-                    .smartCurrentLimit(ClimbConstants.kUniversalSoftLimit);
-        
-
+                    .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
         }
     }
 //     public static final class TestSubsystem {

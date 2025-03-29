@@ -98,44 +98,44 @@ public class BotControls {
 
         // Operator Side
 
-        //Polls for Controller Input, if a button is being pressed deliver selected intake/extake speed
-        if(controlHub.operatorController.L_Bumper.wasReleased() || controlHub.operatorController.R_Bumper.wasReleased()
-                && controlHub.operatorController.L_Bumper.isNotBeingPressed() && controlHub.operatorController.R_Bumper.isNotBeingPressed()){
-                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
-        } else{
-            if (controlHub.operatorController.L_Bumper.isBeingPressed() && !controlHub.operatorController.R_Bumper.isBeingPressed()) {
-                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.7);
-                }else if (controlHub.operatorController.R_Bumper.isBeingPressed() && !controlHub.operatorController.L_Bumper.isBeingPressed()) {
-                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+        // //Polls for Controller Input, if a button is being pressed deliver selected intake/extake speed
+        // if(controlHub.operatorController.L_Bumper.wasReleased() || controlHub.operatorController.R_Bumper.wasReleased()
+        //         && controlHub.operatorController.L_Bumper.isNotBeingPressed() && controlHub.operatorController.R_Bumper.isNotBeingPressed()){
+        //         rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
+        // } else{
+        //     if (controlHub.operatorController.L_Bumper.isBeingPressed() && !controlHub.operatorController.R_Bumper.isBeingPressed()) {
+        //         rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.7);
+        //         }else if (controlHub.operatorController.R_Bumper.isBeingPressed() && !controlHub.operatorController.L_Bumper.isBeingPressed()) {
+        //         rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
 
-                }
-        }
-            //Polls for Controller Input, if a button is being pressed deliver selected Elevator height
-            if (!controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.X_Button.isBeingPressed() 
-            && !controlHub.operatorController.Y_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()){
-                rContainer.m_Elevator.setSafePercentageOpenLoop(0.0);
-            }else{
+        //         }
+        // }
+        //     //Polls for Controller Input, if a button is being pressed deliver selected Elevator height
+        //     if (!controlHub.operatorController.A_Button.isBeingPressed() && !controlHub.operatorController.X_Button.isBeingPressed() 
+        //     && !controlHub.operatorController.Y_Button.isBeingPressed() && !controlHub.operatorController.B_Button.isBeingPressed()){
+        //         rContainer.m_Elevator.setSafePercentageOpenLoop(0.0);
+        //     }else{
 
-            if (controlHub.operatorController.B_Button.wasActivated()){
-                    rContainer.stowElevatorCommand().schedule();
-            }else if (controlHub.operatorController.A_Button.wasActivated() && !controlHub.operatorController.B_Button.isBeingPressed()
-                        && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()) {
-                    rContainer.tierOneElevatorCommand().schedule();
-            }else if (controlHub.operatorController.X_Button.wasActivated() && !controlHub.operatorController.A_Button.isBeingPressed()
-                        && !controlHub.operatorController.B_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()){
-                    rContainer.tierTwoElevatorCommand().schedule();
-            }else if (controlHub.operatorController.Y_Button.wasActivated() && !controlHub.operatorController.B_Button.isBeingPressed()
-                        && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.A_Button.isBeingPressed()){
-                    rContainer.tierThreeElevatorCommand().schedule();
-                }
-            }
+        //     if (controlHub.operatorController.B_Button.wasActivated()){
+        //             rContainer.stowElevatorCommand().schedule();
+        //     }else if (controlHub.operatorController.A_Button.wasActivated() && !controlHub.operatorController.B_Button.isBeingPressed()
+        //                 && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()) {
+        //             rContainer.tierOneElevatorCommand().schedule();
+        //     }else if (controlHub.operatorController.X_Button.wasActivated() && !controlHub.operatorController.A_Button.isBeingPressed()
+        //                 && !controlHub.operatorController.B_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()){
+        //             rContainer.tierTwoElevatorCommand().schedule();
+        //     }else if (controlHub.operatorController.Y_Button.wasActivated() && !controlHub.operatorController.B_Button.isBeingPressed()
+        //                 && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.A_Button.isBeingPressed()){
+        //             rContainer.tierThreeElevatorCommand().schedule();
+        //         }
+        //     }
 
             if(!controlHub.operatorController.L_Trigger.isBeingPressed() && !controlHub.operatorController.R_Trigger.isBeingPressed()){
-                rContainer.m_Climb.setLazyOpenLoop(0.0);
+                rContainer.m_Climb.setLazyOpenLoop(0);
             }else if (controlHub.operatorController.L_Trigger.isBeingPressed()){
-                rContainer.m_Climb.setLazyOpenLoop(0.1);
+                rContainer.m_Climb.setLazyOpenLoop(1);
             }else if (controlHub.operatorController.R_Trigger.isBeingPressed()){
-                rContainer.m_Climb.setLazyOpenLoop(-0.1);
+                rContainer.m_Climb.setLazyOpenLoop(-1);
             }
 
 

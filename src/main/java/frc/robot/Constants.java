@@ -303,6 +303,7 @@ public final class Constants {
     public static final double climb = 0.0;
     public static final int kUniversalHardLimit = 45;
     public static final int kUniversalSoftLimit = 40;
+    public static final int kSuperHighOutputLimit = 60;
     public static final double kUniversalPIDOutputHigh = 1.0;
     public static final double kUniversalPIDOutputLow = -1.0;
 

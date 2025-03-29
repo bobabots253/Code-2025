@@ -23,8 +23,8 @@ import frc.utils.Util;
 
 
 public class ClimbSubsystem extends SubsystemBase {
-    private static final SparkMax masterClimbSparkMax = new SparkMax(ClimbConstants.masterClimbCanID, MotorType.kBrushless);
-    private static final SparkMax followerClimbSparkMax = new SparkMax(ClimbConstants.slaveClimbCanID, MotorType.kBrushless); //ID,MotorType
+    private static final SparkMax masterClimbSparkMax = new SparkMax(ClimbConstants.slaveClimbCanID, MotorType.kBrushless);
+    private static final SparkMax followerClimbSparkMax = new SparkMax(ClimbConstants.masterClimbCanID, MotorType.kBrushless); //ID,MotorType
     //private final RelativeEncoder relativeEncoder;
     private final AbsoluteEncoder m_climbAbsoluteEncoder;
     /* READ ME:
@@ -46,9 +46,9 @@ public class ClimbSubsystem extends SubsystemBase {
         m_climbAbsoluteEncoder = masterClimbSparkMax.getAbsoluteEncoder();
         masterClimbSparkMax.configure(Configs.ClimbSubsystem.climbMasterConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
-       followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerConfig, ResetMode.kResetSafeParameters,
+       followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerCoastConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
-        setCoastMode(false);
+        // setCoastMode(false);
         register(); //Register Subsystem for Command Scheduluer to call in periodic
     }
 
@@ -56,10 +56,24 @@ public class ClimbSubsystem extends SubsystemBase {
      * Runs motors at a value [-1 to 1]. Log current value on SmartDashboard
      */
     public void setLazyOpenLoop(double OpenLoopValue) {
+        if (OpenLoopValue != 0){
+        masterClimbSparkMax.configure(Configs.ClimbSubsystem.climbMasterConfig, ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
+       followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerCoastConfig, ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
         masterClimbSparkMax.set(OpenLoopValue);
+        followerClimbSparkMax.set(-OpenLoopValue);
+        } else{
+        followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerConfig, ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
+        }
         SmartDashboard.putNumber("Climb /setOpenLoop", OpenLoopValue);
     }
     
+    public void setConditionalBrake(boolean setConditionalBrake){
+        followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerConfig, ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
+    }
     /**
      * Runs motors at a value 0 (stop).
      */
@@ -67,19 +81,19 @@ public class ClimbSubsystem extends SubsystemBase {
         setLazyOpenLoop(0);
     }
 
-    public void setCoastMode(Boolean CoastModeEnabled){
-        if (CoastModeEnabled) {
-            masterClimbSparkMax.configure(
-                Configs.ClimbSubsystem.climbMasterCoastConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-            followerClimbSparkMax.configure(
-                Configs.ClimbSubsystem.climbFollowerCoastConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-          } else {
-            masterClimbSparkMax.configure(
-                Configs.ClimbSubsystem.climbMasterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-                followerClimbSparkMax.configure(
-                Configs.ClimbSubsystem.climbFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        }
-    }
+    // public void setCoastMode(Boolean CoastModeEnabled){
+    //     if (CoastModeEnabled) {
+    //         masterClimbSparkMax.configure(
+    //             Configs.ClimbSubsystem.climbMasterCoastConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    //         followerClimbSparkMax.configure(
+    //             Configs.ClimbSubsystem.climbFollowerCoastConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    //       } else {
+    //         masterClimbSparkMax.configure(
+    //             Configs.ClimbSubsystem.climbMasterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    //             followerClimbSparkMax.configure(
+    //             Configs.ClimbSubsystem.climbFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    //     }
+    // }
     
     /**
      * Resets encoders to zero
