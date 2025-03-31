@@ -305,8 +305,15 @@ public final class Constants {
     public static final double RECENT_DATA_CUTOFF = 3.5;
   }
 
-  
-public static final boolean tuningMode = false;
+    public static final boolean tuningMode = false;
+
+    public static final class ClimbConstants{
+      public static final int masterClimbCanID = 14;
+      public static final int slaveClimbCanID = 15;
+      public static final int kUniversalHardLimit = 45;
+      public static final int kUniversalSoftLimit = 40;
+      public static final int kSuperHighOutputLimit = 60;
+      }
 }
 
 //Old Code Ref:
