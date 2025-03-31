@@ -128,6 +128,13 @@ public class BotControls {
                     rContainer.tierThreeElevatorCommand().schedule();
                 }
             }
+            if(controlHub.operatorController.POV0.isBeingPressed()){
+                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(.1);
+            }else if(controlHub.operatorController.POV180.isBeingPressed()){
+                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(-.1);
+            }else{
+                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0);
+            }
 
 
             //Polls for Controller Input, if a button is being pressed deliver selected algae pivot angle
