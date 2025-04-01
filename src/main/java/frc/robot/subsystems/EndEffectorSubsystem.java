@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+// package frc.robot.subsystems;
+
 import org.ejml.data.DGrowArray;
 
 import com.revrobotics.AbsoluteEncoder;
@@ -31,12 +33,12 @@ private final SparkClosedLoopController m_pivotPIDController;
 private final DigitalInput frontIntakeBeamBreak;
 private final DigitalInput backIntakeBeamBreak;
 
-private static EndEffectorSubsystem instance;
+    private static EndEffectorSubsystem instance;
 
-public static EndEffectorSubsystem getInstance() {
-    if(instance == null) instance = new EndEffectorSubsystem();
-    return instance;
-}
+    public static EndEffectorSubsystem getInstance() {
+        if(instance == null) instance = new EndEffectorSubsystem();
+        return instance;
+    }
 
 private EndEffectorSubsystem(){
     m_pivotSparkMax = new SparkMax(EndEffectorConstants.pivotCANId,MotorType.kBrushless);
@@ -56,27 +58,27 @@ private EndEffectorSubsystem(){
     backIntakeBeamBreak = new DigitalInput(EndEffectorConstants.backBeamBreakSensor);
 }
 
-@Override
+// @Override
 public void periodic() {
 
-    SmartDashboard.putNumber("Algae /absolutePosition", getPivotAbsoluteEncoder());
+    //SmartDashboard.putNumber("Algae /absolutePosition", getPivotAbsoluteEncoder());
     SmartDashboard.putBoolean("EndEffector /isIntakedDIO", isCoralInsideIntake());
 }
 
-    public void setSafePercentagePivotOpenLoop(double OpenLoopPercentage){
-        SmartDashboard.putNumber("Algae / Safe Output Speed (#.##)", OpenLoopPercentage);
-        if (isWithinPivotRange() && !MathUtil.isNear(EndEffectorConstants.PIVOT_MAX_TRAVEL, getPivotAbsoluteEncoder(), 0.15)){
-            m_pivotSparkMax.set(
-                MathUtil.clamp(OpenLoopPercentage,
-                EndEffectorConstants.PIVOT_OUTPUT_LOW, EndEffectorConstants.PIVOT_OUTPUT_HIGH));
-            }else{
-            while(MathUtil.isNear(EndEffectorConstants.PIVOT_MAX_TRAVEL, getPivotAbsoluteEncoder(), 0.15)){
-            m_pivotSparkMax.set(
-                MathUtil.clamp(-0.075,
-                EndEffectorConstants.PIVOT_OUTPUT_LOW, EndEffectorConstants.PIVOT_OUTPUT_HIGH));
-                }
-            }        
-    }
+    // public void setSafePercentagePivotOpenLoop(double OpenLoopPercentage){
+    //     SmartDashboard.putNumber("Algae / Safe Output Speed (#.##)", OpenLoopPercentage);
+    //     if (isWithinPivotRange() && !MathUtil.isNear(EndEffectorConstants.PIVOT_MAX_TRAVEL, getPivotAbsoluteEncoder(), 0.15)){
+    //         m_pivotSparkMax.set(
+    //             MathUtil.clamp(OpenLoopPercentage,
+    //             EndEffectorConstants.PIVOT_OUTPUT_LOW, EndEffectorConstants.PIVOT_OUTPUT_HIGH));
+    //         }else{
+    //         while(MathUtil.isNear(EndEffectorConstants.PIVOT_MAX_TRAVEL, getPivotAbsoluteEncoder(), 0.15)){
+    //         m_pivotSparkMax.set(
+    //             MathUtil.clamp(-0.075,
+    //             EndEffectorConstants.PIVOT_OUTPUT_LOW, EndEffectorConstants.PIVOT_OUTPUT_HIGH));
+    //             }
+    //         }        
+    //     }
     
     public void setIntakeLazyPercentageOpenLoop(double value) {
             SmartDashboard.putNumber("Intake Running Speed", value);
@@ -88,9 +90,6 @@ public void periodic() {
         m_pivotSparkMax.set(inputvalue);
 }
 
-    public double getPivotAbsoluteEncoder(){
-        return m_pivotEncoder.getPosition();
-    }
 
     public boolean isFrontBeamBreakBlocked(){
         return frontIntakeBeamBreak.get();
@@ -125,12 +124,12 @@ public void periodic() {
     //     m_algaeRollerEncoder.setPosition(0.0);
     //}
 
-    public void setLazyPivotPositionSetpoint(double PositionSetpoint){
-        double correctedSetpoint = MathUtil.clamp(PositionSetpoint,
-                 EndEffectorConstants.PIVOT_MIN_TRAVEL, EndEffectorConstants.PIVOT_MAX_TRAVEL);
-        m_pivotPIDController.setReference(correctedSetpoint, ControlType.kPosition);
-        SmartDashboard.putNumber("Pivot Setpoint", PositionSetpoint);
-    }
+//     public void setLazyPivotPositionSetpoint(double PositionSetpoint){
+//         double correctedSetpoint = MathUtil.clamp(PositionSetpoint,
+//                  EndEffectorConstants.PIVOT_MIN_TRAVEL, EndEffectorConstants.PIVOT_MAX_TRAVEL);
+//         m_pivotPIDController.setReference(correctedSetpoint, ControlType.kPosition);
+//         SmartDashboard.putNumber("Pivot Setpoint", PositionSetpoint);
+//     }
 
     // public void setLazyIntakeVelocitySetpoint(double velocity){
     //     m_intakeRollerPIDController.setReference(velocity, ControlType.kVelocity);

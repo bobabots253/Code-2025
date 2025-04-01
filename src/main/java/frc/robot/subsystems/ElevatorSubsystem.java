@@ -44,15 +44,19 @@ private static ProfiledPIDController m_profiledPIDController;
 // public final String kTunableI = "Tunable_I";
 // public final String kTunableD = "Tunable_D";
 public int currentIntSetpointElevator;
-private static ElevatorSubsystem instance;
+// private static ElevatorSubsystem instance;
 public static ElevatorFeedforward m_feedForward;
 public static double trapezoid;
 
 public double volting;
-public static ElevatorSubsystem getInstance() {
-    if(instance == null) instance = new ElevatorSubsystem();
-    return instance;
-}
+
+    private static class ElevatorSubsystemHandler {
+        private static final ElevatorSubsystem instance = new ElevatorSubsystem();
+    }
+
+    public static ElevatorSubsystem getInstance() {
+        return ElevatorSubsystemHandler.instance;
+    }
 
 private ElevatorSubsystem() {
     m_masterLiftingSparkMax = new SparkMax(ElevatorConstants.masterLiftingCANId, MotorType.kBrushless);
@@ -77,24 +81,24 @@ private ElevatorSubsystem() {
     m_slaveLiftingSparkMax.configure(Configs.ElevatorSubsystem.slaveLiftingConfig, ResetMode.kResetSafeParameters,
     PersistMode.kPersistParameters);
 
-    //Homing & Safe Code Stop
-    masterHallEffectSensor = new DigitalInput(ElevatorConstants.pivotMasterHallEffectDIO);
-    slaveHallEffectSensor = new DigitalInput(ElevatorConstants.pivotSlaveHallEffectDIO);
-    //Preferences.putDouble(kTunableP , ElevatorConstants.kIncrementalPostionP);
-    resetEncoders();
-    //setCoastMode(true);
-}
+//     //Homing & Safe Code Stop
+//     masterHallEffectSensor = new DigitalInput(ElevatorConstants.pivotMasterHallEffectDIO);
+//     slaveHallEffectSensor = new DigitalInput(ElevatorConstants.pivotSlaveHallEffectDIO);
+//     //Preferences.putDouble(kTunableP , ElevatorConstants.kIncrementalPostionP);
+//     resetEncoders();
+//     //setCoastMode(true);
+// }
 
-@Override
-public void periodic() {
+// @Override
+// public void periodic() {
 
 
-    if (!isWithinExtensionRange()){
-        System.out.println("Elevator Hitting Code Stop");
-        stopElevator();
-    }
+//     if (!isWithinExtensionRange()){
+//         System.out.println("Elevator Hitting Code Stop");
+//         stopElevator();
+//     }
 
-    SmartDashboard.putNumber("Elevator /elevatorVel",getElevatorVelocity());
+//     SmartDashboard.putNumber("Elevator /elevatorVel",getElevatorVelocity());
     
     SmartDashboard.putNumber("Elevator /relativePosition", m_LiftingEncoder.getPosition());
     SmartDashboard.putNumber("Elevator /relativePositionMEters", rotToMeters(m_LiftingEncoder.getPosition()));

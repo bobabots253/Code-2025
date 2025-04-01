@@ -44,6 +44,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Autonomous.AutoModeManager.DesiredMode;
 import frc.robot.Bobaboard.BotControls;
@@ -124,7 +125,11 @@ public class Robot extends TimedRobot {
     URCL.start();
     DriverStation.startDataLog(DataLogManager.getLog());
     mDriveControls.PutControllerOption();
-    m_robotContainer.m_robotDrive.zeroHeading();
+    // m_robotContainer.m_robotDrive.zeroHeading();
+    // LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 1);
+    // LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 1);
+    // LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
+    // LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
     SmartDashboard.putNumber("Set P Value",ElevatorConstants.kIncrementalPostionP);
     SmartDashboard.putNumber("Set I Value",ElevatorConstants.kIncrementalPostionI);
     SmartDashboard.putNumber("Set D Value",ElevatorConstants.kIncrementalPositionD);
@@ -141,10 +146,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override

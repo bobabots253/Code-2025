@@ -28,9 +28,10 @@ import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Bobaboard.BotControls;
 import frc.robot.Bobaboard.ControlHub;
 import frc.robot.subsystems.EndEffectorSubsystem;
-import frc.robot.commands.DriveToPose;
 import frc.robot.commands.PathfindClosest;
 import frc.robot.commands.PathfindToPose;
+import frc.robot.limelights.VisionData;
+import frc.robot.limelights.VisionSubsystem;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -79,7 +80,7 @@ public class RobotContainer {
   private static RobotContainer instance = null;
   public final AutoModeManager m_AutoModeManager;
   public final ControlHub m_ControlHub;
-  public final DriveSubsystem m_robotDrive;
+  public static DriveSubsystem m_robotDrive;
   public final ElevatorSubsystem m_Elevator;
   public final EndEffectorSubsystem m_Effector;
   public final ClimbSubsystem m_Climb;
@@ -96,9 +97,10 @@ public class RobotContainer {
    */
   public RobotContainer() {
     //m_TestSubsystem =TestSubsystem.getInstance();
-    m_robotDrive = new DriveSubsystem();
+    m_robotDrive = DriveSubsystem.getInstance();
     m_AutoModeManager = new AutoModeManager();
     m_ControlHub = ControlHub.getInstance();
+    VisionSubsystem.getInstance(m_robotDrive);
     m_Elevator = ElevatorSubsystem.getInstance();
     m_Effector = EndEffectorSubsystem.getInstance();
     m_Climb = ClimbSubsystem.getInstance();
@@ -111,7 +113,6 @@ public class RobotContainer {
           -MathUtil.applyDeadband(m_ControlHub.driverController.getRightX(), OIConstants.kDriveDeadband),
           true, true),
       m_robotDrive));
-      //NamedCommands.registerCommand("TestCommand", new InstantCommand(() -> Score()));
   }
 
 
@@ -334,8 +335,8 @@ public class RobotContainer {
     return new PathfindToPose(FieldSetup.allianceReefFarSupplier, FieldSetup.kReefFarEntranceTolerance, permission);
   }
 
-  public static Command PathfindClosest(boolean permission) {
-    return new PathfindClosest(permission);
+  public static Command PathfindClosest(boolean permission, Boolean isRight) {
+    return new PathfindClosest(permission,isRight);
   }
 
 }
