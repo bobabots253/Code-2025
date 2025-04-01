@@ -106,7 +106,6 @@ public class BotControls {
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.7);
                 }else if (controlHub.operatorController.R_Bumper.isBeingPressed() && !controlHub.operatorController.L_Bumper.isBeingPressed()) {
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
-
                 }
         }
             //Polls for Controller Input, if a button is being pressed deliver selected Elevator height
@@ -129,13 +128,21 @@ public class BotControls {
                 }
             }
 
-            if(!controlHub.operatorController.L_Trigger.isBeingPressed() && !controlHub.operatorController.R_Trigger.isBeingPressed()){
-                rContainer.m_Climb.setLazyOpenLoop(0);
-            }else if (controlHub.operatorController.L_Trigger.isBeingPressed()){
-                rContainer.m_Climb.setLazyOpenLoop(1);
-            }else if (controlHub.operatorController.R_Trigger.isBeingPressed()){
-                rContainer.m_Climb.setLazyOpenLoop(-1);
+            if(controlHub.operatorController.L_Trigger.isNotBeingPressed() && controlHub.operatorController.R_Trigger.isNotBeingPressed()){
+                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0);
+            }else if(controlHub.operatorController.L_Trigger.wasActivated()){
+                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(-.1);
+            }else if (controlHub.operatorController.R_Trigger.wasActivated()){
+                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0.1);
             }
+
+            // if(!controlHub.operatorController.L_Trigger.isBeingPressed() && !controlHub.operatorController.R_Trigger.isBeingPressed()){
+            //     rContainer.m_Climb.setLazyOpenLoop(0);
+            // }else if (controlHub.operatorController.L_Trigger.isBeingPressed()){
+            //     rContainer.m_Climb.setLazyOpenLoop(1);
+            // }else if (controlHub.operatorController.R_Trigger.isBeingPressed()){
+            //     rContainer.m_Climb.setLazyOpenLoop(-1);
+            // }
 
 
             //Polls for Controller Input, if a button is being pressed deliver selected algae pivot angle

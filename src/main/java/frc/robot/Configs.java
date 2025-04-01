@@ -122,17 +122,17 @@ public final class Configs {
         pivotConfig.absoluteEncoder
                     .inverted(false);
 
-        pivotConfig
+        pivotCoastModeConfig
                     .idleMode(IdleMode.kCoast)
                     .smartCurrentLimit(EndEffectorConstants.kUniversalSoftLimit);
-        pivotConfig.closedLoop
+        pivotCoastModeConfig.closedLoop
                     .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                     .pid(EndEffectorConstants.kPivotAbsolutePositionP,
                          EndEffectorConstants.kPivotAbsolutePositionI,
                          EndEffectorConstants.kPivotAbsolutePositionD)
                     .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh)
                     .positionWrappingEnabled(false);
-        pivotConfig.absoluteEncoder
+        pivotCoastModeConfig.absoluteEncoder
                     .inverted(false);
 
         intakeRollerConfig
@@ -143,16 +143,6 @@ public final class Configs {
                     .pid(EndEffectorConstants.kIntakeVelocityP, 
                          EndEffectorConstants.kIntakeVelocityI, 
                          EndEffectorConstants.kIntakeVelocityD)
-                    .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh);
-        
-        algaeRollerConfig
-                    .idleMode(IdleMode.kBrake)
-                    .smartCurrentLimit(EndEffectorConstants.kUniversalSoftLimit);
-        algaeRollerConfig.closedLoop
-                    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                    .pid(EndEffectorConstants.kAlgaeVelocityP, 
-                         EndEffectorConstants.kAlgaeVelocityI, 
-                         EndEffectorConstants.kAlgaeVelocityD)
                     .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh);
         }   
      }

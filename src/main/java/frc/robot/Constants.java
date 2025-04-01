@@ -223,7 +223,6 @@ public final class Constants {
     //EF CAN Id's
     public static final int pivotCANId = 12;
     public static final int intakeRollerCANId = 11;
-    public static final int algaeRollerCANId = 13;
 
     //EF DIO Port
     public static final int frontBeamBreakSensor = 2;

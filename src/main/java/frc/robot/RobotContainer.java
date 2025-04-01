@@ -126,20 +126,8 @@ public class RobotContainer {
       * @return 
       */
 
-  // public Command stowElevatorCommand(){
-  //   return new RunCommand(() -> 
-  //     m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW),
-  //       m_Effector);
-  // }
-
    public Command stowElevatorCommand(){
     return new ParallelCommandGroup(
-          // new RunCommand(() -> {
-          //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-          //     m_Effector),
-          new RunCommand(() -> {
-            m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-              m_Effector),
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.STOW);
             }, m_Elevator)
@@ -148,16 +136,6 @@ public class RobotContainer {
 
    public Command tierOneElevatorCommand(){
     return new ParallelCommandGroup(
-          // new SequentialCommandGroup(
-          //   new WaitCommand(.2),
-          //   new RunCommand(() -> {
-          //     m_Effector.setLazyEndEffectorState(States.EndEffectorPos.L1Score);
-          //   }, m_Effector)
-          // ),
-          // new RunCommand(() -> {
-          //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-          //     m_Effector),
-          
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.L1Score);
             }, m_Elevator)
@@ -168,98 +146,82 @@ public class RobotContainer {
     return new ParallelCommandGroup(
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
-            }, m_Elevator));
-          // new SequentialCommandGroup(
-          //   new WaitCommand(.2),
-          //   new RunCommand(() -> {
-          //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);
-          //   }, m_Effector)
-          // )
-
-        
+            }, m_Elevator));  
     }
 
     public Command tierThreeElevatorCommand(){
       return new ParallelCommandGroup(
-
-            // new SequentialCommandGroup(
-            //   new WaitCommand(0.2),
-            //   new RunCommand(() -> {
-            //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-            //     m_Effector)
-            // ),
-
             new RunCommand(() -> {
               m_Elevator.setLazyElevatorState(States.ElevatorPos.L3SCORE);
               }, m_Elevator)
           );
       }
 
-    public Command intakeCoralCommand(){
-      return new SequentialCommandGroup(
-            new InstantCommand(() -> {
-              m_Effector.setLazyEndEffectorState(States.EndEffectorPos.INTAKE);},
-                  m_Effector)
-              // new RunCommand(() -> {
-              //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-              //     m_Effector),
+    // public Command intakeCoralCommand(){
+    //   return new SequentialCommandGroup(
+    //         new InstantCommand(() -> {
+    //           m_Effector.setLazyEndEffectorState(States.EndEffectorPos.INTAKE);},
+    //               m_Effector)
+    //           // new RunCommand(() -> {
+    //           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+    //           //     m_Effector),
              
-            );
-        }
+    //         );
+    //     }
 
-        public Command hardExtakeCoralCommand(){
-          return new SequentialCommandGroup(
-                new InstantCommand(() -> 
-                  m_Effector.setLazyEndEffectorState(States.EndEffectorPos.HARD_REMOVE))
-                  // new RunCommand(() -> {
-                  //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-                  //     m_Effector),
+        // public Command hardExtakeCoralCommand(){
+        //   return new SequentialCommandGroup(
+        //         new InstantCommand(() -> 
+        //           m_Effector.setLazyEndEffectorState(States.EndEffectorPos.HARD_REMOVE))
+        //           // new RunCommand(() -> {
+        //           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+        //           //     m_Effector),
                  
-                );
-            }
+        //         );
+        //     }
 
-          public Command softExtakeCoralCommand(){
-          return new SequentialCommandGroup(
-                new InstantCommand(() -> 
-                  m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SOFT_REMOVE))
-                  // new RunCommand(() -> {
-                  //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-                  //     m_Effector),
+          // public Command softExtakeCoralCommand(){
+          // return new SequentialCommandGroup(
+          //       new InstantCommand(() -> 
+          //         m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SOFT_REMOVE))
+          //         // new RunCommand(() -> {
+          //         //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+          //         //     m_Effector),
                  
-                );
-            }
+          //       );
+          //   }
 
-          public Command smartIntakeCoralCommand(){
-          return new SequentialCommandGroup(
-                new InstantCommand(() -> 
-                  m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SMART_INTAKE))
-                  // new RunCommand(() -> {
-                  //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-                  //     m_Effector),
+          // public Command smartIntakeCoralCommand(){
+          // return new SequentialCommandGroup(
+          //       new InstantCommand(() -> 
+          //         m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SMART_INTAKE))
+          //         // new RunCommand(() -> {
+          //         //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+          //         //     m_Effector),
                  
-                );
-            }
-            public Command algaeExtendCommand(){
-              return new SequentialCommandGroup(
-                    new InstantCommand(() -> 
-                      m_Effector.setLazyEndEffectorState(States.EndEffectorPos.EXTENDED_PIVOT))
-                      // new RunCommand(() -> {
-                      //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-                      //     m_Effector),
+          //       );
+          //   }
+            // public Command algaeExtendCommand(){
+            //   return new SequentialCommandGroup(
+            //         new InstantCommand(() -> 
+            //           m_Effector.setLazyEndEffectorState(States.EndEffectorPos.EXTENDED_PIVOT))
+            //           // new RunCommand(() -> {
+            //           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+            //           //     m_Effector),
                      
-                    );
-            }
+            //         );
+            // }
 
-            public Command stowAlgaeCommand(){
-              return new SequentialCommandGroup(
-                    new InstantCommand(() -> 
-                      m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW))
-                      // new RunCommand(() -> {
-                      //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-                      //     m_Effector),
+            // public Command stowAlgaeCommand(){
+            //   return new SequentialCommandGroup(
+            //         new InstantCommand(() -> 
+            //           m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW))
+            //           // new RunCommand(() -> {
+            //           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+            //           //     m_Effector),
                      
-                    );
-            }
+            //         );
+            // }
 
 
 
