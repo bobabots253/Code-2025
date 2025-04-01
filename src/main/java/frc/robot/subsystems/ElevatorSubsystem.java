@@ -44,15 +44,19 @@ private static ProfiledPIDController m_profiledPIDController;
 // public final String kTunableI = "Tunable_I";
 // public final String kTunableD = "Tunable_D";
 public int currentIntSetpointElevator;
-private static ElevatorSubsystem instance;
+// private static ElevatorSubsystem instance;
 public static ElevatorFeedforward m_feedForward;
 public static double trapezoid;
 
 public double volting;
-public static ElevatorSubsystem getInstance() {
-    if(instance == null) instance = new ElevatorSubsystem();
-    return instance;
-}
+
+    private static class ElevatorSubsystemHandler {
+        private static final ElevatorSubsystem instance = new ElevatorSubsystem();
+    }
+
+    public static ElevatorSubsystem getInstance() {
+        return ElevatorSubsystemHandler.instance;
+    }
 
 private ElevatorSubsystem() {
     m_masterLiftingSparkMax = new SparkMax(ElevatorConstants.masterLiftingCANId, MotorType.kBrushless);

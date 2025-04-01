@@ -33,12 +33,12 @@ private final SparkClosedLoopController m_pivotPIDController;
 private final DigitalInput frontIntakeBeamBreak;
 private final DigitalInput backIntakeBeamBreak;
 
-// private static EndEffectorSubsystem instance;
+    private static EndEffectorSubsystem instance;
 
-// public static EndEffectorSubsystem getInstance() {
-//     if(instance == null) instance = new EndEffectorSubsystem();
-//     return instance;
-// }
+    public static EndEffectorSubsystem getInstance() {
+        if(instance == null) instance = new EndEffectorSubsystem();
+        return instance;
+    }
 
 private EndEffectorSubsystem(){
     m_pivotSparkMax = new SparkMax(EndEffectorConstants.pivotCANId,MotorType.kBrushless);
