@@ -166,12 +166,23 @@ public final class Constants {
     public static final int pivotMasterHallEffectDIO = 0;
     public static final int pivotSlaveHallEffectDIO = 1;
 
+    //Elevator trapezoidal profile
+    /** In meters per second. Used for Profiled PID controller*/
+    public static final double elevatorMaxVelocity = 8.5;//.685
+    public static final double elevaotrMaxAccerleration = 13.16;//2.615
+    public static final double profiledP = 2.248;//4.96
+    public static final double profiledI = 0;
+    public static final double profiledD = 0.07;
+    public static final double gearRatio = 5.0;
+    //meters
+    public static final double gearRadius = 0.0254;
+
     public static final double idealHomingLinearPosition = 0.000; //revs
-    public static final double softZeroLinearPosition = 0.1200; //revs
-    public static final double L1Score = 9.470; // 2/24/25
+    public static final double softZeroLinearPosition = 0.100; //revs0.023809418082237244
+    public static final double L1Score = 7.470; // 2/24/25
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Elevator 
 
-    public static final double L2Score = 14.05; // 2/24/25 //works
+    public static final double L2Score = 12.55; // 2/24/25 //works
     public static final double L2Algae = 0.120;
     public static final double L2Misc = 0.120;
     public static final double L3Score = 19.585; // 2/24/25 18.9
@@ -212,7 +223,6 @@ public final class Constants {
     //EF CAN Id's
     public static final int pivotCANId = 12;
     public static final int intakeRollerCANId = 11;
-    public static final int algaeRollerCANId = 13;
 
     //EF DIO Port
     public static final int frontBeamBreakSensor = 2;
@@ -230,7 +240,7 @@ public final class Constants {
     public static final double kIntakeVelocityFF = 0.0005; //1:1
 
     //PIVOT
-    public static final double softZeroPivotPosition = 0.000; //degress
+    public static final double softZeroPivotPosition = 0.015; //degress
     public static final double extendedPIvotPosition = 0.65;
     public static final double idealStowAngle = 0.000; //degrees
     public static final double alternateStowAngle = 0.245; //degress
@@ -268,8 +278,8 @@ public final class Constants {
     public static final double kAlgaeVelocityFF = 0.0005; 
     
     //Universal EF Current Limits
-    public static final int kUniversalSoftLimit = 40; 
-    public static final int kUniversalHardLimit = 45;
+    public static final int kUniversalSoftLimit = 20; 
+    public static final int kUniversalHardLimit = 25;
     //Universal EF Output Limits
     public static final double kUniversalPIDOutputLow = -1; //max output is capped @ 1
     public static final double kUniversalPIDOutputHigh = 1;
@@ -306,4 +316,12 @@ public final class Constants {
 
   
 public static final boolean tuningMode = false;
+
+public static final class ClimbConstants{
+  public static final int masterClimbCanID = 14;
+  public static final int slaveClimbCanID = 15;
+  public static final int kUniversalHardLimit = 45;
+  public static final int kUniversalSoftLimit = 40;
+  public static final int kSuperHighOutputLimit = 60;
+  }
 }

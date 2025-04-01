@@ -110,9 +110,9 @@ public class FieldSetup {
         //Use this format for examples.
         public static Supplier<Pose2d> allianceTopFeedingStationSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d(new Translation2d(1.050, 7.040), 
+                        ? new Pose2d(new Translation2d(1.170, 7.010), 
                                 new Rotation2d(306 * (Math.PI/180)))
-                        : new Pose2d(new Translation2d(16.485, 7.040),
+                        : new Pose2d(new Translation2d(16.380, 7.010),
                                 new Rotation2d(234 * (Math.PI/180)));
 
         public static Supplier<Pose2d> allianceBottomFeedingStationSupplier = () -> DriverStation.getAlliance()

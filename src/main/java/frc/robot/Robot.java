@@ -42,6 +42,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Autonomous.AutoModeManager;
@@ -49,6 +50,7 @@ import frc.robot.Autonomous.AutoModeManager.DesiredMode;
 import frc.robot.Bobaboard.BotControls;
 import frc.robot.Bobaboard.ControlHub;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 /*Important Notes for 2025:
 22 April Tags - Diff Angles (not all @ 90*). - center tags @ 30* down
@@ -128,7 +130,10 @@ public class Robot extends TimedRobot {
     // LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 1);
     // LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
     // LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
-  } 
+    SmartDashboard.putNumber("Set P Value",ElevatorConstants.kIncrementalPostionP);
+    SmartDashboard.putNumber("Set I Value",ElevatorConstants.kIncrementalPostionI);
+    SmartDashboard.putNumber("Set D Value",ElevatorConstants.kIncrementalPositionD);
+  }
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
@@ -164,6 +169,12 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     mControlBoard.verifyPossibleControllerInit();
     mDriveControls.selectControllerOption();
+    double Pval = SmartDashboard.getNumber("Set P Value", 0);
+    double Ival = SmartDashboard.getNumber("Set I Value", 0);
+    double Dval = SmartDashboard.getNumber("Set D Value", 0);
+    //m_robotContainer.m_Elevator.setPIDParameters(Pval, Ival, Dval);
+  
+    
   }
 
   /** This function is called periodically during operator control. */

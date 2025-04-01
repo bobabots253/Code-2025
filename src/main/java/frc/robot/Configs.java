@@ -7,6 +7,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.*;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -121,17 +122,17 @@ public final class Configs {
         pivotConfig.absoluteEncoder
                     .inverted(false);
 
-        pivotConfig
+        pivotCoastModeConfig
                     .idleMode(IdleMode.kCoast)
                     .smartCurrentLimit(EndEffectorConstants.kUniversalSoftLimit);
-        pivotConfig.closedLoop
+        pivotCoastModeConfig.closedLoop
                     .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                     .pid(EndEffectorConstants.kPivotAbsolutePositionP,
                          EndEffectorConstants.kPivotAbsolutePositionI,
                          EndEffectorConstants.kPivotAbsolutePositionD)
                     .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh)
                     .positionWrappingEnabled(false);
-        pivotConfig.absoluteEncoder
+        pivotCoastModeConfig.absoluteEncoder
                     .inverted(false);
 
         intakeRollerConfig
@@ -143,18 +144,39 @@ public final class Configs {
                          EndEffectorConstants.kIntakeVelocityI, 
                          EndEffectorConstants.kIntakeVelocityD)
                     .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh);
-        
-        algaeRollerConfig
-                    .idleMode(IdleMode.kBrake)
-                    .smartCurrentLimit(EndEffectorConstants.kUniversalSoftLimit);
-        algaeRollerConfig.closedLoop
-                    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                    .pid(EndEffectorConstants.kAlgaeVelocityP, 
-                         EndEffectorConstants.kAlgaeVelocityI, 
-                         EndEffectorConstants.kAlgaeVelocityD)
-                    .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh);
+        }   
+     }
+
+     public static class ClimbSubsystem {
+        public static final SparkMaxConfig climbMasterConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig climbFollowerConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig climbMasterCoastConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig climbFollowerCoastConfig = new SparkMaxConfig();
+         static {
+         climbMasterConfig
+             .inverted(false)
+             .idleMode(IdleMode.kBrake)
+             .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
+         // climbConfig.closedLoop
+         //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+         //     .pid(ElevatorConstants.kIncrementalPostionP,
+         //          ElevatorConstants.kIncrementalPostionI,
+         //          ElevatorConstants.kIncrementalPositionD)
+         //     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh)
+         //     .velocityFF(0);
+         climbFollowerConfig
+         .idleMode(IdleMode.kBrake)
+         .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
+ 
+         climbMasterCoastConfig
+                     .idleMode(IdleMode.kCoast)
+                     .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
+ 
+         climbFollowerCoastConfig
+                     .idleMode(IdleMode.kCoast)
+                     .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
+         }
         }
-    }
 //     public static final class TestSubsystem {
 //         public static final SparkMaxConfig TestConfig = new SparkMaxConfig();
 //         public static final SparkMaxConfig TestConfig2 = new SparkMaxConfig();

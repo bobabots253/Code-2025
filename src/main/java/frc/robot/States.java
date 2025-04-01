@@ -18,4 +18,12 @@ public final class States {
         }
     }
 
+    public enum ClimbPos {
+        STOW(0), CLIMB(1), NOTHING(99); //Add All Pos Later
+        public int val;
+        private ClimbPos(int val) {
+            this.val = val;
+        }
+    }
+
 }
