@@ -80,7 +80,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   private final static AHRS Nav_x = new AHRS(NavXComType.kMXP_SPI);
-  public final boolean fieldFlipped = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
+  public final boolean fieldFlipped = DriverStation.getAlliance().get() == Alliance.Red;
   // Locations for the swerve drive modules relative to the robot center.
   // Distance in meters
   Translation2d m_frontLeftLocation = new Translation2d(0.4086, 0.4086);
@@ -197,6 +197,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     
     SmartDashboard.putBoolean("NavX Exists", Nav_x.isConnected());
+    SmartDashboard.putNumber("NavX Angle", getTrueInitialRotation2dBasedOnAlliance().getDegrees());
     // Update the odometry in the periodic block
     //Main Odometry Update
     m_odometry.update(
@@ -269,7 +270,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     double[] pose = {getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()};
     SmartDashboard.putNumberArray("POSE", pose);
-
+    //SmartDashboard.putBoolean("fieldFlipped", fieldFlipped);
   }
   
   // public void addBasicVisionMeasurement(String limelight, SwerveDrivePoseEstimator poseEstimator) {
@@ -483,7 +484,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public Rotation2d getTrueInitialRotation2dBasedOnAlliance(){
-    return fieldFlipped ? getTrueRotation2DHeading() :  getTrueInitialFlippeRotation2d();
+    return fieldFlipped ? getTrueInitialFlippeRotation2d() :  getTrueRotation2DHeading();
   }
 
   public Rotation2d getRotation2DHeading(){

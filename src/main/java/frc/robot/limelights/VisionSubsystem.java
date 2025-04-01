@@ -69,8 +69,8 @@ public class VisionSubsystem extends SubsystemBase {
     this.notifier.startPeriodic(0.020); //20ms
     this.driveRequire = driveSubsystem;
 
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 2);
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 2);
+    // LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 0);
+    // LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 0);
     LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
     LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
     }
@@ -85,8 +85,6 @@ public class VisionSubsystem extends SubsystemBase {
         
         //loop overrun warnings
         for (VisionData data : filteredLimelightDatas) {
-
-            //if (data == null) continue; // || data.optimized
 
             if (data.canTrustRotation()) { //data.canTrustRotation
                 // Only trust rotational data when adding this pose.
@@ -124,8 +122,6 @@ public class VisionSubsystem extends SubsystemBase {
 
 
         }
-
-        // This method is suprprisingly efficient, generally below 1 ms.
         optimizeLimelights();
     }
 
@@ -136,9 +132,7 @@ public class VisionSubsystem extends SubsystemBase {
         long delayRightLL = 1; //default
     
         if (!useStored) {
-            double rotationDegrees = DriverStation.getAlliance().get() == Alliance.Red ?
-                 driveRequire.getTrueInitialFlippeRotation2d().getDegrees():
-                 driveRequire.getTrueRotation2DHeading().getDegrees();
+            double rotationDegrees = driveRequire.getTrueInitialRotation2dBasedOnAlliance().getDegrees();
             LimelightHelpers.SetRobotOrientation(Constants.VisionConstants.FRONT_LEFT_APRIL_TAG_LL,
                 rotationDegrees, 0, 0, 0, 0, 0
             );

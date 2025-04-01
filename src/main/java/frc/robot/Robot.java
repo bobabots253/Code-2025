@@ -151,6 +151,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 1);
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 1);
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -163,23 +165,21 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 2);
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 2);
   }
 
   @Override
   public void teleopInit() {
     mControlBoard.verifyPossibleControllerInit();
     mDriveControls.selectControllerOption();
-    double Pval = SmartDashboard.getNumber("Set P Value", 0);
-    double Ival = SmartDashboard.getNumber("Set I Value", 0);
-    double Dval = SmartDashboard.getNumber("Set D Value", 0);
-    //m_robotContainer.m_Elevator.setPIDParameters(Pval, Ival, Dval);
-  
-    
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 2);
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 2);
     SmartDashboard.putString("ALLIANCE", RobotContainer.isRedAlliance().get().toString());
     SmartDashboard.putNumber("MATCH TIME", DriverStation.getMatchTime());
     mControlBoard.verifyControllerIntegrity();
