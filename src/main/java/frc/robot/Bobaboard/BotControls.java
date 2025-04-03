@@ -67,11 +67,13 @@ public class BotControls {
         
             
             if (controlHub.driverController.L_Bumper.wasActivated() && !controlHub.driverController.R_Bumper.wasActivated()){
-                RobotContainer.PathfindClosest(interruptedPPLib,false);
+                interruptedPPLib = !interruptedPPLib;
+                RobotContainer.PathfindClosest(interruptedPPLib,false).schedule();
             }
 
             if (controlHub.driverController.R_Bumper.wasActivated() && !controlHub.driverController.L_Bumper.wasActivated()){
-                RobotContainer.PathfindClosest(interruptedPPLib,true);
+                interruptedPPLib = !interruptedPPLib;
+                RobotContainer.PathfindClosest(interruptedPPLib,true).schedule();
             }
 
         }
@@ -105,8 +107,19 @@ public class BotControls {
 
         //Resets the virtual heading based on the current heading (fixes drift)
         if (controlHub.driverController.Y_Button.wasActivated()) {
-                rContainer.m_robotDrive.zeroHeading();
-            }
+                DriveSubsystem.getInstance().zeroHeading();
+        }
+
+        if (controlHub.driverController.L_Bumper.wasActivated() && !controlHub.driverController.R_Bumper.wasActivated()){
+            interruptedPPLib = !interruptedPPLib;
+            RobotContainer.PathfindClosest(interruptedPPLib,false).schedule();
+        }
+
+        if (controlHub.driverController.R_Bumper.wasActivated() && !controlHub.driverController.L_Bumper.wasActivated()){
+            interruptedPPLib = !interruptedPPLib;
+            RobotContainer.PathfindClosest(interruptedPPLib,true).schedule();
+        }
+
 
         // Operator Side
 

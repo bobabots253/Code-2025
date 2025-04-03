@@ -407,7 +407,7 @@ public class VisionSubsystem extends SubsystemBase {
             return new Pose2d(
                 filteredLimelightDatas[0].MegaTag2.pose.getTranslation(),
                 filteredLimelightDatas[0].canTrustRotation ?
-                    filteredLimelightDatas[0].MegaTag2.pose.getRotation() : driveRequire.getTrueRotation2DHeading()
+                    filteredLimelightDatas[0].MegaTag2.pose.getRotation() : driveRequire.getTrueInitialRotation2dBasedOnAlliance()
             );
         }
         else {

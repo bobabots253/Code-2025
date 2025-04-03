@@ -165,8 +165,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 2);
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 2);
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 1);
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 1);
   }
 
   @Override
@@ -178,8 +178,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 2);
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 2);
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 1);
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 1);
     SmartDashboard.putString("ALLIANCE", RobotContainer.isRedAlliance().get().toString());
     SmartDashboard.putNumber("MATCH TIME", DriverStation.getMatchTime());
     mControlBoard.verifyControllerIntegrity();
