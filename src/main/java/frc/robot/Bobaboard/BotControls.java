@@ -173,9 +173,9 @@ public class BotControls {
             if(controlHub.operatorController.L_Trigger.isNotBeingPressed() && controlHub.operatorController.R_Trigger.isNotBeingPressed()){
                 rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0);
             }else if(controlHub.operatorController.L_Trigger.wasActivated()){
-                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(-.1);
+                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(-.8);
             }else if (controlHub.operatorController.R_Trigger.wasActivated()){
-                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0.1);
+                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0.8);
             }
 
             // if(!controlHub.operatorController.L_Trigger.isBeingPressed() && !controlHub.operatorController.R_Trigger.isBeingPressed()){
