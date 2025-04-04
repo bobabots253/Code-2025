@@ -45,7 +45,7 @@ public class VisionSubsystem extends SubsystemBase {
     private volatile long lastHeartbeatFrontLL = 0;
     /** Last heartbeat of the back LL (updated every frame) */
     private volatile long lastHeartbeatBackLL = 0;
-    private final Notifier notifier;
+    public Notifier notifier;
 
     //Fix these later
     private final List<Integer> BLUE_REEF = Arrays.asList(12, 13, 14, 15, 16, 17, 18, 29, 20, 21, 22);
@@ -428,5 +428,18 @@ public class VisionSubsystem extends SubsystemBase {
 
         
     } 
+
+    public void handleThreadRestart(){
+        if (this.notifier == null){
+            try{
+            this.notifier = new Notifier(() -> notifierLoop());
+            this.notifier.setName("Vision Notifier");
+            this.notifier.startPeriodic(0.020);
+            } catch (Exception e){
+                System.out.println("THREAD EXCEPTION LOOPED: PERMA QUITTING VISION THREAD");
+                return;
+            } 
+        }
+    }
 
 }

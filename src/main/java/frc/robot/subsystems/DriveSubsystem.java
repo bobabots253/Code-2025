@@ -227,6 +227,7 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
       });
 
+      try{
       refinedodometryVision.update(
         Rotation2d.fromDegrees(-Nav_x.getAngle()),
         new SwerveModulePosition[] {
@@ -235,6 +236,11 @@ public class DriveSubsystem extends SubsystemBase {
               m_rearLeft.getPosition(),
               m_rearRight.getPosition()
         });
+      } catch (NullPointerException NPE){
+        VisionSubsystem.getInstance(DriveSubsystemHandler.instance).notifier.close();
+        VisionSubsystem.getInstance(DriveSubsystemHandler.instance).notifier = null;
+        VisionSubsystem.getInstance(DriveSubsystemHandler.instance).handleThreadRestart();
+      }
 
     /*Basic Vision Pose Estimator */
     // try {
