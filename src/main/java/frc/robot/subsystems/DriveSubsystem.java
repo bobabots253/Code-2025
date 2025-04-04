@@ -89,7 +89,7 @@ public class DriveSubsystem extends SubsystemBase {
   Translation2d m_backRightLocation = new Translation2d(-0.4086, -0.4086);
 
   //Swerve Kinematics used for the AUTO
-  SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
+  public SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation
   );
 
