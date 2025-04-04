@@ -91,8 +91,8 @@ public class PathfindClosest extends Command {
                 waypoints,
                 PPLibConstants.defaultPathfindingConstraints,
                 null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
-                new GoalEndState(0.0, Rotation2d.fromDegrees(180)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-        );
+                new GoalEndState(0.0, Rotation2d.fromDegrees(target.getRotation().getDegrees())) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+        );      
 
         path.preventFlipping = true;
         return generateOTFPathCommand(path);
