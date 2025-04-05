@@ -66,15 +66,15 @@ public class BotControls {
 
         
             
-            if (controlHub.driverController.L_Bumper.wasActivated() && !controlHub.driverController.R_Bumper.wasActivated()){
-                interruptedPPLib = !interruptedPPLib;
-                RobotContainer.PathfindClosest(interruptedPPLib,false).schedule();
-            }
+            // if (controlHub.driverController.L_Bumper.wasActivated() && !controlHub.driverController.R_Bumper.wasActivated()){
+            //     interruptedPPLib = !interruptedPPLib;
+            //     RobotContainer.PathfindClosest(interruptedPPLib,false).schedule();
+            // }
 
-            if (controlHub.driverController.R_Bumper.wasActivated() && !controlHub.driverController.L_Bumper.wasActivated()){
-                interruptedPPLib = !interruptedPPLib;
-                RobotContainer.PathfindClosest(interruptedPPLib,true).schedule();
-            }
+            // if (controlHub.driverController.R_Bumper.wasActivated() && !controlHub.driverController.L_Bumper.wasActivated()){
+            //     interruptedPPLib = !interruptedPPLib;
+            //     RobotContainer.PathfindClosest(interruptedPPLib,true).schedule();
+            // }
 
         }
             // if(controlHub.driverController.A_Button.wasReleased() || controlHub.driverController.B_Button.wasReleased()
@@ -120,13 +120,13 @@ public class BotControls {
         //     RobotContainer.PathfindClosest(interruptedPPLib,true).schedule();
         // }
         //works maybe mechanical
-        if(!controlHub.driverController.R_Trigger.isBeingPressed() && !controlHub.driverController.L_Trigger.isBeingPressed()){
-            rContainer.m_Climb.setLazyOpenLoop(0.0);
-        }else if (controlHub.driverController.L_Trigger.isBeingPressed()){
-            rContainer.m_Climb.setLazyOpenLoop(0.3);
-        }else if (controlHub.driverController.R_Trigger.isBeingPressed()){
-            rContainer.m_Climb.setLazyOpenLoop(-0.3);
-        }
+        // if(!controlHub.driverController.R_Trigger.isBeingPressed() && !controlHub.driverController.L_Trigger.isBeingPressed()){
+        //     rContainer.m_Climb.setLazyOpenLoop(0.0);
+        // }else if (controlHub.driverController.L_Trigger.isBeingPressed()){
+        //     rContainer.m_Climb.setLazyOpenLoop(0.3);
+        // }else if (controlHub.driverController.R_Trigger.isBeingPressed()){
+        //     rContainer.m_Climb.setLazyOpenLoop(-0.3);
+        // }
         // Operator Side
 
         //Polls for Controller Input, if a button is being pressed deliver selected intake/extake speed
