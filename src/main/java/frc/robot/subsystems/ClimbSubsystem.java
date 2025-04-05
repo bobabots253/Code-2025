@@ -23,32 +23,46 @@ import frc.utils.Util;
 
 
 public class ClimbSubsystem extends SubsystemBase {
-    private static final SparkMax masterClimbSparkMax = new SparkMax(ClimbConstants.slaveClimbCanID, MotorType.kBrushless);
-    private static final SparkMax followerClimbSparkMax = new SparkMax(ClimbConstants.masterClimbCanID, MotorType.kBrushless); //ID,MotorType
-    //private final RelativeEncoder relativeEncoder;
-    private final AbsoluteEncoder m_climbAbsoluteEncoder;
+    public static SparkMax masterClimbSparkMax;
+    public static SparkMax followerClimbSparkMax; 
+    private final RelativeEncoder m_masterEncoder;
+    private final RelativeEncoder m_followerEncoder;
+
     /* READ ME:
     * Creates a PID Controller which we use to control the motors movement
     */
     //private SparkClosedLoopController pidController;
 
-    private static ClimbSubsystem instance;
-    public static ClimbSubsystem getInstance() {
-        if(instance == null) instance = new ClimbSubsystem();
-        return instance;
-
-
+    private static class ClimbSubsystemHandler {
+        private static final ClimbSubsystem instance = new ClimbSubsystem();
     }
 
+    public static ClimbSubsystem getInstance() {
+        return ClimbSubsystemHandler.instance;
+    }
+
+    // private static ClimbSubsystem instance;
+    // public static ClimbSubsystem getInstance() {
+    //     if(instance == null) instance = new ClimbSubsystem();
+    //     return instance;
+    // }
+
     private ClimbSubsystem() {
+        masterClimbSparkMax = new SparkMax(ClimbConstants.masterClimbCanID, MotorType.kBrushless);
+        followerClimbSparkMax = new SparkMax(ClimbConstants.slaveClimbCanID, MotorType.kBrushless);
+        m_masterEncoder = masterClimbSparkMax.getEncoder();
+        m_followerEncoder = followerClimbSparkMax.getEncoder();
         //absoluteEncoder = masterClimbSparkMax.getAbsoluteEncoder();
         //pidController = masterClimbSparkMax.getClosedLoopController();
-        m_climbAbsoluteEncoder = masterClimbSparkMax.getAbsoluteEncoder();
         masterClimbSparkMax.configure(Configs.ClimbSubsystem.climbMasterConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
        followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerCoastConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
-        register(); //Register Subsystem for Command Scheduluer to call in periodic
+
+        SmartDashboard.putNumber("Climb /masterClimbOutputCurrent", masterClimbSparkMax.getOutputCurrent());
+        SmartDashboard.putNumber("Climb /slaveClimbOutputCurrent", followerClimbSparkMax.getOutputCurrent());
+        SmartDashboard.putNumber("Climb /m_masterEncoder", m_masterEncoder.getPosition());
+        SmartDashboard.putNumber("Climb /m_followerEncoder", m_followerEncoder.getPosition());
     }
 
     /**
@@ -56,23 +70,25 @@ public class ClimbSubsystem extends SubsystemBase {
      */
     public void setLazyOpenLoop(double OpenLoopValue) {
         if (OpenLoopValue != 0){
-        masterClimbSparkMax.configure(Configs.ClimbSubsystem.climbMasterConfig, ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
-       followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerCoastConfig, ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
+    //     masterClimbSparkMax.configure(Configs.ClimbSubsystem.climbMasterConfig, ResetMode.kResetSafeParameters,
+    //     PersistMode.kPersistParameters);
+    //    followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerCoastConfig, ResetMode.kResetSafeParameters,
+    //     PersistMode.kPersistParameters);
         masterClimbSparkMax.set(OpenLoopValue);
         followerClimbSparkMax.set(-OpenLoopValue);
         } else{
-        followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerConfig, ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
+        // followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerConfig, ResetMode.kResetSafeParameters,
+        // PersistMode.kPersistParameters);
+        masterClimbSparkMax.set(0);
+        followerClimbSparkMax.set(0);
         }
-        SmartDashboard.putNumber("Climb /setOpenLoop", OpenLoopValue);
+        //SmartDashboard.putNumber("Climb /setOpenLoop", OpenLoopValue);
     }
 
-    public void setConditionalBrake(boolean setConditionalBrake){
-        followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerConfig, ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
-    }
+    // public void setConditionalBrake(boolean setConditionalBrake){
+    //     followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerConfig, ResetMode.kResetSafeParameters,
+    //     PersistMode.kPersistParameters);
+    // }
     /**
      * Runs motors at a value 0 (stop).
      */
@@ -82,9 +98,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //SmartDashboard.putNumber("Relative Encoder value [Rots]", absoluteEncoder.getPosition());
-        SmartDashboard.putNumber("Climb /masterClimbOutputCurrent", masterClimbSparkMax.getOutputCurrent());
-        SmartDashboard.putNumber("Climb /slaveClimbOutputCurrent", followerClimbSparkMax.getOutputCurrent());
-        SmartDashboard.putNumber("Climb /absoluteEncoder", m_climbAbsoluteEncoder.getPosition());
+        //SmartDashboard.putNumber("Relative Encoder value [Rots]", absoluteEncoder.getPosition())
+
     }
 }

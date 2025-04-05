@@ -100,7 +100,7 @@ public class RobotContainer {
     m_robotDrive = DriveSubsystem.getInstance();
     m_AutoModeManager = new AutoModeManager();
     m_ControlHub = ControlHub.getInstance();
-    VisionSubsystem.getInstance(m_robotDrive);
+    //VisionSubsystem.getInstance(m_robotDrive);
     m_Elevator = ElevatorSubsystem.getInstance();
     m_Effector = EndEffectorSubsystem.getInstance();
     m_Climb = ClimbSubsystem.getInstance();

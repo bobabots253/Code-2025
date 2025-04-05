@@ -227,6 +227,7 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
       });
 
+      try{
       refinedodometryVision.update(
         Rotation2d.fromDegrees(-Nav_x.getAngle()),
         new SwerveModulePosition[] {
@@ -235,6 +236,9 @@ public class DriveSubsystem extends SubsystemBase {
               m_rearLeft.getPosition(),
               m_rearRight.getPosition()
         });
+      } catch (NullPointerException e){
+        System.out.println("Caught NPE");
+      }
 
     /*Basic Vision Pose Estimator */
     // try {
@@ -484,7 +488,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public Rotation2d getTrueInitialRotation2dBasedOnAlliance(){
-    return fieldFlipped ? getTrueInitialFlippeRotation2d() :  getTrueRotation2DHeading();
+    return fieldFlipped ? getInitialFlippeRotation2d() :  getTrueRotation2DHeading();
   }
 
   public Rotation2d getRotation2DHeading(){

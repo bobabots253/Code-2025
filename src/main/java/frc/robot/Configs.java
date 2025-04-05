@@ -152,6 +152,7 @@ public final class Configs {
         public static final SparkMaxConfig climbFollowerConfig = new SparkMaxConfig();
         public static final SparkMaxConfig climbMasterCoastConfig = new SparkMaxConfig();
         public static final SparkMaxConfig climbFollowerCoastConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig climbFollowerBrakeConfig = new SparkMaxConfig();
          static {
          climbMasterConfig
              .inverted(false)
@@ -165,8 +166,9 @@ public final class Configs {
          //     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh)
          //     .velocityFF(0);
          climbFollowerConfig
-         .idleMode(IdleMode.kBrake)
+         .idleMode(IdleMode.kCoast)
          .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
+         //.follow(ClimbConstants.masterClimbCanID, true);
  
          climbMasterCoastConfig
                      .idleMode(IdleMode.kCoast)
@@ -175,6 +177,9 @@ public final class Configs {
          climbFollowerCoastConfig
                      .idleMode(IdleMode.kCoast)
                      .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
+
+        climbFollowerBrakeConfig
+                .idleMode(IdleMode.kBrake);
          }
         }
 //     public static final class TestSubsystem {
