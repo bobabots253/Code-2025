@@ -13,6 +13,8 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import java.text.DecimalFormat;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -70,19 +72,44 @@ public class ClimbSubsystem extends SubsystemBase {
      */
     public void setLazyOpenLoop(double OpenLoopValue) {
         if (OpenLoopValue != 0){
-    //     masterClimbSparkMax.configure(Configs.ClimbSubsystem.climbMasterConfig, ResetMode.kResetSafeParameters,
-    //     PersistMode.kPersistParameters);
-    //    followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerCoastConfig, ResetMode.kResetSafeParameters,
-    //     PersistMode.kPersistParameters);
+        masterClimbSparkMax.configure(Configs.ClimbSubsystem.climbMasterConfig, ResetMode.kResetSafeParameters,
+        PersistMode.kNoPersistParameters);
+       followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerCoastConfig, ResetMode.kResetSafeParameters,
+        PersistMode.kNoPersistParameters);
         masterClimbSparkMax.set(OpenLoopValue);
         followerClimbSparkMax.set(-OpenLoopValue);
         } else{
-        // followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerConfig, ResetMode.kResetSafeParameters,
-        // PersistMode.kPersistParameters);
+        followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerBrakeConfig, ResetMode.kNoResetSafeParameters,
+        PersistMode.kNoPersistParameters);
         masterClimbSparkMax.set(0);
         followerClimbSparkMax.set(0);
         }
         //SmartDashboard.putNumber("Climb /setOpenLoop", OpenLoopValue);
+    }
+
+    public void setHorizonPosition(){
+        var currentRevs = m_masterEncoder.getPosition();
+        double arbRevHorizonSetpoint = 0.0; // tune
+        if (!MathUtil.isNear(arbRevHorizonSetpoint, currentRevs, 0.1)){
+            if (currentRevs < arbRevHorizonSetpoint){
+                setLazyOpenLoop(-1.0);
+            } else if (currentRevs > arbRevHorizonSetpoint){
+                setLazyOpenLoop(1.0);
+            }
+        }
+    }
+
+    
+    public void setPullUpPosition(){
+        var currentRevs = m_masterEncoder.getPosition();
+        double arbRevPullUpSetpoint = 0.0; // tune
+        if (!MathUtil.isNear(arbRevPullUpSetpoint, currentRevs, 0.1)){
+            if (currentRevs < arbRevPullUpSetpoint){
+                setLazyOpenLoop(-1.0);
+            } else if (currentRevs > arbRevPullUpSetpoint){
+                setLazyOpenLoop(1.0);
+            }
+        }
     }
 
     // public void setConditionalBrake(boolean setConditionalBrake){

@@ -123,9 +123,9 @@ public class BotControls {
         // if(!controlHub.driverController.R_Trigger.isBeingPressed() && !controlHub.driverController.L_Trigger.isBeingPressed()){
         //     rContainer.m_Climb.setLazyOpenLoop(0.0);
         // }else if (controlHub.driverController.L_Trigger.isBeingPressed()){
-        //     rContainer.m_Climb.setLazyOpenLoop(0.3);
+        //     rContainer.m_Climb.setLazyOpenLoop(1.0);
         // }else if (controlHub.driverController.R_Trigger.isBeingPressed()){
-        //     rContainer.m_Climb.setLazyOpenLoop(-0.3);
+        //     rContainer.m_Climb.setLazyOpenLoop(-1.0);
         // }
         // Operator Side
 
