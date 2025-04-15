@@ -28,12 +28,14 @@ import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Bobaboard.BotControls;
 import frc.robot.Bobaboard.ControlHub;
 import frc.robot.subsystems.EndEffectorSubsystem;
-import frc.robot.commands.DriveToPose;
 import frc.robot.commands.PathfindClosest;
 import frc.robot.commands.PathfindToPose;
+import frc.robot.limelights.VisionData;
+import frc.robot.limelights.VisionSubsystem;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 //import frc.robot.subsystems.TestSubsystem;
@@ -78,9 +80,10 @@ public class RobotContainer {
   private static RobotContainer instance = null;
   public final AutoModeManager m_AutoModeManager;
   public final ControlHub m_ControlHub;
-  public final DriveSubsystem m_robotDrive;
+  public static DriveSubsystem m_robotDrive;
   public final ElevatorSubsystem m_Elevator;
   public final EndEffectorSubsystem m_Effector;
+  public final ClimbSubsystem m_Climb;
    /*READ ME:
   A static instance of the Robot Container with all its contents
   */
@@ -94,11 +97,13 @@ public class RobotContainer {
    */
   public RobotContainer() {
     //m_TestSubsystem =TestSubsystem.getInstance();
-    m_robotDrive = new DriveSubsystem();
+    m_robotDrive = DriveSubsystem.getInstance();
     m_AutoModeManager = new AutoModeManager();
     m_ControlHub = ControlHub.getInstance();
+    //VisionSubsystem.getInstance(m_robotDrive);
     m_Elevator = ElevatorSubsystem.getInstance();
     m_Effector = EndEffectorSubsystem.getInstance();
+    m_Climb = ClimbSubsystem.getInstance();
     // Configure default commands
     SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
     m_robotDrive.setDefaultCommand(new RunCommand(
@@ -108,7 +113,6 @@ public class RobotContainer {
           -MathUtil.applyDeadband(m_ControlHub.driverController.getRightX(), OIConstants.kDriveDeadband),
           true, true),
       m_robotDrive));
-      //NamedCommands.registerCommand("TestCommand", new InstantCommand(() -> Score()));
   }
 
 
@@ -123,20 +127,8 @@ public class RobotContainer {
       * @return 
       */
 
-  // public Command stowElevatorCommand(){
-  //   return new RunCommand(() -> 
-  //     m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW),
-  //       m_Effector);
-  // }
-
    public Command stowElevatorCommand(){
     return new ParallelCommandGroup(
-          // new RunCommand(() -> {
-          //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-          //     m_Effector),
-          new RunCommand(() -> {
-            m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-              m_Effector),
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.STOW);
             }, m_Elevator)
@@ -145,16 +137,6 @@ public class RobotContainer {
 
    public Command tierOneElevatorCommand(){
     return new ParallelCommandGroup(
-          // new SequentialCommandGroup(
-          //   new WaitCommand(.2),
-          //   new RunCommand(() -> {
-          //     m_Effector.setLazyEndEffectorState(States.EndEffectorPos.L1Score);
-          //   }, m_Effector)
-          // ),
-          // new RunCommand(() -> {
-          //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-          //     m_Effector),
-          
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.L1Score);
             }, m_Elevator)
@@ -165,98 +147,104 @@ public class RobotContainer {
     return new ParallelCommandGroup(
           new RunCommand(() -> {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
-            }, m_Elevator));
-          // new SequentialCommandGroup(
-          //   new WaitCommand(.2),
-          //   new RunCommand(() -> {
-          //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);
-          //   }, m_Effector)
-          // )
-
-        
+            }, m_Elevator));  
     }
 
     public Command tierThreeElevatorCommand(){
       return new ParallelCommandGroup(
-
-            // new SequentialCommandGroup(
-            //   new WaitCommand(0.2),
-            //   new RunCommand(() -> {
-            //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW);},
-            //     m_Effector)
-            // ),
-
             new RunCommand(() -> {
               m_Elevator.setLazyElevatorState(States.ElevatorPos.L3SCORE);
               }, m_Elevator)
           );
       }
 
-    public Command intakeCoralCommand(){
-      return new SequentialCommandGroup(
-            new InstantCommand(() -> {
-              m_Effector.setLazyEndEffectorState(States.EndEffectorPos.INTAKE);},
-                  m_Effector)
-              // new RunCommand(() -> {
-              //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-              //     m_Effector),
+    public Command tierTwoScoreCommand(){
+      return new ParallelCommandGroup(
+          new RunCommand(() -> {
+            m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
+          }, m_Elevator),
+          new SequentialCommandGroup(
+            new WaitCommand(.5),
+            new ParallelCommandGroup(
+              new SequentialCommandGroup(
+                new WaitCommand(1),
+                new InstantCommand(() -> {
+                  m_Effector.setIntakeLazyPercentageOpenLoop(0.0);
+                }, m_Effector)
+              ),
+              new InstantCommand(() -> {
+                m_Effector.setIntakeLazyPercentageOpenLoop(.8);
+              }, m_Effector)
+            )
+          )
+      );
+    }
+
+    // public Command intakeCoralCommand(){
+    //   return new SequentialCommandGroup(
+    //         new InstantCommand(() -> {
+    //           m_Effector.setLazyEndEffectorState(States.EndEffectorPos.INTAKE);},
+    //               m_Effector)
+    //           // new RunCommand(() -> {
+    //           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+    //           //     m_Effector),
              
-            );
-        }
+    //         );
+    //     }
 
-        public Command hardExtakeCoralCommand(){
-          return new SequentialCommandGroup(
-                new InstantCommand(() -> 
-                  m_Effector.setLazyEndEffectorState(States.EndEffectorPos.HARD_REMOVE))
-                  // new RunCommand(() -> {
-                  //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-                  //     m_Effector),
+        // public Command hardExtakeCoralCommand(){
+        //   return new SequentialCommandGroup(
+        //         new InstantCommand(() -> 
+        //           m_Effector.setLazyEndEffectorState(States.EndEffectorPos.HARD_REMOVE))
+        //           // new RunCommand(() -> {
+        //           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+        //           //     m_Effector),
                  
-                );
-            }
+        //         );
+        //     }
 
-          public Command softExtakeCoralCommand(){
-          return new SequentialCommandGroup(
-                new InstantCommand(() -> 
-                  m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SOFT_REMOVE))
-                  // new RunCommand(() -> {
-                  //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-                  //     m_Effector),
+          // public Command softExtakeCoralCommand(){
+          // return new SequentialCommandGroup(
+          //       new InstantCommand(() -> 
+          //         m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SOFT_REMOVE))
+          //         // new RunCommand(() -> {
+          //         //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+          //         //     m_Effector),
                  
-                );
-            }
+          //       );
+          //   }
 
-          public Command smartIntakeCoralCommand(){
-          return new SequentialCommandGroup(
-                new InstantCommand(() -> 
-                  m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SMART_INTAKE))
-                  // new RunCommand(() -> {
-                  //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-                  //     m_Effector),
+          // public Command smartIntakeCoralCommand(){
+          // return new SequentialCommandGroup(
+          //       new InstantCommand(() -> 
+          //         m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SMART_INTAKE))
+          //         // new RunCommand(() -> {
+          //         //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+          //         //     m_Effector),
                  
-                );
-            }
-            public Command algaeExtendCommand(){
-              return new SequentialCommandGroup(
-                    new InstantCommand(() -> 
-                      m_Effector.setLazyEndEffectorState(States.EndEffectorPos.EXTENDED_PIVOT))
-                      // new RunCommand(() -> {
-                      //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-                      //     m_Effector),
+          //       );
+          //   }
+            // public Command algaeExtendCommand(){
+            //   return new SequentialCommandGroup(
+            //         new InstantCommand(() -> 
+            //           m_Effector.setLazyEndEffectorState(States.EndEffectorPos.EXTENDED_PIVOT))
+            //           // new RunCommand(() -> {
+            //           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+            //           //     m_Effector),
                      
-                    );
-            }
+            //         );
+            // }
 
-            public Command stowAlgaeCommand(){
-              return new SequentialCommandGroup(
-                    new InstantCommand(() -> 
-                      m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW))
-                      // new RunCommand(() -> {
-                      //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-                      //     m_Effector),
+            // public Command stowAlgaeCommand(){
+            //   return new SequentialCommandGroup(
+            //         new InstantCommand(() -> 
+            //           m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW))
+            //           // new RunCommand(() -> {
+            //           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
+            //           //     m_Effector),
                      
-                    );
-            }
+            //         );
+            // }
 
 
 
@@ -369,8 +357,8 @@ public class RobotContainer {
     return new PathfindToPose(FieldSetup.allianceReefFarSupplier, FieldSetup.kReefFarEntranceTolerance, permission);
   }
 
-  public static Command PathfindClosest(boolean permission) {
-    return new PathfindClosest(permission);
+  public static Command PathfindClosest(boolean permission, Boolean isRight) {
+    return new PathfindClosest(permission,isRight);
   }
 
 }

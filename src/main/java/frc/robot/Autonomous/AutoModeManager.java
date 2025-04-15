@@ -39,12 +39,12 @@ public final class AutoModeManager{
 
     public AutoModeManager() {
     mModeChooser.setDefaultOption("Default Auto", DesiredMode.DO_NOTHING);
-    mModeChooser.addOption("Return Auto", DesiredMode.RETURN_AUTO);
-    mModeChooser.addOption("Go Auto", DesiredMode.GO_AUTO);
-    mModeChooser.addOption("Bottom Feeder", DesiredMode.AB_BOTAUTO);
-    mModeChooser.addOption("Safety Auto", DesiredMode.AB_MIDLEAVE);
-    mModeChooser.addOption("Mid 1 Coral", DesiredMode.AB_MIDSCOREONE);
-    mModeChooser.addOption("Stand Still Boi", DesiredMode.STAND_STILL);
+    // mModeChooser.addOption("Return Auto", DesiredMode.RETURN_AUTO);
+    // mModeChooser.addOption("Go Auto", DesiredMode.GO_AUTO);
+    // mModeChooser.addOption("Bottom Feeder", DesiredMode.AB_BOTAUTO);
+    // mModeChooser.addOption("Safety Auto", DesiredMode.AB_MIDLEAVE);
+    // mModeChooser.addOption("Mid 1 Coral", DesiredMode.AB_MIDSCOREONE);
+    // mModeChooser.addOption("Stand Still Boi", DesiredMode.STAND_STILL);
     mModeChooser.addOption("Simple Cross Line", DesiredMode.CROSS_LINE);
     }
 

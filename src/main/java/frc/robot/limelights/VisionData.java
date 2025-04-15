@@ -6,14 +6,14 @@ import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Constants;
+import frc.robot.Constants.VisionConstants;
 
 public class VisionData {
     public final String name;
     public final LimelightHelpers.PoseEstimate MegaTag;
     public final LimelightHelpers.PoseEstimate MegaTag2;
-    public final boolean canTrustRotation;
-    public final boolean canTrustPosition;
-    private final DriveSubsystem driveRequire = RobotContainer.getInstance().m_robotDrive;
+    public Boolean canTrustRotation;
+    public Boolean canTrustPosition;
 
     public boolean optimized;
 
@@ -29,28 +29,34 @@ public class VisionData {
     }
 
     //Makes sure: Distance <= 3 meters ; Angular <= 180 deg/s ; Translational <= 2 m/s
-    private boolean canTrustRotation() {
-        ChassisSpeeds robotChassisSpeeds = driveRequire.getRobotRelativeSpeeds();
-        double currentVelocity = Math.sqrt(Math.pow(robotChassisSpeeds.vxMetersPerSecond, 2) + Math.pow(robotChassisSpeeds.vyMetersPerSecond, 2));
-        return this.MegaTag2 != null
-            && this.MegaTag2.avgTagDist <= Constants.VisionConstants.AVG_MT2_TAG_DIST
-            && this.MegaTag != null
-            && this.MegaTag.tagCount >= Constants.VisionConstants.MIN_MT_TAG_COUNT
-            && Units.radiansToDegrees(robotChassisSpeeds.omegaRadiansPerSecond) <= Constants.VisionConstants.MAX_ANGULAR
-            && currentVelocity <= 2;
+    public boolean canTrustRotation() {
+        if (this.canTrustRotation == null) {
+            this.canTrustRotation = 
+            this.MegaTag != null
+            && this.MegaTag2 != null;  
+        // return
+        // // this.MegaTag2.avgTagDist <= 3 // 3 Meters
+        // // && this.MegaTag != null
+        // // && this.MegaTag.tagCount >= 2
+        // this.MegaTag != null
+        // && this.MegaTag2 != null;   
+        }
+        return this.canTrustRotation;
     }
 
     /**
      * Checks if the MegaTag2 Pose2d is within distance tolerance relative to the bot's position.
      * @return Whether position data can be trusted.
      */
-    private boolean canTrustPosition() {
-        ChassisSpeeds robotChassisSpeeds = driveRequire.getRobotRelativeSpeeds();
-        double currentVelocity = Math.sqrt(Math.pow(robotChassisSpeeds.vxMetersPerSecond, 2) + Math.pow(robotChassisSpeeds.vyMetersPerSecond, 2));
-        return this.MegaTag2 != null
+    public boolean canTrustPosition() {
+        if (this.canTrustPosition == null) {
+            this.canTrustPosition =
+            this.MegaTag2 != null
             && this.MegaTag2.tagCount > 0
-            && this.MegaTag2.avgTagDist < Constants.VisionConstants.TRUSTWORTHY_DISTANCE
-            && Units.radiansToDegrees(robotChassisSpeeds.omegaRadiansPerSecond) <= Constants.VisionConstants.MAX_ANGULAR
-            && currentVelocity <= 2;
+            && this.MegaTag2.avgTagDist < VisionConstants.TRUSTWORTHY_DISTANCE;
+        }
+        return this.canTrustPosition;
+        // this.MegaTag2.tagCount > 0
+        // && this.MegaTag2.avgTagDist < VisionConstants.TRUSTWORTHY_DISTANCE;
     }
 }

@@ -15,6 +15,9 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+
 import edu.wpi.first.apriltag.AprilTagDetection;
 import edu.wpi.first.apriltag.AprilTagDetector;
 import edu.wpi.first.apriltag.AprilTagPoseEstimator;
@@ -44,6 +47,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Autonomous.AutoModeManager.DesiredMode;
 import frc.robot.Bobaboard.BotControls;
@@ -124,7 +128,11 @@ public class Robot extends TimedRobot {
     URCL.start();
     DriverStation.startDataLog(DataLogManager.getLog());
     mDriveControls.PutControllerOption();
-    m_robotContainer.m_robotDrive.zeroHeading();
+    // m_robotContainer.m_robotDrive.zeroHeading();
+    // LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 1);
+    // LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 1);
+    // LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
+    // LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
     SmartDashboard.putNumber("Set P Value",ElevatorConstants.kIncrementalPostionP);
     SmartDashboard.putNumber("Set I Value",ElevatorConstants.kIncrementalPostionI);
     SmartDashboard.putNumber("Set D Value",ElevatorConstants.kIncrementalPositionD);
@@ -141,10 +149,15 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    //RobotContainer.getInstance().m_Climb.followerClimbSparkMax.configure(Configs.ClimbSubsystem.climbFollowerBrakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 0);
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 0);
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -156,23 +169,21 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 3);
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 3);
   }
 
   @Override
   public void teleopInit() {
     mControlBoard.verifyPossibleControllerInit();
     mDriveControls.selectControllerOption();
-    double Pval = SmartDashboard.getNumber("Set P Value", 0);
-    double Ival = SmartDashboard.getNumber("Set I Value", 0);
-    double Dval = SmartDashboard.getNumber("Set D Value", 0);
-    //m_robotContainer.m_Elevator.setPIDParameters(Pval, Ival, Dval);
-  
-    
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 3);
+    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 3);
     SmartDashboard.putString("ALLIANCE", RobotContainer.isRedAlliance().get().toString());
     SmartDashboard.putNumber("MATCH TIME", DriverStation.getMatchTime());
     mControlBoard.verifyControllerIntegrity();
