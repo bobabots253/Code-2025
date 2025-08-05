@@ -230,7 +230,7 @@ private ElevatorSubsystem() {
             System.out.println("ELEVATOR POSITION OUT OF TOLERANCE - PROFILED PID REQUEST");
         }
         //System.out.println("calculating = "+ m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition)));
-        trapezoid = m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))+ .62; // doesn't match up with the other one???
+        trapezoid = m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))+ .68; // doesn't match up with the other one???
     }
 
     private double rpmToVelocity(double rpm){
