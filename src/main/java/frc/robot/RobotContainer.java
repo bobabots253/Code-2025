@@ -108,8 +108,8 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
     m_robotDrive.setDefaultCommand(new RunCommand(
       () -> m_robotDrive.drive(
-          -MathUtil.applyDeadband(m_ControlHub.driverController.getLeftY(), OIConstants.kDriveDeadband),
-          -MathUtil.applyDeadband(m_ControlHub.driverController.getLeftX(), OIConstants.kDriveDeadband),
+          -MathUtil.applyDeadband(m_ControlHub.driverController.getLeftY()*.3, OIConstants.kDriveDeadband),
+          -MathUtil.applyDeadband(m_ControlHub.driverController.getLeftX()*.3, OIConstants.kDriveDeadband),
           -MathUtil.applyDeadband(m_ControlHub.driverController.getRightX(), OIConstants.kDriveDeadband),
           true, true),
       m_robotDrive));
