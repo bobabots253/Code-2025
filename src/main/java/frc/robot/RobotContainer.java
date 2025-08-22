@@ -267,62 +267,7 @@ public class RobotContainer {
   //   new ConditionalCommand(RunElevatorNegative(), StopElevator(), permission);
   // }
 
-  // public void RunNegative(){
-  //   new RunCommand(() -> m_TestSubsystem.setOpenLoop(-0.2), m_TestSubsystem);
-  // }
 
-  // public Command IntakePrep(){
-  //   return new RunCommand(() -> m_TestSubsystem.setState(States.TestPos.POS1), m_TestSubsystem);
-  // }
-
-  // public Command IntakeStow(){
-  //   return new RunCommand(() -> m_TestSubsystem.setState(States.TestPos.STOW), m_TestSubsystem);
-  // }
-
-  // public Command Score(){
-  //   return new ParallelCommandGroup(
-  //         // new RunCommand(() -> {
-  //         //   arm.setArmState(States.ArmPos.SCORE);
-  //         //   }, arm),
-  //         // new SequentialCommandGroup(
-  //         //   new WaitCommand(HookConstants.delay),
-  //         //   new RunCommand(() -> {
-  //         //     hook.setHookState(States.HookPos.SCORE);
-  //         //   }, hook
-  //         //   )
-  //         // )
-  //       );
-  // }
-
-  // public Command StowArm(){
-  // return new RunCommand(() -> {
-  //       arm.setArmState(States.ArmPos.STOW); 
-  //       hook.setHookState(States.HookPos.STOW);
-  //      }, arm, hook);
-  // }
-
-  /* READ ME:
-  //    * This command runs the SCORE command for the AMP shot in AUTO
-  //    * By condensing the entire score command into one method we no longer have to keep defining it everywhere and we set the standard for each attempt
-  //    * Utilizes Constants.java for realtive and absoulte scoring encoder values.
-  //    * Parrallel Command Group - The command runs at the same time but we put a time delay to calculate the exact timing
-  //    * We needed the wait command bc we need the momentum from the swinign arm to score into the AMP
-  //    */
-
-  // public Command scoreHookDelay() {
-  //   return new ParallelCommandGroup(
-  //         new RunCommand(() -> {
-  //           arm.setArmState(States.ArmPos.SCORE);
-  //           }, arm),
-  //         new SequentialCommandGroup(
-  //           new WaitCommand(HookConstants.delay),
-  //           new RunCommand(() -> {
-  //             hook.setHookState(States.HookPos.SCORE);
-  //           }, hook
-  //           )
-  //         )
-  //       );
-  // }
 
   /**
    * Returns the current alliance, with false indicating blue and true indicating red.
