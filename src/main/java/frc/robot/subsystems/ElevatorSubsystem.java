@@ -108,7 +108,7 @@ private ElevatorSubsystem() {
     SmartDashboard.putNumber("Elevator /requestedPosition", currentIntSetpointElevator);
     SmartDashboard.putNumber("Elevator /trapezoid", trapezoid);
     SmartDashboard.putNumber("Elevator /masterInputCurrent", m_masterLiftingSparkMax.getAppliedOutput());
-    SmartDashboard.putNumber("Elevator/secondStageVelocity ", rpmToVelocity(m_LiftingEncoder.getVelocity()));
+    SmartDashboard.putNumber("Elevator /secondStageVelocity ", rpmToVelocity(m_LiftingEncoder.getVelocity()));
 
     
 }
@@ -225,12 +225,13 @@ private ElevatorSubsystem() {
             m_masterLiftingSparkMax.setVoltage(
                 m_profiledPIDController.calculate(
                     rotToMeters(m_LiftingEncoder.getPosition()),
-                    rotToMeters(goalPosition))+ 0.68); //What is the 0.68 for?
+                    rotToMeters(goalPosition))+ 0.7); //What is the 0.68 for?
         }else{
             System.out.println("ELEVATOR POSITION OUT OF TOLERANCE - PROFILED PID REQUEST");
         }
         //System.out.println("calculating = "+ m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition)));
-        trapezoid = m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))+ .62; // doesn't match up with the other one???
+        trapezoid = m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))+ .7; // doesn't match up with the other one???
+        SmartDashboard.putNumber("Elevator /trapezoid", trapezoid);
     }
 
     private double rpmToVelocity(double rpm){
@@ -251,10 +252,13 @@ private ElevatorSubsystem() {
         switch (requestedState) {
             case STOW:
                 profiledPIDCalculation(ElevatorConstants.softZeroLinearPosition);
+                SmartDashboard.putNumber("Elevator /relativePositionMEters", rotToMeters(m_LiftingEncoder.getPosition()));
+                SmartDashboard.putNumber("Elevator /masterCurrent", m_masterLiftingSparkMax.getOutputCurrent());
                 //setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
                 break;
             case L1Score:
                 profiledPIDCalculation(ElevatorConstants.L1Score);
+                SmartDashboard.putNumber("Elevator /relativePositionMEters", rotToMeters(m_LiftingEncoder.getPosition()));
                 //setLazyPositionSetpoint(ElevatorConstants.L1Score);
                 break;
             case L2Score:
@@ -264,6 +268,8 @@ private ElevatorSubsystem() {
                 break;
             case L3SCORE:
                 profiledPIDCalculation(ElevatorConstants.L3Score);
+                SmartDashboard.putNumber("Elevator /relativePositionMEters", rotToMeters(m_LiftingEncoder.getPosition()));
+                SmartDashboard.putNumber("Elevator /masterCurrent", m_masterLiftingSparkMax.getOutputCurrent());
                 //setLazyPositionSetpoint(ElevatorConstants.L3Score);
                 break;
             default:

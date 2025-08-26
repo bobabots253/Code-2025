@@ -168,11 +168,11 @@ public final class Constants {
 
     //Elevator trapezoidal profile
     /** In meters per second. Used for Profiled PID controller*/
-    public static final double elevatorMaxVelocity = 8.5;//.685
-    public static final double elevaotrMaxAccerleration = 13.16;//2.615
-    public static final double profiledP = 2.248;//4.96
+    public static final double elevatorMaxVelocity = 4.25;//.685 for rotation we are using half so the original is 8.5
+    public static final double elevaotrMaxAccerleration = 6.58;//2.615 for rotation we are using half so the original is 13.16
+    public static final double profiledP = 2.25;//4.96
     public static final double profiledI = 0;
-    public static final double profiledD = 0.07;
+    public static final double profiledD = 0.0;//.07
     public static final double gearRatio = 5.0;
     //meters
     public static final double gearRadius = 0.0254;
