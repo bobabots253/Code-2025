@@ -25,14 +25,15 @@ import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.States;
 
 public class EndEffectorSubsystem extends SubsystemBase{
-private static SparkMax m_pivotSparkMax;
-private static SparkMax m_intakeRollerSparkMax;
-private final RelativeEncoder m_intakeRollerEncoder;
-private final AbsoluteEncoder m_pivotEncoder;
-private final SparkClosedLoopController m_pivotPIDController;
-private final SparkClosedLoopController m_intakeRollerPIDController;
-private final DigitalInput frontIntakeBeamBreak;
-private final DigitalInput backIntakeBeamBreak;
+// private static SparkMax m_pivotSparkMax;
+// private static SparkMax m_intakeRollerSparkMax;
+// private final RelativeEncoder m_intakeRollerEncoder;
+// private final AbsoluteEncoder m_pivotEncoder;
+// private final SparkClosedLoopController m_pivotPIDController;
+// private final SparkClosedLoopController m_intakeRollerPIDController;
+// private final DigitalInput frontIntakeBeamBreak;
+// private final DigitalInput backIntakeBeamBreak;
+private static SparkMax rollerSparkMax;
 
     private static EndEffectorSubsystem instance;
 
@@ -43,33 +44,33 @@ private final DigitalInput backIntakeBeamBreak;
 
 private EndEffectorSubsystem(){
     //pivot 
-    m_pivotSparkMax = new SparkMax(EndEffectorConstants.pivotCANId,MotorType.kBrushless);
-    m_intakeRollerSparkMax = new SparkMax(EndEffectorConstants.intakeRollerCANId,MotorType.kBrushless);
+    // m_pivotSparkMax = new SparkMax(EndEffectorConstants.pivotCANId,MotorType.kBrushless);
+    // m_intakeRollerSparkMax = new SparkMax(EndEffectorConstants.intakeRollerCANId,MotorType.kBrushless);
 
-    m_pivotEncoder = m_pivotSparkMax.getAbsoluteEncoder();
-    m_intakeRollerEncoder = m_intakeRollerSparkMax.getEncoder();
+    // m_pivotEncoder = m_pivotSparkMax.getAbsoluteEncoder();
+    // m_intakeRollerEncoder = m_intakeRollerSparkMax.getEncoder();
 
-    m_pivotPIDController = m_pivotSparkMax.getClosedLoopController();
+    // m_pivotPIDController = m_pivotSparkMax.getClosedLoopController();
 
-    m_pivotSparkMax.configure(Configs.EndEffectorSubsystemConfig.pivotConfig, ResetMode.kResetSafeParameters,
-    PersistMode.kPersistParameters);
+    // m_pivotSparkMax.configure(Configs.EndEffectorSubsystemConfig.pivotConfig, ResetMode.kResetSafeParameters,
+    // PersistMode.kPersistParameters);
 
-    //Rollers
-    m_intakeRollerSparkMax = new SparkMax(EndEffectorConstants.intakeRollerCANId,MotorType.kBrushless);
-    m_intakeRollerPIDController = m_intakeRollerSparkMax.getClosedLoopController();
-    m_intakeRollerSparkMax.configure(Configs.EndEffectorSubsystemConfig.intakeRollerConfig, ResetMode.kResetSafeParameters,
-    PersistMode.kPersistParameters);
+    // //Rollers
+    // m_intakeRollerSparkMax = new SparkMax(EndEffectorConstants.intakeRollerCANId,MotorType.kBrushless);
+    // m_intakeRollerPIDController = m_intakeRollerSparkMax.getClosedLoopController();
+    // m_intakeRollerSparkMax.configure(Configs.EndEffectorSubsystemConfig.intakeRollerConfig, ResetMode.kResetSafeParameters,
+    // PersistMode.kPersistParameters);
 
-    //Beam break
-    frontIntakeBeamBreak = new DigitalInput(EndEffectorConstants.frontBeamBreakSensor);
-    backIntakeBeamBreak = new DigitalInput(EndEffectorConstants.backBeamBreakSensor);
+    // //Beam break
+    // frontIntakeBeamBreak = new DigitalInput(EndEffectorConstants.frontBeamBreakSensor);
+    // backIntakeBeamBreak = new DigitalInput(EndEffectorConstants.backBeamBreakSensor);
 }
 
 // @Override
 public void periodic() {
 
     //SmartDashboard.putNumber("Algae /absolutePosition", getPivotAbsoluteEncoder());
-    SmartDashboard.putBoolean("EndEffector /isIntakedDIO", isCoralInsideIntake());
+    //SmartDashboard.putBoolean("EndEffector /isIntakedDIO", isCoralInsideIntake());
 }
 
     // public void setSafePercentagePivotOpenLoop(double OpenLoopPercentage){
@@ -91,45 +92,45 @@ public void periodic() {
      * Setting speed for intake rollers
      * @param value should be from -1 to 1
      */
-    public void setIntakeLazyPercentageOpenLoop(double value) {
-            SmartDashboard.putNumber("Intake Running Speed", value);
-            m_intakeRollerSparkMax.set(value);
-    }
+//     public void setIntakeLazyPercentageOpenLoop(double value) {
+//             SmartDashboard.putNumber("Intake Running Speed", value);
+//             m_intakeRollerSparkMax.set(value);
+//     }
 
-    public void setPivotLazyPercentageOpenLoop(double inputvalue) {
-        SmartDashboard.putNumber("Pivot Running Speed", inputvalue);
-        m_pivotSparkMax.set(inputvalue);
-}
+//     public void setPivotLazyPercentageOpenLoop(double inputvalue) {
+//         SmartDashboard.putNumber("Pivot Running Speed", inputvalue);
+//         m_pivotSparkMax.set(inputvalue);
+// }
 
 
-    public boolean isFrontBeamBreakBlocked(){
-        return frontIntakeBeamBreak.get();
-    }
+//     public boolean isFrontBeamBreakBlocked(){
+//         return frontIntakeBeamBreak.get();
+//     }
 
-    public boolean isBackBeamBreakBlocked(){
-        return backIntakeBeamBreak.get();
-    }
+//     public boolean isBackBeamBreakBlocked(){
+//         return backIntakeBeamBreak.get();
+//     }
     
-    public boolean isCoralInsideIntake(){
-        if (isFrontBeamBreakBlocked() && isBackBeamBreakBlocked() != isBackBeamBreakBlocked()){
-            return true;
-        }else{
-            return false;
-        }
-    }
+//     public boolean isCoralInsideIntake(){
+//         if (isFrontBeamBreakBlocked() && isBackBeamBreakBlocked() != isBackBeamBreakBlocked()){
+//             return true;
+//         }else{
+//             return false;
+//         }
+//     }
 
-    public boolean isWithinPivotRange(){
-        if (m_pivotEncoder.getPosition() < EndEffectorConstants.PIVOT_MAX_TRAVEL 
-            && m_pivotEncoder.getPosition() > EndEffectorConstants.PIVOT_MIN_TRAVEL){
-            return true;
-        }else{
-            return false;
-        }
-    }
+//     public boolean isWithinPivotRange(){
+//         if (m_pivotEncoder.getPosition() < EndEffectorConstants.PIVOT_MAX_TRAVEL 
+//             && m_pivotEncoder.getPosition() > EndEffectorConstants.PIVOT_MIN_TRAVEL){
+//             return true;
+//         }else{
+//             return false;
+//         }
+//     }
 
-    public void resetIntakeRollerEncoders() {
-        m_intakeRollerEncoder.setPosition(0.0);
-    }
+//     public void resetIntakeRollerEncoders() {
+//         m_intakeRollerEncoder.setPosition(0.0);
+//     }
 
     // public void resetAlgaeRollerEncoders() {
     //     m_algaeRollerEncoder.setPosition(0.0);
