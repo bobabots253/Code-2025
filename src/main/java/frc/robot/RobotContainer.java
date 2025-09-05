@@ -28,10 +28,10 @@ import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Bobaboard.BotControls;
 import frc.robot.Bobaboard.ControlHub;
 import frc.robot.subsystems.EndEffectorSubsystem;
-import frc.robot.commands.PathfindClosest;
+// import frc.robot.commands.PathfindClosest;
 import frc.robot.commands.PathfindToPose;
-import frc.robot.limelights.VisionData;
-import frc.robot.limelights.VisionSubsystem;
+// import frc.robot.limelights.VisionData;
+//import frc.robot.limelights.VisionSubsystem;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -302,9 +302,9 @@ public class RobotContainer {
     return new PathfindToPose(FieldSetup.allianceReefFarSupplier, FieldSetup.kReefFarEntranceTolerance, permission);
   }
 
-  public static Command PathfindClosest(boolean permission, Boolean isRight) {
-    return new PathfindClosest(permission,isRight);
-  }
+  // public static Command PathfindClosest(boolean permission, Boolean isRight) {
+  //   return new PathfindClosest(permission,isRight);
+  // }
 
 }
 
