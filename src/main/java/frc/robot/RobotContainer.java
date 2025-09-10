@@ -348,18 +348,18 @@ public class RobotContainer {
   // }
 
   
-  double redAMP_x = 14.7;
-        double redAMP_Y = 7.8;
-        Translation2d redAMPTranslation2d = new Translation2d(redAMP_x,redAMP_Y);
-        Pose2d redAMPPose2d = new Pose2d((redAMPTranslation2d), Rotation2d.fromDegrees(90));
+  // double redAMP_x = 14.7;
+  //       double redAMP_Y = 7.8;
+  //       Translation2d redAMPTranslation2d = new Translation2d(redAMP_x,redAMP_Y);
+  //       Pose2d redAMPPose2d = new Pose2d((redAMPTranslation2d), Rotation2d.fromDegrees(90));
   
-  public static Command PathFindReef21(boolean permission){
-    return new PathfindToPose(FieldSetup.allianceReefFarSupplier, FieldSetup.kReefFarEntranceTolerance, permission);
-  }
+  // public static Command PathFindReef21(boolean permission){
+  //   return new PathfindToPose(FieldSetup.allianceReefFarSupplier, FieldSetup.kReefFarEntranceTolerance, permission);
+  // }
 
-  public static Command PathfindClosest(boolean permission, Boolean isRight) {
-    return new PathfindClosest(permission,isRight);
-  }
+  // public static Command PathfindClosest(boolean permission, Boolean isRight) {
+  //   return new PathfindClosest(permission,isRight);
+  // }
 
 }
 
