@@ -161,13 +161,13 @@ public class BotControls {
                 }
             }
 
-            if(controlHub.operatorController.L_Trigger.isNotBeingPressed() && controlHub.operatorController.R_Trigger.isNotBeingPressed()){
-                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0);
-            }else if(controlHub.operatorController.L_Trigger.wasActivated()){
-                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(-.8);
-            }else if (controlHub.operatorController.R_Trigger.wasActivated()){
-                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0.8);
-            }
+            // if(controlHub.operatorController.L_Trigger.isNotBeingPressed() && controlHub.operatorController.R_Trigger.isNotBeingPressed()){
+            //     rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0);
+            // }else if(controlHub.operatorController.L_Trigger.wasActivated()){
+            //     rContainer.m_Effector.setPivotLazyPercentageOpenLoop(-.8);
+            // }else if (controlHub.operatorController.R_Trigger.wasActivated()){
+            //     rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0.8);
+            // }
 
             // if(!controlHub.operatorController.POV90.isBeingPressed() && !controlHub.operatorController.POV270.isBeingPressed()){
             //     rContainer.m_Climb.setLazyOpenLoop(0);
@@ -185,13 +185,13 @@ public class BotControls {
             //     rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0.8);
             // }
 
-            // if(!controlHub.operatorController.L_Trigger.isBeingPressed() && !controlHub.operatorController.R_Trigger.isBeingPressed()){
-            //     rContainer.m_Climb.setLazyOpenLoop(0);
+             if(!controlHub.operatorController.L_Trigger.isBeingPressed() && !controlHub.operatorController.R_Trigger.isBeingPressed()){
+                 rContainer.m_Climb.setLazyOpenLoop(0.0001);
             // }else if (controlHub.operatorController.L_Trigger.isBeingPressed()){
             //     rContainer.m_Climb.setLazyOpenLoop(1);
             // }else if (controlHub.operatorController.R_Trigger.isBeingPressed()){
             //     rContainer.m_Climb.setLazyOpenLoop(-1);
-            // }
+         }
 
 
         //     //Polls for Controller Input, if a button is being pressed deliver selected algae pivot angle
