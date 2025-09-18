@@ -77,7 +77,7 @@ public class JoshVision extends SubsystemBase{
     //@SuppressWarnings("unchecked")
     @Override
     public void periodic(){
-        LimelightHelpers.SetRobotOrientation(Constants.VisionConstants.FRONT_LEFT_APRIL_TAG_LL, currentYaw(), 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(Constants.VisionConstants.FRONT_LEFT_APRIL_TAG_LL, currentYaw()-23, 0, 22, 0, 0, 0);
         location.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         currentLocation = getPose2d(getData().pose.getTranslation(), Rotation2d.fromDegrees(currentYaw()));
         location.addVisionMeasurement(currentLocation, getData().timestampSeconds);
