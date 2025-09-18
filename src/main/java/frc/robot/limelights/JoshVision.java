@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
@@ -46,6 +48,31 @@ public class JoshVision extends SubsystemBase{
         return new Pose2d(translation, rotation);
 
     }
+    //have a variable for the reeftage so I can either put int a number or idk make a enum to put in for int 
+    //have the boolean be left if its false and right if its true you should make a enum
+    public Command generateCommand(int tagID, boolean side){
+        // return Commands.defer(() -> {
+        //     //var branch = getBranchFromTag(tagID.getPosition, null);
+            
+        // })
+        return new Command;
+    }
+
+    private static Pose2d getBranchFromTag(Pose2d tag, Boolean side) {
+        var translation = tag.getTranslation().plus(
+            new Translation2d(
+                //side.tagOffset.getY(),
+                //side.tagOffset.getX()
+            ).rotateBy(tag.getRotation())
+        );
+
+        return new Pose2d(
+            translation.getX(),
+            translation.getY(),
+            tag.getRotation()
+        );
+    }
+
 
     //@SuppressWarnings("unchecked")
     @Override
