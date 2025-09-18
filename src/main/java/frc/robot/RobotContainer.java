@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Bobaboard.BotControls;
 import frc.robot.Bobaboard.ControlHub;
-import frc.robot.subsystems.EndEffectorSubsystem;
+// import frc.robot.subsystems.EndEffectorSubsystem;
 import frc.robot.commands.PathfindClosest;
 import frc.robot.commands.PathfindToPose;
 import frc.robot.limelights.JoshVision;
@@ -36,9 +36,9 @@ import frc.robot.limelights.VisionData;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-// import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
+// import frc.robot.subsystems.ElevatorSubsystem;
 //import frc.robot.subsystems.TestSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -82,9 +82,8 @@ public class RobotContainer {
   public final AutoModeManager m_AutoModeManager;
   public final ControlHub m_ControlHub;
   public static DriveSubsystem m_robotDrive;
-  public final ElevatorSubsystem m_Elevator;
-  public final EndEffectorSubsystem m_Effector;
-  public final JoshVision m_Vision;
+  // public final ElevatorSubsystem m_Elevator;
+  // public final EndEffectorSubsystem m_Effector;
   // public final ClimbSubsystem m_Climb;
    /*READ ME:
   A static instance of the Robot Container with all its contents
@@ -99,13 +98,13 @@ public class RobotContainer {
    */
   public RobotContainer() {
     //m_TestSubsystem =TestSubsystem.getInstance();
-    m_Vision = JoshVision.getInstance();
+    //m_Vision = JoshVision.getInstance();
     m_robotDrive = DriveSubsystem.getInstance();
     m_AutoModeManager = new AutoModeManager();
     m_ControlHub = ControlHub.getInstance();
     //VisionSubsystem.getInstance(m_robotDrive);
-    m_Elevator = ElevatorSubsystem.getInstance();
-    m_Effector = EndEffectorSubsystem.getInstance();
+    // m_Elevator = ElevatorSubsystem.getInstance();
+    // m_Effector = EndEffectorSubsystem.getInstance();
     // m_Climb = ClimbSubsystem.getInstance();
     // Configure default commands
     SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
@@ -130,54 +129,54 @@ public class RobotContainer {
       * @return 
       */
 
-   public Command stowElevatorCommand(){
-    return new ParallelCommandGroup(
-          new RunCommand(() -> {
-            m_Elevator.setLazyElevatorState(States.ElevatorPos.STOW);
-            }, m_Elevator)
-        );
-    }
+  //  public Command stowElevatorCommand(){
+  //   return new ParallelCommandGroup(
+  //         new RunCommand(() -> {
+  //           m_Elevator.setLazyElevatorState(States.ElevatorPos.STOW);
+  //           }, m_Elevator)
+  //       );
+  //   }
 
-   public Command tierOneElevatorCommand(){
-    return new ParallelCommandGroup(
-          new RunCommand(() -> {
-            m_Elevator.setLazyElevatorState(States.ElevatorPos.L1Score);
-            }, m_Elevator)
-        );
-    }
+  //  public Command tierOneElevatorCommand(){
+  //   return new ParallelCommandGroup(
+  //         new RunCommand(() -> {
+  //           m_Elevator.setLazyElevatorState(States.ElevatorPos.L1Score);
+  //           }, m_Elevator)
+  //       );
+  //   }
 
-   public Command tierTwoElevatorCommand(){
-    return new ParallelCommandGroup(
-          new RunCommand(() -> {
-            m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
-            }, m_Elevator));  
-    }
-
-    public Command tierThreeElevatorCommand(){
-      return new ParallelCommandGroup(
-            new RunCommand(() -> {
-              m_Elevator.setLazyElevatorState(States.ElevatorPos.L3SCORE);
-              }, m_Elevator)
-          );
-      }
-
-  //   public Command tierTwoScoreCommand(){
-  //     return new ParallelCommandGroup(
+  //  public Command tierTwoElevatorCommand(){
+  //   return new ParallelCommandGroup(
   //         new RunCommand(() -> {
   //           m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
-  //         }, m_Elevator),
-  //         new SequentialCommandGroup(
-  //           new WaitCommand(.5),
-  //           new ParallelCommandGroup(
-  //             new SequentialCommandGroup(
-  //               new WaitCommand(1),
-  //               new InstantCommand(() -> {
-  //                 m_Effector.setIntakeLazyPercentageOpenLoop(0.0);
-  //               }, m_Effector)
-  //             ),
-  //             new InstantCommand(() -> {
-  //               m_Effector.setIntakeLazyPercentageOpenLoop(.8);
-  //             }, m_Effector)
+  //           }, m_Elevator));  
+  //   }
+
+  //   public Command tierThreeElevatorCommand(){
+  //     return new ParallelCommandGroup(
+  //           new RunCommand(() -> {
+  //             m_Elevator.setLazyElevatorState(States.ElevatorPos.L3SCORE);
+  //             }, m_Elevator)
+  //         );
+  //     }
+
+    // public Command tierTwoScoreCommand(){
+    //   return new ParallelCommandGroup(
+    //       new RunCommand(() -> {
+    //         m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
+    //       }, m_Elevator),
+    //       new SequentialCommandGroup(
+    //         new WaitCommand(.5),
+    //         new ParallelCommandGroup(
+    //           new SequentialCommandGroup(
+    //             new WaitCommand(1),
+    //             new InstantCommand(() -> {
+    //               m_Effector.setIntakeLazyPercentageOpenLoop(0.0);
+    //             }, m_Effector)
+    //           ),
+    //           new InstantCommand(() -> {
+    //             m_Effector.setIntakeLazyPercentageOpenLoop(.8);
+    //           }, m_Effector)
     //         )
     //       )
     //   );

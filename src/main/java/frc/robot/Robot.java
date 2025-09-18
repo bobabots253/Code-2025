@@ -53,6 +53,7 @@ import frc.robot.Autonomous.AutoModeManager.DesiredMode;
 import frc.robot.Bobaboard.BotControls;
 import frc.robot.Bobaboard.ControlHub;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 /*Important Notes for 2025:
 22 April Tags - Diff Angles (not all @ 90*). - center tags @ 30* down
