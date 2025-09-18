@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Bobaboard.BotControls;
 import frc.robot.Bobaboard.ControlHub;
-// import frc.robot.subsystems.EndEffectorSubsystem;
+import frc.robot.subsystems.EndEffectorSubsystem;
 import frc.robot.commands.PathfindClosest;
 import frc.robot.commands.PathfindToPose;
 import frc.robot.limelights.JoshVision;
@@ -38,7 +38,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-// import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 //import frc.robot.subsystems.TestSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -82,8 +82,8 @@ public class RobotContainer {
   public final AutoModeManager m_AutoModeManager;
   public final ControlHub m_ControlHub;
   public static DriveSubsystem m_robotDrive;
-  // public final ElevatorSubsystem m_Elevator;
-  // public final EndEffectorSubsystem m_Effector;
+  public final ElevatorSubsystem m_Elevator;
+  public final EndEffectorSubsystem m_Effector;
   // public final ClimbSubsystem m_Climb;
    /*READ ME:
   A static instance of the Robot Container with all its contents
@@ -103,8 +103,8 @@ public class RobotContainer {
     m_AutoModeManager = new AutoModeManager();
     m_ControlHub = ControlHub.getInstance();
     //VisionSubsystem.getInstance(m_robotDrive);
-    // m_Elevator = ElevatorSubsystem.getInstance();
-    // m_Effector = EndEffectorSubsystem.getInstance();
+    m_Elevator = ElevatorSubsystem.getInstance();
+    m_Effector = EndEffectorSubsystem.getInstance();
     // m_Climb = ClimbSubsystem.getInstance();
     // Configure default commands
     SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
@@ -129,36 +129,36 @@ public class RobotContainer {
       * @return 
       */
 
-  //  public Command stowElevatorCommand(){
-  //   return new ParallelCommandGroup(
-  //         new RunCommand(() -> {
-  //           m_Elevator.setLazyElevatorState(States.ElevatorPos.STOW);
-  //           }, m_Elevator)
-  //       );
-  //   }
+   public Command stowElevatorCommand(){
+    return new ParallelCommandGroup(
+          new RunCommand(() -> {
+            m_Elevator.setLazyElevatorState(States.ElevatorPos.STOW);
+            }, m_Elevator)
+        );
+    }
 
-  //  public Command tierOneElevatorCommand(){
-  //   return new ParallelCommandGroup(
-  //         new RunCommand(() -> {
-  //           m_Elevator.setLazyElevatorState(States.ElevatorPos.L1Score);
-  //           }, m_Elevator)
-  //       );
-  //   }
+   public Command tierOneElevatorCommand(){
+    return new ParallelCommandGroup(
+          new RunCommand(() -> {
+            m_Elevator.setLazyElevatorState(States.ElevatorPos.L1Score);
+            }, m_Elevator)
+        );
+    }
 
-  //  public Command tierTwoElevatorCommand(){
-  //   return new ParallelCommandGroup(
-  //         new RunCommand(() -> {
-  //           m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
-  //           }, m_Elevator));  
-  //   }
+   public Command tierTwoElevatorCommand(){
+    return new ParallelCommandGroup(
+          new RunCommand(() -> {
+            m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
+            }, m_Elevator));  
+    }
 
-  //   public Command tierThreeElevatorCommand(){
-  //     return new ParallelCommandGroup(
-  //           new RunCommand(() -> {
-  //             m_Elevator.setLazyElevatorState(States.ElevatorPos.L3SCORE);
-  //             }, m_Elevator)
-  //         );
-  //     }
+    public Command tierThreeElevatorCommand(){
+      return new ParallelCommandGroup(
+            new RunCommand(() -> {
+              m_Elevator.setLazyElevatorState(States.ElevatorPos.L3SCORE);
+              }, m_Elevator)
+          );
+      }
 
     // public Command tierTwoScoreCommand(){
     //   return new ParallelCommandGroup(
