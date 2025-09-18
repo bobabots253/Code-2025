@@ -185,13 +185,13 @@ public class BotControls {
             //     rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0.8);
             // }
 
-             if(!controlHub.operatorController.L_Trigger.isBeingPressed() && !controlHub.operatorController.R_Trigger.isBeingPressed()){
-                 rContainer.m_Climb.setLazyOpenLoop(0.0001);
+            //  if(!controlHub.operatorController.L_Trigger.isBeingPressed() && !controlHub.operatorController.R_Trigger.isBeingPressed()){
+            //      rContainer.m_Climb.setLazyOpenLoop(0.0001);
             // }else if (controlHub.operatorController.L_Trigger.isBeingPressed()){
             //     rContainer.m_Climb.setLazyOpenLoop(1);
             // }else if (controlHub.operatorController.R_Trigger.isBeingPressed()){
             //     rContainer.m_Climb.setLazyOpenLoop(-1);
-         }
+        //  }
 
 
         //     //Polls for Controller Input, if a button is being pressed deliver selected algae pivot angle
