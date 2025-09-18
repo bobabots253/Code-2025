@@ -35,7 +35,7 @@ import frc.robot.commands.PathfindToPose;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.ClimbSubsystem;
+// import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 //import frc.robot.subsystems.TestSubsystem;
@@ -83,7 +83,7 @@ public class RobotContainer {
   public static DriveSubsystem m_robotDrive;
   public final ElevatorSubsystem m_Elevator;
   public final EndEffectorSubsystem m_Effector;
-  public final ClimbSubsystem m_Climb;
+  // public final ClimbSubsystem m_Climb;
    /*READ ME:
   A static instance of the Robot Container with all its contents
   */
@@ -103,7 +103,7 @@ public class RobotContainer {
     //VisionSubsystem.getInstance(m_robotDrive);
     m_Elevator = ElevatorSubsystem.getInstance();
     m_Effector = EndEffectorSubsystem.getInstance();
-    m_Climb = ClimbSubsystem.getInstance();
+    // m_Climb = ClimbSubsystem.getInstance();
     // Configure default commands
     SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
     m_robotDrive.setDefaultCommand(new RunCommand(
