@@ -23,7 +23,15 @@ public class JoshVision extends SubsystemBase{
     public static PoseEstimator location;
     AHRS navx = new AHRS(NavXComType.kMXP_SPI);
     public Field2d field;
+    private static JoshVision instance;
+    public static JoshVision getInstance(){
+        if(instance == null) instance = new JoshVision();
+        return instance;
+    }
     
+    private JoshVision(){
+        
+    }
     
 
     public double currentYaw(){
@@ -50,13 +58,13 @@ public class JoshVision extends SubsystemBase{
     }
     //have a variable for the reeftage so I can either put int a number or idk make a enum to put in for int 
     //have the boolean be left if its false and right if its true you should make a enum
-    public Command generateCommand(int tagID, boolean side){
-        // return Commands.defer(() -> {
-        //     //var branch = getBranchFromTag(tagID.getPosition, null);
+    // public Command generateCommand(int tagID, boolean side){
+    //     // return Commands.defer(() -> {
+    //     //     //var branch = getBranchFromTag(tagID.getPosition, null);
             
-        // })
-        return new Command;
-    }
+    //     // })
+    //     return new Command;
+    // }
 
     private static Pose2d getBranchFromTag(Pose2d tag, Boolean side) {
         var translation = tag.getTranslation().plus(
@@ -78,11 +86,11 @@ public class JoshVision extends SubsystemBase{
     @Override
     public void periodic(){
         LimelightHelpers.SetRobotOrientation(Constants.VisionConstants.FRONT_LEFT_APRIL_TAG_LL, currentYaw()-23, 0, 22, 0, 0, 0);
-        location.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+        //location.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         currentLocation = getPose2d(getData().pose.getTranslation(), Rotation2d.fromDegrees(currentYaw()));
-        location.addVisionMeasurement(currentLocation, getData().timestampSeconds);
-        field.setRobotPose(location.getEstimatedPosition());
-        SmartDashboard.putData("robot", field);
+        //location.addVisionMeasurement(currentLocation, getData().timestampSeconds);
+        //field.setRobotPose(location.getEstimatedPosition());
+        // SmartDashboard.putData("robot", field);
     }
 
 

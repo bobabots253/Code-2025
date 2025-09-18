@@ -18,7 +18,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.PathPlannerLogging;
-
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -49,6 +49,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.limelights.JoshVision;
 // import frc.robot.limelights.VisionSubsystem;
 import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
@@ -56,7 +57,7 @@ import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj.SPI;
 
 public class DriveSubsystem extends SubsystemBase {
-
+  JoshVision jVision = JoshVision.getInstance();
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
@@ -254,7 +255,15 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putData("Field Vision RIGHT", m_fieldVision_R);
     SmartDashboard.putData("Refined Vision", m_refinedVision);
 
+    //josh testing area
+    //mono_odometryVision_L.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+    //LimelightHelpers.SetRobotOrientation(Constants.VisionConstants.FRONT_LEFT_APRIL_TAG_LL, currentYaw()-23, 0, 22, 0, 0, 0);
+
     m_fieldGyro.setRobotPose(m_odometry.getPoseMeters());
+
+    //test to see if the Field vision left shows anything if it dosen't then implement vision measurment
+    // mono_odometryVision_L.addVisionMeasurement(jVision.getPose2d(jVision.getData().pose.getTranslation(),
+    // Rotation2d.fromDegrees(-Nav_x.getRotation2d().getDegrees())), jVision.getData().timestampSeconds);
     m_fieldVision_L.setRobotPose(mono_odometryVision_L.getEstimatedPosition());
     m_fieldVision_R.setRobotPose(mono_odometryVision_R.getEstimatedPosition());
     m_refinedVision.setRobotPose(refinedodometryVision.getEstimatedPosition());
