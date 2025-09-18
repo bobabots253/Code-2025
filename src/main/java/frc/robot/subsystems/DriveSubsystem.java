@@ -49,7 +49,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.limelights.JoshVision;
+// import frc.robot.limelights.JoshVision;
 // import frc.robot.limelights.VisionSubsystem;
 import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
@@ -57,7 +57,7 @@ import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj.SPI;
 
 public class DriveSubsystem extends SubsystemBase {
-  JoshVision jVision = JoshVision.getInstance();
+  // JoshVision jVision = JoshVision.getInstance();
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,

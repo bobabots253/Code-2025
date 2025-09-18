@@ -29,7 +29,7 @@ import frc.robot.Bobaboard.BotControls;
 import frc.robot.Bobaboard.ControlHub;
 import frc.robot.subsystems.EndEffectorSubsystem;
 // import frc.robot.commands.PathfindClosest;
-import frc.robot.commands.PathfindToPose;
+// import frc.robot.commands.PathfindToPose;
 // import frc.robot.limelights.VisionData;
 //import frc.robot.limelights.VisionSubsystem;
 import frc.robot.Constants.AutoConstants;
@@ -298,9 +298,9 @@ public class RobotContainer {
         Translation2d redAMPTranslation2d = new Translation2d(redAMP_x,redAMP_Y);
         Pose2d redAMPPose2d = new Pose2d((redAMPTranslation2d), Rotation2d.fromDegrees(90));
   
-  public static Command PathFindReef21(boolean permission){
-    return new PathfindToPose(FieldSetup.allianceReefFarSupplier, FieldSetup.kReefFarEntranceTolerance, permission);
-  }
+  // public static Command PathFindReef21(boolean permission){
+  //   return new PathfindToPose(FieldSetup.allianceReefFarSupplier, FieldSetup.kReefFarEntranceTolerance, permission);
+  // }
 
   // public static Command PathfindClosest(boolean permission, Boolean isRight) {
   //   return new PathfindClosest(permission,isRight);
