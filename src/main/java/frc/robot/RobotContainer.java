@@ -83,7 +83,7 @@ public class RobotContainer {
   public static DriveSubsystem m_robotDrive;
   public final ElevatorSubsystem m_Elevator;
   public final EndEffectorSubsystem m_Effector;
-  public final ClimbSubsystem m_Climb;
+  // public final ClimbSubsystem m_Climb;
    /*READ ME:
   A static instance of the Robot Container with all its contents
   */
@@ -97,13 +97,14 @@ public class RobotContainer {
    */
   public RobotContainer() {
     //m_TestSubsystem =TestSubsystem.getInstance();
+    //m_Vision = JoshVision.getInstance();
     m_robotDrive = DriveSubsystem.getInstance();
     m_AutoModeManager = new AutoModeManager();
     m_ControlHub = ControlHub.getInstance();
     //VisionSubsystem.getInstance(m_robotDrive);
     m_Elevator = ElevatorSubsystem.getInstance();
     m_Effector = EndEffectorSubsystem.getInstance();
-    m_Climb = ClimbSubsystem.getInstance();
+    // m_Climb = ClimbSubsystem.getInstance();
     // Configure default commands
     SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
     m_robotDrive.setDefaultCommand(new RunCommand(
@@ -158,27 +159,27 @@ public class RobotContainer {
           );
       }
 
-    public Command tierTwoScoreCommand(){
-      return new ParallelCommandGroup(
-          new RunCommand(() -> {
-            m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
-          }, m_Elevator),
-          new SequentialCommandGroup(
-            new WaitCommand(.5),
-            new ParallelCommandGroup(
-              new SequentialCommandGroup(
-                new WaitCommand(1),
-                new InstantCommand(() -> {
-                  m_Effector.setIntakeLazyPercentageOpenLoop(0.0);
-                }, m_Effector)
-              ),
-              new InstantCommand(() -> {
-                m_Effector.setIntakeLazyPercentageOpenLoop(.8);
-              }, m_Effector)
-            )
-          )
-      );
-    }
+    // public Command tierTwoScoreCommand(){
+    //   return new ParallelCommandGroup(
+    //       new RunCommand(() -> {
+    //         m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
+    //       }, m_Elevator),
+    //       new SequentialCommandGroup(
+    //         new WaitCommand(.5),
+    //         new ParallelCommandGroup(
+    //           new SequentialCommandGroup(
+    //             new WaitCommand(1),
+    //             new InstantCommand(() -> {
+    //               m_Effector.setIntakeLazyPercentageOpenLoop(0.0);
+    //             }, m_Effector)
+    //           ),
+    //           new InstantCommand(() -> {
+    //             m_Effector.setIntakeLazyPercentageOpenLoop(.8);
+    //           }, m_Effector)
+    //         )
+    //       )
+    //   );
+    // }
 
     // public Command intakeCoralCommand(){
     //   return new SequentialCommandGroup(
@@ -293,10 +294,10 @@ public class RobotContainer {
   // }
 
   
-  double redAMP_x = 14.7;
-        double redAMP_Y = 7.8;
-        Translation2d redAMPTranslation2d = new Translation2d(redAMP_x,redAMP_Y);
-        Pose2d redAMPPose2d = new Pose2d((redAMPTranslation2d), Rotation2d.fromDegrees(90));
+  // double redAMP_x = 14.7;
+  //       double redAMP_Y = 7.8;
+  //       Translation2d redAMPTranslation2d = new Translation2d(redAMP_x,redAMP_Y);
+  //       Pose2d redAMPPose2d = new Pose2d((redAMPTranslation2d), Rotation2d.fromDegrees(90));
   
   // public static Command PathFindReef21(boolean permission){
   //   return new PathfindToPose(FieldSetup.allianceReefFarSupplier, FieldSetup.kReefFarEntranceTolerance, permission);
