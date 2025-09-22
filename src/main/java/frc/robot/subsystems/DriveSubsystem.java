@@ -49,6 +49,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.LimelightHelpers.PoseEstimate;
 // import frc.robot.limelights.VisionSubsystem;
 import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
@@ -255,6 +256,8 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putData("Refined Vision", m_refinedVision);
 
     m_fieldGyro.setRobotPose(m_odometry.getPoseMeters());
+    visionUpdate(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, mono_odometryVision_L);
+    visionUpdate(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, mono_odometryVision_R);
     m_fieldVision_L.setRobotPose(mono_odometryVision_L.getEstimatedPosition());
     m_fieldVision_R.setRobotPose(mono_odometryVision_R.getEstimatedPosition());
     m_refinedVision.setRobotPose(refinedodometryVision.getEstimatedPosition());
@@ -288,7 +291,23 @@ public class DriveSubsystem extends SubsystemBase {
   //         }
   //     }
   // }
-
+    public void visionUpdate(String limelightName, SwerveDrivePoseEstimator poseEstimator){
+      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, Nav_x.getAngle()+203, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
+      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, Nav_x.getAngle()-203, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
+      if(!LimelightHelpers.getTV(limelightName)){
+        return;
+      }
+      Boolean running = false;
+      SmartDashboard.getBoolean("visonRunning", running);
+      PoseEstimate botPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
+      Pose2d visionPose = new Pose2d();
+      if(botPose.pose != null){
+        visionPose = new Pose2d(botPose.pose.getTranslation(), Nav_x.getRotation2d());
+        poseEstimator.addVisionMeasurement(visionPose, botPose.timestampSeconds);
+        running = true;
+      }else return;
+      //poseEstimator.addVisionMeasurement(visionPose, botPose.timestampSeconds);
+    }
   /**
    * Returns the currently-estimated pose of the robot.
    *
