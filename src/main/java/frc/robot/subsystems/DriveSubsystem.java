@@ -50,6 +50,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
 // import frc.robot.limelights.JoshVision;
+import frc.robot.LimelightHelpers.PoseEstimate;
 // import frc.robot.limelights.VisionSubsystem;
 import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
@@ -260,10 +261,8 @@ public class DriveSubsystem extends SubsystemBase {
     //LimelightHelpers.SetRobotOrientation(Constants.VisionConstants.FRONT_LEFT_APRIL_TAG_LL, currentYaw()-23, 0, 22, 0, 0, 0);
 
     m_fieldGyro.setRobotPose(m_odometry.getPoseMeters());
-
-    //test to see if the Field vision left shows anything if it dosen't then implement vision measurment
-    // mono_odometryVision_L.addVisionMeasurement(jVision.getPose2d(jVision.getData().pose.getTranslation(),
-    // Rotation2d.fromDegrees(-Nav_x.getRotation2d().getDegrees())), jVision.getData().timestampSeconds);
+    visionUpdate(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, mono_odometryVision_L);
+    visionUpdate(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, mono_odometryVision_R);
     m_fieldVision_L.setRobotPose(mono_odometryVision_L.getEstimatedPosition());
     m_fieldVision_R.setRobotPose(mono_odometryVision_R.getEstimatedPosition());
     m_refinedVision.setRobotPose(refinedodometryVision.getEstimatedPosition());
@@ -297,7 +296,23 @@ public class DriveSubsystem extends SubsystemBase {
   //         }
   //     }
   // }
-
+    public void visionUpdate(String limelightName, SwerveDrivePoseEstimator poseEstimator){
+      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, Nav_x.getAngle()+23, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
+      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, Nav_x.getAngle()-23, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
+      if(!LimelightHelpers.getTV(limelightName)){
+        return;
+      }
+      Boolean running = false;
+      SmartDashboard.getBoolean("visonRunning", running);
+      PoseEstimate botPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
+      Pose2d visionPose = new Pose2d();
+      if(botPose.pose != null){
+        visionPose = new Pose2d(botPose.pose.getTranslation(), Nav_x.getRotation2d());
+        poseEstimator.addVisionMeasurement(visionPose, botPose.timestampSeconds);
+        running = true;
+      }else return;
+      //poseEstimator.addVisionMeasurement(visionPose, botPose.timestampSeconds);
+    }
   /**
    * Returns the currently-estimated pose of the robot.
    *
