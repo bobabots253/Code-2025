@@ -112,6 +112,7 @@ public class DriveSubsystem extends SubsystemBase {
   final Field2d m_refinedVision = new Field2d();
   final Field2d m_pureVisionEstimation = new Field2d();
   public static Pose2d refinedVisionPose;
+  // private final double[] visionStdDevs = {0.5, 0.5, Units.degreesToRadians(10)};
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -293,7 +294,7 @@ public class DriveSubsystem extends SubsystemBase {
   // }
     public void visionUpdate(String limelightName, SwerveDrivePoseEstimator poseEstimator){
       LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, Nav_x.getAngle()+23, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
-      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, Nav_x.getAngle()-23, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
+      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, Nav_x.getAngle()-203, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
       if(!LimelightHelpers.getTV(limelightName)){
         return;
       }
@@ -303,7 +304,7 @@ public class DriveSubsystem extends SubsystemBase {
       Pose2d visionPose = new Pose2d();
       if(botPose.pose != null){
         visionPose = new Pose2d(botPose.pose.getTranslation(), Nav_x.getRotation2d());
-        poseEstimator.addVisionMeasurement(visionPose, botPose.timestampSeconds);
+        poseEstimator.addVisionMeasurement(visionPose, botPose.timestampSeconds, VecBuilder.fill(.5,.5, Units.degreesToRadians(10)));
         running = true;
       }else return;
       //poseEstimator.addVisionMeasurement(visionPose, botPose.timestampSeconds);
