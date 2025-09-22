@@ -292,8 +292,8 @@ public class DriveSubsystem extends SubsystemBase {
   //     }
   // }
     public void visionUpdate(String limelightName, SwerveDrivePoseEstimator poseEstimator){
-      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, Nav_x.getAngle()+203, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
-      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, Nav_x.getAngle()-203, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
+      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, Nav_x.getAngle()+23, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
+      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, Nav_x.getAngle()-23, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
       if(!LimelightHelpers.getTV(limelightName)){
         return;
       }
