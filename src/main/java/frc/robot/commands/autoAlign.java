@@ -22,7 +22,7 @@ public class autoAlign extends Command{
 
     @Override
     public void initialize(){
-        Pose2d currentPose = driveSubsystem.mono_getPoseVision_L();
+        //Pose2d currentPose = driveSubsystem.mono_getPoseVision_L();
         autoAlignCommand = AutoBuilder.pathfindToPose(targetPose, defaultPathfindingConstraints, 0.0);
         autoAlignCommand.schedule();
 

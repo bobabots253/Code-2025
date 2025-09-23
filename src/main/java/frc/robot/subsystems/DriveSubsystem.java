@@ -314,11 +314,11 @@ public class DriveSubsystem extends SubsystemBase {
    *
    * @return The pose.
    */
-  public Pose2d getPose() {
+  public Pose2d getPoseOLD() {
     return m_odometry.getPoseMeters();
   }
 
-    public Pose2d mono_getPoseVision_L() {
+    public Pose2d getPose() {
     return mono_odometryVision_L.getEstimatedPosition();
   }
 

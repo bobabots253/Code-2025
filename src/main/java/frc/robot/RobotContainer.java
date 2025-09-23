@@ -161,6 +161,9 @@ public class RobotContainer {
               }, m_Elevator)
           );
       }
+    public Command autoAlign() {
+      return new autoAlign(m_robotDrive, new Pose2d(5.7,4.0, new Rotation2d(0)));
+    }
     // public Command autoalign = new autoAlignCommand(m_robotDrive, new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
 
     // public Command tierTwoScoreCommand(){

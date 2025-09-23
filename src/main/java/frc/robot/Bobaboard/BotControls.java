@@ -63,6 +63,9 @@ public class BotControls {
             if (controlHub.driverController.Y_Button.wasActivated()) {
                 DriveSubsystem.getInstance().zeroHeading();
             }
+            if(controlHub.driverController.A_Button.wasActivated()){
+                rContainer.autoAlign();
+            }
 
         
             
