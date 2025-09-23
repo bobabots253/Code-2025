@@ -30,6 +30,7 @@ import frc.robot.Bobaboard.ControlHub;
 import frc.robot.subsystems.EndEffectorSubsystem;
 import frc.robot.commands.PathfindClosest;
 import frc.robot.commands.PathfindToPose;
+import frc.robot.commands.autoAlign;
 // import frc.robot.limelights.JoshVision;
 // import frc.robot.limelights.VisionData;
 // import frc.robot.limelights.VisionSubsystem;
@@ -84,6 +85,7 @@ public class RobotContainer {
   public static DriveSubsystem m_robotDrive;
   public final ElevatorSubsystem m_Elevator;
   public final EndEffectorSubsystem m_Effector;
+  // public final autoAlign 
   // public final ClimbSubsystem m_Climb;
    /*READ ME:
   A static instance of the Robot Container with all its contents
@@ -159,6 +161,7 @@ public class RobotContainer {
               }, m_Elevator)
           );
       }
+    // public Command autoalign = new autoAlignCommand(m_robotDrive, new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
 
     // public Command tierTwoScoreCommand(){
     //   return new ParallelCommandGroup(
