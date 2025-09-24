@@ -314,11 +314,13 @@ public class DriveSubsystem extends SubsystemBase {
    *
    * @return The pose.
    */
-  public Pose2d getPoseOLD() {
-    return m_odometry.getPoseMeters();
+  public Pose2d getPose() {
+    //return m_odometry.getPoseMeters();
+    //This is for testing for pathplanner Remove this in the future and replace this switch either a switch or fuse positions.
+    return mono_odometryVision_L.getEstimatedPosition();
   }
 
-    public Pose2d getPose() {
+    public Pose2d mono_getPoseVision_L() {
     return mono_odometryVision_L.getEstimatedPosition();
   }
 

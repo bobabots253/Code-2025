@@ -64,7 +64,8 @@ public class BotControls {
                 DriveSubsystem.getInstance().zeroHeading();
             }
             if(controlHub.driverController.A_Button.wasActivated()){
-                rContainer.autoAlign();
+                System.out.println("Auto align should Be scheduled");
+                rContainer.autoAlign().schedule();
             }
 
         
