@@ -111,6 +111,7 @@ public class DriveSubsystem extends SubsystemBase {
   final Field2d m_fieldVision_R = new Field2d();
   final Field2d m_refinedVision = new Field2d();
   final Field2d m_pureVisionEstimation = new Field2d();
+  final Field2d returnedPose = new Field2d();
   public static Pose2d refinedVisionPose;
   // private final double[] visionStdDevs = {0.5, 0.5, Units.degreesToRadians(10)};
 
@@ -255,8 +256,11 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putData("Field Vision LEFT", m_fieldVision_L);
     SmartDashboard.putData("Field Vision RIGHT", m_fieldVision_R);
     SmartDashboard.putData("Refined Vision", m_refinedVision);
+    SmartDashboard.putData("The returned postion", returnedPose);
 
     m_fieldGyro.setRobotPose(m_odometry.getPoseMeters());
+    returnedPose.setRobotPose(getPose());
+
     visionUpdate(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, mono_odometryVision_L);
     visionUpdate(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, mono_odometryVision_R);
     m_fieldVision_L.setRobotPose(mono_odometryVision_L.getEstimatedPosition());
@@ -293,7 +297,7 @@ public class DriveSubsystem extends SubsystemBase {
   //     }
   // }
     public void visionUpdate(String limelightName, SwerveDrivePoseEstimator poseEstimator){
-      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, Nav_x.getAngle()+23, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
+      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, -(Nav_x.getAngle()+23), Nav_x.getRawGyroZ(), 0, 0, 0, 0);
       LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, Nav_x.getAngle()-203, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
       if(!LimelightHelpers.getTV(limelightName)){
         return;

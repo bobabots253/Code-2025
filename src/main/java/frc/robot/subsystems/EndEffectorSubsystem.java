@@ -88,7 +88,8 @@ public void periodic() {
     public void setPivotLazyPercentageOpenLoop(double inputvalue) {
         SmartDashboard.putNumber("Pivot Running Speed", inputvalue);
         m_pivotSparkMax.set(inputvalue);
-}
+    }
+    
 
 
     public boolean isFrontBeamBreakBlocked(){
@@ -124,12 +125,12 @@ public void periodic() {
     //     m_algaeRollerEncoder.setPosition(0.0);
     //}
 
-//     public void setLazyPivotPositionSetpoint(double PositionSetpoint){
-//         double correctedSetpoint = MathUtil.clamp(PositionSetpoint,
-//                  EndEffectorConstants.PIVOT_MIN_TRAVEL, EndEffectorConstants.PIVOT_MAX_TRAVEL);
-//         m_pivotPIDController.setReference(correctedSetpoint, ControlType.kPosition);
-//         SmartDashboard.putNumber("Pivot Setpoint", PositionSetpoint);
-//     }
+    public void setLazyPivotPositionSetpoint(double PositionSetpoint){
+        double correctedSetpoint = MathUtil.clamp(PositionSetpoint,
+                 EndEffectorConstants.PIVOT_MIN_TRAVEL, EndEffectorConstants.PIVOT_MAX_TRAVEL);
+        m_pivotPIDController.setReference(correctedSetpoint, ControlType.kPosition);
+        SmartDashboard.putNumber("Pivot Setpoint", PositionSetpoint);
+    }
 
     // public void setLazyIntakeVelocitySetpoint(double velocity){
     //     m_intakeRollerPIDController.setReference(velocity, ControlType.kVelocity);
