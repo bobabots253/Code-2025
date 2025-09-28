@@ -263,6 +263,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     visionUpdate(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, mono_odometryVision_L);
     visionUpdate(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, mono_odometryVision_R);
+    visionUpdate(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, refinedodometryVision);
+    visionUpdate(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, refinedodometryVision);
     m_fieldVision_L.setRobotPose(mono_odometryVision_L.getEstimatedPosition());
     m_fieldVision_R.setRobotPose(mono_odometryVision_R.getEstimatedPosition());
     m_refinedVision.setRobotPose(refinedodometryVision.getEstimatedPosition());

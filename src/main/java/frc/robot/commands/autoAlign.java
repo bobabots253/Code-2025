@@ -15,7 +15,7 @@ public class autoAlign extends Command{
     private Pose2d targetPose;
     public Command autoAlignCommand;
     public Field2d targetfield = new Field2d();
-    public static PathConstraints defaultPathfindingConstraints = new PathConstraints(3.0,4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+    public static PathConstraints defaultPathfindingConstraints = new PathConstraints(3.5,4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
 
     public autoAlign(DriveSubsystem driveSubsystem, Pose2d targetPose){
         targetfield.setRobotPose(targetPose);
