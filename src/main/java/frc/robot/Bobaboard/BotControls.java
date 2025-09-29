@@ -64,6 +64,14 @@ public class BotControls {
                 DriveSubsystem.getInstance().zeroHeading();
             }
 
+            if (controlHub.driverController.X_Button.wasActivated()) {
+                rContainer.autoAlignCommand(false).schedule();
+            }
+
+            if (controlHub.driverController.B_Button.wasActivated()) {
+                rContainer.autoAlignCommand(true).schedule();
+            }
+
         
             
             // if (controlHub.driverController.L_Bumper.wasActivated() && !controlHub.driverController.R_Bumper.wasActivated()){
