@@ -4,66 +4,32 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Autonomous.AutoModeManager;
-import frc.robot.Bobaboard.BotControls;
-import frc.robot.Bobaboard.ControlHub;
-import frc.robot.subsystems.EndEffectorSubsystem;
-import frc.robot.commands.PathfindClosest;
-import frc.robot.commands.PathfindToPose;
-// import frc.robot.limelights.VisionData;
-// import frc.robot.limelights.VisionSubsystem;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
-// import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
 //import frc.robot.subsystems.TestSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.PathPlannerLogging;
+import frc.robot.Constants.OIConstants;
+import frc.robot.Autonomous.AutoModeManager;
+import frc.robot.Bobaboard.ControlHub;
+import frc.robot.commands.autoAlign;
+// import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.EndEffectorSubsystem;
 
 /*
  * This class is where the bulk of the robot (including the subsystems) should be declared.  Since Command-based is a
@@ -178,6 +144,32 @@ public class RobotContainer {
             )
           )
       );
+    }
+
+    public Command autoAlignCommand(Boolean isRight){
+      Pose2d currentPos = m_robotDrive.getPose();
+      Pose2d desiredPos;
+      List<Pose2d> rightReefTags = new ArrayList<Pose2d>();
+      List<Pose2d> leftReefTags = new ArrayList<Pose2d>();
+      rightReefTags.add(FieldSetup.allianceReefBSupplier.get());
+      rightReefTags.add(FieldSetup.allianceReefDSupplier.get());
+      rightReefTags.add(FieldSetup.allianceReefESupplier.get());
+      rightReefTags.add(FieldSetup.allianceReefHSupplier.get());
+      rightReefTags.add(FieldSetup.allianceReefJSupplier.get());
+      rightReefTags.add(FieldSetup.allianceReefKSupplier.get());
+
+      leftReefTags.add(FieldSetup.allianceReefASupplier.get());
+      leftReefTags.add(FieldSetup.allianceReefCSupplier.get());
+      leftReefTags.add(FieldSetup.allianceReefFSupplier.get());
+      leftReefTags.add(FieldSetup.allianceReefGSupplier.get());
+      leftReefTags.add(FieldSetup.allianceReefISupplier.get());
+      leftReefTags.add(FieldSetup.allianceReefLSupplier.get());
+      if(isRight){
+        desiredPos = currentPos.nearest(rightReefTags);
+      } else {
+        desiredPos = currentPos.nearest(leftReefTags);
+      }
+      return new autoAlign(m_robotDrive, desiredPos);
     }
 
     // public Command intakeCoralCommand(){
