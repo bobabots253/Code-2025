@@ -219,6 +219,14 @@ public class RobotContainer {
       );
     }
 
+    public Command alignTierTwoCommandLeft(){
+      return new SequentialCommandGroup(autoLeftAlign(), tierTwoScoreCommand());
+    }
+
+    public Command alignTierTwoCommandRight(){
+      return new SequentialCommandGroup(autoRightAlign(), tierTwoScoreCommand());
+    }
+
     // public Command intakeCoralCommand(){
     //   return new SequentialCommandGroup(
     //         new InstantCommand(() -> {
