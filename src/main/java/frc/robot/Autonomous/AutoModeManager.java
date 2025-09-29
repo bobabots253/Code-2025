@@ -24,8 +24,8 @@ public final class AutoModeManager{
         AB_MIDLEAVE,
         AB_MIDSCOREONE,
         STAND_STILL,
-        CROSS_LINE,
-        autoAlignScore
+        CROSS_LINE
+        // autoAlignScore
 	}
 
     public static AutoModeManager AutoQueue;
@@ -50,17 +50,17 @@ public final class AutoModeManager{
     mModeChooser.addOption("Simple Cross Line", DesiredMode.CROSS_LINE);
     }
 
-    public static void updateAutoMode(RobotContainer rContainer){
+    public static void updateAutoMode( ){
         DesiredMode desiredMode = mModeChooser.getSelected();
         if (desiredMode == null) {
 			    desiredMode = DesiredMode.DO_NOTHING;
         }else{
         System.out.println("Auto Chosen");
         }   
-        m_autonomousCommand = grabAutoMode(desiredMode, rContainer);
+        m_autonomousCommand = grabAutoMode(desiredMode);
     }
 
-    public static Command grabAutoMode(DesiredMode data, RobotContainer container){
+    public static Command grabAutoMode(DesiredMode data){
         switch(data){
             case DO_NOTHING:
 				m_autonomousCommand = DoNothingCommand.NoAuto();
@@ -84,8 +84,6 @@ public final class AutoModeManager{
                 m_autonomousCommand = StandStillCommand.runDefaultedAutoCommand();  
             case CROSS_LINE:
                 m_autonomousCommand = CrossLineCommand.runDefaultedAutoCommand(); 
-            case  autoAlignScore:
-                m_autonomousCommand = container.tierTwoScoreCommand();
             default:
 			    System.out.println("ERROR: unexpected auto mode!");
 				break;

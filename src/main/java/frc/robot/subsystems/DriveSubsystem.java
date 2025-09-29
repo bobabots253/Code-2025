@@ -299,7 +299,7 @@ public class DriveSubsystem extends SubsystemBase {
   //     }
   // }
     public void visionUpdate(String limelightName, SwerveDrivePoseEstimator poseEstimator){
-      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, -(Nav_x.getAngle()+23), Nav_x.getRawGyroZ(), 0, 0, 0, 0);
+      LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, -Nav_x.getAngle()+23, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
       LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, Nav_x.getAngle()-203, Nav_x.getRawGyroZ(), 0, 0, 0, 0);
       if(!LimelightHelpers.getTV(limelightName)){
         return;
@@ -309,7 +309,7 @@ public class DriveSubsystem extends SubsystemBase {
       PoseEstimate botPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
       Pose2d visionPose = new Pose2d();
       if(botPose.pose != null){
-        visionPose = new Pose2d(botPose.pose.getTranslation(), Nav_x.getRotation2d());
+        visionPose = new Pose2d(botPose.pose.getTranslation(), Nav_x.getRotation2d().plus(Rotation2d.fromDegrees(180)));
         poseEstimator.addVisionMeasurement(visionPose, botPose.timestampSeconds, VecBuilder.fill(.5,.5, Units.degreesToRadians(10)));
         running = true;
       }else return;

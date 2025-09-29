@@ -161,40 +161,42 @@ public class RobotContainer {
               }, m_Elevator)
           );
       }
-    public Command autoLeftAlign() {
-      double id = LimelightHelpers.getFiducialID(Constants.VisionConstants.FRONT_LEFT_APRIL_TAG_LL);
-      if(id==7 || id==18){
-        return new autoAlign(m_robotDrive, FieldSetup.allianceReefASupplier.get());
-      }else if(id==8 || id == 17){
-        return new autoAlign(m_robotDrive, FieldSetup.allianceReefCSupplier.get());
-      }else if(id==9 || id == 22){
-        return new autoAlign(m_robotDrive, FieldSetup.allianceReefESupplier.get());
-      }else if(id==10 || id == 21){
-        return new autoAlign(m_robotDrive, FieldSetup.allianceReefGSupplier.get());
-      }else if(id==11 || id == 20){
-        return new autoAlign(m_robotDrive, FieldSetup.allianceReefISupplier.get());
-      }else if(id==6 || id == 19){
-        return new autoAlign(m_robotDrive, FieldSetup.allianceReefKSupplier.get());
-      }
-      return new InstantCommand();
-    }
-    public Command autoRightAlign() {
-      double id = LimelightHelpers.getFiducialID(Constants.VisionConstants.FRONT_LEFT_APRIL_TAG_LL);
-      if(id==7 || id==18){
-        return new autoAlign(m_robotDrive, FieldSetup.allianceReefBSupplier.get());
-      }else if(id==8 || id == 17){
-        return new autoAlign(m_robotDrive, FieldSetup.allianceReefDSupplier.get());
-      }else if(id==9 || id == 22){
-        return new autoAlign(m_robotDrive, FieldSetup.allianceReefFSupplier.get());
-      }else if(id==10 || id == 21){
-        return new autoAlign(m_robotDrive, FieldSetup.allianceReefHSupplier.get());
-      }else if(id==11 || id == 20){
-        return new autoAlign(m_robotDrive, FieldSetup.allianceReefJSupplier.get());
-      }else if(id==6 || id == 19){
-        return new autoAlign(m_robotDrive, FieldSetup.allianceReefLSupplier.get());
-      }
-      return new InstantCommand();
-    }
+    // public Command autoLeftAlign() {
+    //   double id = LimelightHelpers.getFiducialID(Constants.VisionConstants.FRONT_LEFT_APRIL_TAG_LL);
+    //   if(id==7 || id==18){
+    //     return new autoAlign(m_robotDrive, FieldSetup.allianceReefASupplier.get());
+    //   }else if(id==8 || id == 17){
+    //     return new autoAlign(m_robotDrive, FieldSetup.allianceReefCSupplier.get());
+    //   }else if(id==9 || id == 22){
+    //     return new autoAlign(m_robotDrive, FieldSetup.allianceReefESupplier.get());
+    //   }else if(id==10 || id == 21){
+    //     return new autoAlign(m_robotDrive, FieldSetup.allianceReefGSupplier.get());
+    //   }else if(id==11 || id == 20){
+    //     return new autoAlign(m_robotDrive, FieldSetup.allianceReefISupplier.get());
+    //   }else if(id==6 || id == 19){
+    //     return new autoAlign(m_robotDrive, FieldSetup.allianceReefKSupplier.get());
+    //   }
+    //   return new InstantCommand();
+    // }
+    // public Command autoRightAlign() {
+    //   double id = LimelightHelpers.getFiducialID(Constants.VisionConstants.FRONT_LEFT_APRIL_TAG_LL);
+    //   if(id==7 || id==18){
+    //     return new autoAlign(m_robotDrive, FieldSetup.allianceReefBSupplier.get());
+    //   }else if(id==8 || id == 17){
+    //     return new autoAlign(m_robotDrive, FieldSetup.allianceReefDSupplier.get());
+    //   }else if(id==9 || id == 22){
+    //     return new autoAlign(m_robotDrive, FieldSetup.allianceReefFSupplier.get());
+    //   }else if(id==10 || id == 21){
+    //     return new autoAlign(m_robotDrive, FieldSetup.allianceReefHSupplier.get());
+    //   }else if(id==11 || id == 20){
+    //     return new autoAlign(m_robotDrive, FieldSetup.allianceReefJSupplier.get());
+    //   }else if(id==6 || id == 19){
+    //     return new autoAlign(m_robotDrive, FieldSetup.allianceReefLSupplier.get());
+    //   }
+    //   return new InstantCommand();
+    // }
+    public Command autoLeftCommand = new autoAlign(m_robotDrive, false);
+    public Command autoRightCommand = new autoAlign(m_robotDrive, true);
     // public Command autoalign = new autoAlignCommand(m_robotDrive, new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
     
     public Command tierTwoScoreCommand(){
@@ -219,13 +221,13 @@ public class RobotContainer {
       );
     }
 
-    public Command alignTierTwoCommandLeft(){
-      return new SequentialCommandGroup(autoLeftAlign(), tierTwoScoreCommand());
-    }
+    // public Command alignTierTwoCommandLeft(){
+    //   return new SequentialCommandGroup(autoLeftAlign(), tierTwoScoreCommand());
+    // }
 
-    public Command alignTierTwoCommandRight(){
-      return new SequentialCommandGroup(autoRightAlign(), tierTwoScoreCommand());
-    }
+    // public Command alignTierTwoCommandRight(){
+    //   return new SequentialCommandGroup(autoRightAlign(), tierTwoScoreCommand());
+    // }
 
     // public Command intakeCoralCommand(){
     //   return new SequentialCommandGroup(
