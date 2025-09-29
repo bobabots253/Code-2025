@@ -8,6 +8,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class autoAlign extends Command{
@@ -15,6 +17,7 @@ public class autoAlign extends Command{
     private Pose2d targetPose;
     public Command autoAlignCommand;
     public Field2d targetfield = new Field2d();
+    RobotContainer rContainer = RobotContainer.getInstance();
     public static PathConstraints defaultPathfindingConstraints = new PathConstraints(3.5,4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
 
     public autoAlign(DriveSubsystem driveSubsystem, Pose2d targetPose){
@@ -46,5 +49,8 @@ public class autoAlign extends Command{
     @Override
     public boolean isFinished(){
         return autoAlignCommand == null || autoAlignCommand.isFinished();
+    }
+    public Command autoScore(){
+        return new SequentialCommandGroup(rContainer.autoRightAlign(), rContainer.tierTwoScoreCommand());
     }
 }

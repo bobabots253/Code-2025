@@ -196,28 +196,28 @@ public class RobotContainer {
       return new InstantCommand();
     }
     // public Command autoalign = new autoAlignCommand(m_robotDrive, new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
-
-    // public Command tierTwoScoreCommand(){
-    //   return new ParallelCommandGroup(
-    //       new RunCommand(() -> {
-    //         m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
-    //       }, m_Elevator),
-    //       new SequentialCommandGroup(
-    //         new WaitCommand(.5),
-    //         new ParallelCommandGroup(
-    //           new SequentialCommandGroup(
-    //             new WaitCommand(1),
-    //             new InstantCommand(() -> {
-    //               m_Effector.setIntakeLazyPercentageOpenLoop(0.0);
-    //             }, m_Effector)
-    //           ),
-    //           new InstantCommand(() -> {
-    //             m_Effector.setIntakeLazyPercentageOpenLoop(.8);
-    //           }, m_Effector)
-    //         )
-    //       )
-    //   );
-    // }
+    
+    public Command tierTwoScoreCommand(){
+      return new ParallelCommandGroup(
+          new RunCommand(() -> {
+            m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
+          }, m_Elevator),
+          new SequentialCommandGroup(
+            new WaitCommand(.5),
+            new ParallelCommandGroup(
+              new SequentialCommandGroup(
+                new WaitCommand(1),
+                new InstantCommand(() -> {
+                  m_Effector.setIntakeLazyPercentageOpenLoop(0.0);
+                }, m_Effector)
+              ),
+              new InstantCommand(() -> {
+                m_Effector.setIntakeLazyPercentageOpenLoop(.8);
+              }, m_Effector)
+            )
+          )
+      );
+    }
 
     // public Command intakeCoralCommand(){
     //   return new SequentialCommandGroup(
