@@ -4,6 +4,7 @@ import java.util.Optional;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.Autonomous.BlueAutos.BlueBottomCommand;
 import frc.robot.Autonomous.BlueAutos.BlueMidSafetyCommand;
 import frc.robot.Autonomous.BlueAutos.CrossLineCommand;
@@ -23,7 +24,8 @@ public final class AutoModeManager{
         AB_MIDLEAVE,
         AB_MIDSCOREONE,
         STAND_STILL,
-        CROSS_LINE
+        CROSS_LINE,
+        autoAlignScore
 	}
 
     public static AutoModeManager AutoQueue;
@@ -48,17 +50,17 @@ public final class AutoModeManager{
     mModeChooser.addOption("Simple Cross Line", DesiredMode.CROSS_LINE);
     }
 
-    public static void updateAutoMode(){
+    public static void updateAutoMode(RobotContainer rContainer){
         DesiredMode desiredMode = mModeChooser.getSelected();
         if (desiredMode == null) {
 			    desiredMode = DesiredMode.DO_NOTHING;
         }else{
         System.out.println("Auto Chosen");
         }   
-        m_autonomousCommand = grabAutoMode(desiredMode);
+        m_autonomousCommand = grabAutoMode(desiredMode, rContainer);
     }
 
-    public static Command grabAutoMode(DesiredMode data){
+    public static Command grabAutoMode(DesiredMode data, RobotContainer container){
         switch(data){
             case DO_NOTHING:
 				m_autonomousCommand = DoNothingCommand.NoAuto();
@@ -82,6 +84,8 @@ public final class AutoModeManager{
                 m_autonomousCommand = StandStillCommand.runDefaultedAutoCommand();  
             case CROSS_LINE:
                 m_autonomousCommand = CrossLineCommand.runDefaultedAutoCommand(); 
+            case  autoAlignScore:
+                m_autonomousCommand = container.tierTwoScoreCommand();
             default:
 			    System.out.println("ERROR: unexpected auto mode!");
 				break;

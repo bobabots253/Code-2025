@@ -64,10 +64,13 @@ public class BotControls {
                 DriveSubsystem.getInstance().zeroHeading();
             }
             if(controlHub.driverController.X_Button.wasActivated()){
-
+                rContainer.autoLeftAlign();
             }
             if (controlHub.driverController.B_Button.wasActivated()) {
-                
+                rContainer.autoRightAlign();
+            }
+            if (controlHub.driverController.A_Button.wasActivated()){
+                rContainer.tierTwoScoreCommand();
             }
 
         
