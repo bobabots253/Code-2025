@@ -151,7 +151,7 @@ public class DriveSubsystem extends SubsystemBase {
               m_rearLeft.getPosition(),
               m_rearRight.getPosition()
       }, new Pose2d(),
-      VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(5)),
+      VecBuilder.fill(0.4, 0.4, Units.degreesToRadians(5)),
       VecBuilder.fill(0.5, 0.5, 99999999));
 
     private static class DriveSubsystemHandler {
@@ -259,8 +259,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     visionUpdate(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, mono_odometryVision_L);
     visionUpdate(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, mono_odometryVision_R);
-    // visionUpdate(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, refinedodometryVision);
-    // visionUpdate(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, refinedodometryVision);
+    visionUpdate(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, refinedodometryVision);
+    visionUpdate(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, refinedodometryVision);
 
     m_fieldVision_L.setRobotPose(mono_odometryVision_L.getEstimatedPosition());
     m_fieldVision_R.setRobotPose(mono_odometryVision_R.getEstimatedPosition());
@@ -304,7 +304,7 @@ public class DriveSubsystem extends SubsystemBase {
           0, 0, 0, 0);
       LimelightHelpers.SetRobotOrientation(
           VisionConstants.FRONT_RIGHT_APRIL_TAG_LL,
-          Nav_x.getAngle()-23, Nav_x.getRawGyroZ(),
+          -Nav_x.getAngle()-23, Nav_x.getRawGyroZ(),
           0, 0, 0, 0);
       if(!LimelightHelpers.getTV(limelightName)){
         return;
@@ -327,7 +327,7 @@ public class DriveSubsystem extends SubsystemBase {
   public Pose2d getPose() {
     //return m_odometry.getPoseMeters();
     //This is for testing for pathplanner Remove this in the future and replace this switch either a switch or fuse positions.
-    return mono_odometryVision_R.getEstimatedPosition();
+    return refinedodometryVision.getEstimatedPosition();
     // return m_odometry.getPoseMeters();
   }
 

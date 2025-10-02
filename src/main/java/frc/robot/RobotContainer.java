@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import frc.robot.subsystems.TestSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -131,17 +132,25 @@ public class RobotContainer {
           }, m_Elevator),
           new SequentialCommandGroup(
             new WaitCommand(1.5),
-            new ParallelCommandGroup(
-              new SequentialCommandGroup(
-                new WaitCommand(1),
-                new InstantCommand(() -> {
-                  m_Effector.setIntakeLazyPercentageOpenLoop(0.8);
-                }, m_Effector)
-              )
+            new InstantCommand(() -> {
+              m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+            }, m_Effector),
+            new WaitCommand(1.2),
+            new InstantCommand(() -> {
+              m_Effector.setIntakeLazyPercentageOpenLoop(0);
+              }, m_Effector)
+
+            // new ParallelCommandGroup(
+            //   new SequentialCommandGroup(
+            //     new WaitCommand(1),
+            //     new InstantCommand(() -> {
+            //       m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+            //     }, m_Effector)
+            //   )
               // new InstantCommand(() -> {
               //   m_Effector.setIntakeLazyPercentageOpenLoop(.8);
               // }, m_Effector)
-            )
+            
           )
       );
     }
@@ -149,6 +158,7 @@ public class RobotContainer {
     public Command autoAlignCommand(Boolean isRight){
       Pose2d currentPos = m_robotDrive.getPose();
       Pose2d desiredPos;
+      Field2d targetField = new Field2d();
       List<Pose2d> rightReefTags = new ArrayList<Pose2d>();
       List<Pose2d> leftReefTags = new ArrayList<Pose2d>();
       rightReefTags.add(FieldSetup.allianceReefBSupplier.get());
@@ -169,6 +179,8 @@ public class RobotContainer {
       } else {
         desiredPos = currentPos.nearest(leftReefTags);
       }
+      targetField.setRobotPose(desiredPos);
+      SmartDashboard.putData("TargetPose", targetField);
       return new autoAlign(m_robotDrive, desiredPos);
     }
 

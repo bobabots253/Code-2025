@@ -16,7 +16,7 @@ public class autoAlign extends Command{
     public Command autoAlignCommand;
     public Field2d targetfield = new Field2d();
     public static PathConstraints defaultPathfindingConstraints = new PathConstraints(
-        3.0,4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+        2.0,3.5, Units.degreesToRadians(540), Units.degreesToRadians(720));
 
     public autoAlign(DriveSubsystem driveSubsystem, Pose2d targetPose){
         targetfield.setRobotPose(targetPose);
@@ -29,7 +29,7 @@ public class autoAlign extends Command{
     @Override
     public void initialize(){
         //Pose2d currentPose = driveSubsystem.mono_getPoseVision_L();
-        autoAlignCommand = AutoBuilder.pathfindToPose(targetPose, defaultPathfindingConstraints, 0.0);
+        autoAlignCommand = AutoBuilder.pathfindToPose(targetPose, defaultPathfindingConstraints, 1.0);
         autoAlignCommand.schedule();
 
     }
