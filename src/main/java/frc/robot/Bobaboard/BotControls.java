@@ -71,6 +71,9 @@ public class BotControls {
             if (controlHub.driverController.B_Button.wasActivated()) {
                 rContainer.autoAlignCommand(true).schedule();
             }
+            if (controlHub.driverController.A_Button.wasActivated()) {
+                rContainer.tierTwoScoreCommand().schedule();
+            }
 
         
             
@@ -169,13 +172,13 @@ public class BotControls {
                 }
             }
 
-            // if(controlHub.operatorController.L_Trigger.isNotBeingPressed() && controlHub.operatorController.R_Trigger.isNotBeingPressed()){
-            //     rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0);
-            // }else if(controlHub.operatorController.L_Trigger.wasActivated()){
-            //     rContainer.m_Effector.setPivotLazyPercentageOpenLoop(-.8);
-            // }else if (controlHub.operatorController.R_Trigger.wasActivated()){
-            //     rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0.8);
-            // }
+            if(controlHub.operatorController.L_Trigger.isNotBeingPressed() && controlHub.operatorController.R_Trigger.isNotBeingPressed()){
+                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0);
+            }else if(controlHub.operatorController.L_Trigger.wasActivated()){
+                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(-.7);
+            }else if (controlHub.operatorController.R_Trigger.wasActivated()){
+                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0.7);
+            }
 
             // if(!controlHub.operatorController.POV90.isBeingPressed() && !controlHub.operatorController.POV270.isBeingPressed()){
             //     rContainer.m_Climb.setLazyOpenLoop(0);

@@ -130,17 +130,17 @@ public class RobotContainer {
             m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
           }, m_Elevator),
           new SequentialCommandGroup(
-            new WaitCommand(.5),
+            new WaitCommand(1.5),
             new ParallelCommandGroup(
               new SequentialCommandGroup(
                 new WaitCommand(1),
                 new InstantCommand(() -> {
-                  m_Effector.setIntakeLazyPercentageOpenLoop(0.0);
+                  m_Effector.setIntakeLazyPercentageOpenLoop(0.8);
                 }, m_Effector)
-              ),
-              new InstantCommand(() -> {
-                m_Effector.setIntakeLazyPercentageOpenLoop(.8);
-              }, m_Effector)
+              )
+              // new InstantCommand(() -> {
+              //   m_Effector.setIntakeLazyPercentageOpenLoop(.8);
+              // }, m_Effector)
             )
           )
       );
