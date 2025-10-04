@@ -312,7 +312,7 @@ public class DriveSubsystem extends SubsystemBase {
       PoseEstimate botPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
       Pose2d visionPose = new Pose2d();
       if(botPose.pose != null){
-        visionPose = new Pose2d(botPose.pose.getTranslation(), Nav_x.getRotation2d().plus(Rotation2d.fromDegrees(180)));
+        visionPose = new Pose2d(botPose.pose.getTranslation(), Nav_x.getRotation2d());
         poseEstimator.addVisionMeasurement(visionPose, botPose.timestampSeconds,
            VecBuilder.fill(.5,.5, Units.degreesToRadians(10)));
       }else return;
@@ -327,8 +327,8 @@ public class DriveSubsystem extends SubsystemBase {
   public Pose2d getPose() {
     //return m_odometry.getPoseMeters();
     //This is for testing for pathplanner Remove this in the future and replace this switch either a switch or fuse positions.
-    return refinedodometryVision.getEstimatedPosition();
-    // return m_odometry.getPoseMeters();
+    // return refinedodometryVision.getEstimatedPosition();
+    return m_odometry.getPoseMeters();
   }
 
     public Pose2d mono_getPoseVision_L() {
