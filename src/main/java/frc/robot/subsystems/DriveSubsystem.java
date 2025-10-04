@@ -300,17 +300,25 @@ public class DriveSubsystem extends SubsystemBase {
     public void visionUpdate(String limelightName, SwerveDrivePoseEstimator poseEstimator){
       LimelightHelpers.SetRobotOrientation(
           VisionConstants.FRONT_LEFT_APRIL_TAG_LL,
-          -Nav_x.getAngle()+23, Nav_x.getRawGyroZ(),
+          Nav_x.getAngle()+23, Nav_x.getRawGyroZ(),
           0, 0, 0, 0);
       LimelightHelpers.SetRobotOrientation(
           VisionConstants.FRONT_RIGHT_APRIL_TAG_LL,
-          -Nav_x.getAngle()-23, Nav_x.getRawGyroZ(),
+          Nav_x.getAngle()-23, Nav_x.getRawGyroZ(),
           0, 0, 0, 0);
       if(!LimelightHelpers.getTV(limelightName)){
         return;
       }
       PoseEstimate botPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
       Pose2d visionPose = new Pose2d();
+      // var allianceColor = DriverStation.getAlliance();
+      // Rotation2d rotation;
+      // if(allianceColor.get() == DriverStation.Alliance.Blue){
+      //   rotation = Nav_x.getRotation2d();
+      // }else if(allianceColor.get() == DriverStation.Alliance.Red){
+      //   rotation = Nav_x.getRotation2d();
+      // }else return;
+
       if(botPose.pose != null){
         visionPose = new Pose2d(botPose.pose.getTranslation(), Nav_x.getRotation2d());
         poseEstimator.addVisionMeasurement(visionPose, botPose.timestampSeconds,
@@ -326,9 +334,14 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public Pose2d getPose() {
     //return m_odometry.getPoseMeters();
+    if(DriverStation.isAutonomous()){
+      return m_odometry.getPoseMeters();
+    }else{
+      return refinedodometryVision.getEstimatedPosition();
+    }
     //This is for testing for pathplanner Remove this in the future and replace this switch either a switch or fuse positions.
     // return refinedodometryVision.getEstimatedPosition();
-    return m_odometry.getPoseMeters();
+    // return m_odometry.getPoseMeters();
   }
 
     public Pose2d mono_getPoseVision_L() {

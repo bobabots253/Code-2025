@@ -42,7 +42,7 @@ public class autoAlign extends Command{
         if(autoAlignCommand == null){
             autoAlignCommand.cancel();
         }
-        driveSubsystem.drive(0, 0, 0, false, false);
+        // driveSubsystem.drive(0, 0, 0, false, false);
     }
     @Override
     public boolean isFinished(){
