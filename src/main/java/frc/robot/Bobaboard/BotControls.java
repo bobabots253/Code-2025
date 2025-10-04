@@ -26,6 +26,7 @@ public class BotControls {
     public final void PutControllerOption(){
         ControllerMode.addOption("One Controller", true);
         ControllerMode.addOption("Two Controller(s)", false);
+        ControllerMode.setDefaultOption("Default", false);
         SmartDashboard.putData("Controller Selection", ControllerMode);
     }
 
