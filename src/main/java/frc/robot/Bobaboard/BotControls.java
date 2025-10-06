@@ -63,12 +63,12 @@ public class BotControls {
             if (controlHub.driverController.Y_Button.wasActivated()) {
                 DriveSubsystem.getInstance().zeroHeading();
             }
-            if(controlHub.driverController.X_Button.wasActivated()){
-                rContainer.autoLeftCommand.schedule();
-            }
-            if (controlHub.driverController.B_Button.wasActivated()) {
-                rContainer.autoRightCommand.schedule();
-            }
+            // if(controlHub.driverController.X_Button.wasActivated()){
+            //     rContainer.autoLeftCommand.schedule();
+            // }
+            // if (controlHub.driverController.B_Button.wasActivated()) {
+            //     rContainer.autoRightCommand.schedule();
+            // }
             // if (controlHub.driverController.A_Button.wasActivated()){
             //     rContainer.tierTwoScoreCommand();
             // }

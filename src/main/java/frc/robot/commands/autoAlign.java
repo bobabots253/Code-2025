@@ -15,6 +15,8 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
@@ -24,6 +26,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.Constants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class autoAlign extends Command{
@@ -65,15 +69,12 @@ public class autoAlign extends Command{
         path.preventFlipping = true;
 
         Trajectory.State targetState = new Trajectory.State();
+        ChassisSpeeds chassis = holonomicDriveController.calculate(driveSubsystem.getPose(), targetPose, AutoConstants.kMaxSpeedMetersPerSecond, targetPose.getRotation());
         driveSubsystem.driveRobotRelative(holonomicDriveController.calculate(driveSubsystem.getPose(), targetState, targetPose.getRotation()));
+        SwerveModuleState[] swerveModuleStates = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(chassis);
         return (AutoBuilder.followPath(path)
             .andThen(new RunCommand(
-                () -> driveSubsystem.driveRobotRelative(
-                    holonomicDriveController.calculate(
-                        driveSubsystem.getPose(), 
-                        targetState, 
-                        targetPose.getRotation()
-                    )), driveSubsystem)));
+                () -> driveSubsystem.setModuleStates(swerveModuleStates), driveSubsystem)));
 
 
 

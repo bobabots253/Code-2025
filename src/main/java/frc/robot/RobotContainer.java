@@ -195,8 +195,8 @@ public class RobotContainer {
     //   }
     //   return new InstantCommand();
     // }
-    public Command autoLeftCommand = new autoAlign(m_robotDrive, false);
-    public Command autoRightCommand = new autoAlign(m_robotDrive, true);
+    // public Command autoLeftCommand = new autoAlign(m_robotDrive, false);
+    // public Command autoRightCommand = new autoAlign(m_robotDrive, true);
     // public Command autoalign = new autoAlignCommand(m_robotDrive, new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
     
     public Command tierTwoScoreCommand(){
