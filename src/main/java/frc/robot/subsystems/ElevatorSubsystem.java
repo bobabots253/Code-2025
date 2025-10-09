@@ -117,6 +117,10 @@ private ElevatorSubsystem() {
         SmartDashboard.putNumber("Elevator /Raw Output Speed (#.##)", OpenLoopPercentage);
         m_masterLiftingSparkMax.set(OpenLoopPercentage);
     }
+    public void setElevatorVoltage(double volts) {
+        SmartDashboard.putNumber("Elevator /Manual Voltage", volts);
+        m_masterLiftingSparkMax.setVoltage(volts);
+    }
 
     public void setSafePercentageOpenLoop(double OpenLoopPercentage){
         SmartDashboard.putNumber("Elevator / Safe Output Speed (#.##)", OpenLoopPercentage);

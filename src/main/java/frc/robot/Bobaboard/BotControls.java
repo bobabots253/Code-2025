@@ -66,16 +66,33 @@ public class BotControls {
             }
 
             if (controlHub.driverController.X_Button.wasActivated()) {
-                rContainer.autoAlignCommand(false).schedule();
+                // rContainer.autoAlignCommand(false).schedule();
             }
 
             if (controlHub.driverController.B_Button.wasActivated()) {
-                rContainer.autoAlignCommand(true).schedule();
+                // rContainer.autoAlignCommand(true).schedule();
             }
             if (controlHub.driverController.A_Button.wasActivated()) {
-                rContainer.tierTwoScoreCommand().schedule();
+                // rContainer.tierTwoScoreCommand().schedule();
             }
 
+
+            // if(controlHub.driverController.X_Button.isBeingPressed() && controlHub.driverController.B_Button.isNotBeingPressed()){
+            //     rContainer.m_Elevator.setElevatorVoltage(1.5);
+            // }else if(controlHub.driverController.B_Button.isBeingPressed() && controlHub.driverController.X_Button.isNotBeingPressed()){
+            //     rContainer.m_Elevator.setElevatorVoltage(-.5);
+            // }else rContainer.m_Elevator.setElevatorVoltage(.7);
+
+            // if(controlHub.driverController.L_Bumper.wasReleased() || controlHub.driverController.R_Bumper.wasReleased()
+            //     && controlHub.driverController.L_Bumper.isNotBeingPressed() && controlHub.driverController.R_Bumper.isNotBeingPressed()){
+            //     rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
+            // } else{
+            // if (controlHub.driverController.L_Bumper.isBeingPressed() && !controlHub.driverController.R_Bumper.isBeingPressed()) {
+            //     rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.7);
+            //     }else if (controlHub.driverController.R_Bumper.isBeingPressed() && !controlHub.driverController.L_Bumper.isBeingPressed()) {
+            //     rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+            //     }
+            // }
         
             
             // if (controlHub.driverController.L_Bumper.wasActivated() && !controlHub.driverController.R_Bumper.wasActivated()){
