@@ -66,11 +66,11 @@ public class BotControls {
             }
 
             if (controlHub.driverController.X_Button.wasActivated()) {
-                // rContainer.autoAlignCommand(false).schedule();
+                rContainer.autoAlignCommand(false).schedule();
             }
 
             if (controlHub.driverController.B_Button.wasActivated()) {
-                // rContainer.autoAlignCommand(true).schedule();
+                rContainer.autoAlignCommand(true).schedule();
             }
             if (controlHub.driverController.A_Button.wasActivated()) {
                 // rContainer.tierTwoScoreCommand().schedule();

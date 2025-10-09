@@ -329,7 +329,7 @@ public class DriveSubsystem extends SubsystemBase {
         rotation = Nav_x.getRotation2d().plus(Rotation2d.fromDegrees(180));
       }else return;
 
-      if(botPose.pose != null){
+      if(botPose != null && botPose.pose != null){
         visionPose = new Pose2d(botPose.pose.getTranslation(), rotation);
         poseEstimator.addVisionMeasurement(visionPose, botPose.timestampSeconds,
            VecBuilder.fill(.5,.5, Units.degreesToRadians(10)));
