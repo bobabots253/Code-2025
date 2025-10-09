@@ -11,6 +11,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.util.Units;
 
@@ -314,14 +317,23 @@ public final class Constants {
         Units.degreesToRadians(540), Units.degreesToRadians(720), 12, false);
   }
 
-  
-public static final boolean tuningMode = false;
-
-public static final class ClimbConstants{
-  public static final int masterClimbCanID = 14;
-  public static final int slaveClimbCanID = 15;
-  public static final int kUniversalHardLimit = 45;
-  public static final int kUniversalSoftLimit = 40;
-  public static final int kSuperHighOutputLimit = 60;
+  public static final class PPHolonomicConstants{
+    public static final PIDConstants kTranslationPID = new PIDConstants(5.0,0,0); //tune
+    public static final PIDConstants kRotationPID = new PIDConstants(5.0,0,0); //tune
+    public static final double kRotationTolerance = 5; //degrees (0.0872665 rads)
+    public static final double kPositionTolerance = 0.0508; //meters (2")
+    public static final double TRUSTWORTHY_DISTANCE = 4; //Meters
+    public static final double MAX_ANGULAR = 180; //Degrees
   }
+
+  public static final boolean tuningMode = false;
+
+  public static final class ClimbConstants{
+    public static final int masterClimbCanID = 14;
+    public static final int slaveClimbCanID = 15;
+    public static final int kUniversalHardLimit = 45;
+    public static final int kUniversalSoftLimit = 40;
+    public static final int kSuperHighOutputLimit = 60;
+    }
+  
 }
