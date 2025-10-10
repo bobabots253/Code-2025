@@ -241,15 +241,6 @@ public class DriveSubsystem extends SubsystemBase {
         System.out.println("Caught NPE");
       }
 
-    /*Basic Vision Pose Estimator */
-    // try {
-    //   addBasicVisionMeasurement(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, mono_odometryVision_L);
-    //   addBasicVisionMeasurement(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, mono_odometryVision_R);
-    // }
-    // catch(Exception erException) {
-    //   System.out.println("No Valid Limelight Targets");
-    // }
-
     SmartDashboard.putData("Field Gyro", m_fieldGyro);
     SmartDashboard.putData("Field Vision LEFT", m_fieldVision_L);
     SmartDashboard.putData("Field Vision RIGHT", m_fieldVision_R);
@@ -298,43 +289,41 @@ public class DriveSubsystem extends SubsystemBase {
 
   
     public void visionUpdate(String limelightName, SwerveDrivePoseEstimator poseEstimator){
-      
-      
       if(!LimelightHelpers.getTV(limelightName)){
         return;
       }
-      PoseEstimate botPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-      Pose2d visionPose = new Pose2d();
+      PoseEstimate BotPoseEstimate_wpiBlue_MegaTag2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
+      //PoseEstimate BotPoseEstimate_wpiBlue_MegaTag1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
+      Pose2d trustWorthPoseEstimate = new Pose2d();
       var allianceColor = DriverStation.getAlliance();
-      Rotation2d rotation;
+      Rotation2d rawNavXRot = getRawNavXRotation();
       if(allianceColor.get() == DriverStation.Alliance.Blue){
-        rotation = Nav_x.getRotation2d();
         LimelightHelpers.SetRobotOrientation(
           VisionConstants.FRONT_LEFT_APRIL_TAG_LL,
-          Nav_x.getAngle()-23, Nav_x.getRawGyroZ(),
-          0, 0, 0, 0);
-        LimelightHelpers.SetRobotOrientation(
-            VisionConstants.FRONT_RIGHT_APRIL_TAG_LL,
-            Nav_x.getAngle()-23, Nav_x.getRawGyroZ(),
-            0, 0, 0, 0);
-      }else if(allianceColor.get() == DriverStation.Alliance.Red){
-        LimelightHelpers.SetRobotOrientation(
-          VisionConstants.FRONT_LEFT_APRIL_TAG_LL,
-          Nav_x.getAngle()+203, Nav_x.getRawGyroZ(),
+          getRawNavXAngle() + VisionConstants.FRONT_LEFT_LL_OFFSET_BLUE, Nav_x.getRawGyroZ(),
           0, 0, 0, 0);
         LimelightHelpers.SetRobotOrientation(
           VisionConstants.FRONT_RIGHT_APRIL_TAG_LL,
-          Nav_x.getAngle()-203, Nav_x.getRawGyroZ(),
+          getRawNavXAngle() + VisionConstants.FRONT_RIGHT_LL_OFFSET_BLUE, Nav_x.getRawGyroZ(),
           0, 0, 0, 0);
-        rotation = Nav_x.getRotation2d().plus(Rotation2d.fromDegrees(180));
+
+      }else if(allianceColor.get() == DriverStation.Alliance.Red){
+        LimelightHelpers.SetRobotOrientation(
+          VisionConstants.FRONT_LEFT_APRIL_TAG_LL,
+          getRawNavXAngle() + VisionConstants.FRONT_LEFT_LL_OFFSET_RED, Nav_x.getRawGyroZ(),
+          0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(
+          VisionConstants.FRONT_RIGHT_APRIL_TAG_LL,
+          getRawNavXAngle() + VisionConstants.FRONT_RIGHT_LL_OFFSET_RED, Nav_x.getRawGyroZ(),
+          0, 0, 0, 0);
+          rawNavXRot = Nav_x.getRotation2d().plus(Rotation2d.fromDegrees(180));
       }else return;
 
-      if(botPose.pose != null){
-        visionPose = new Pose2d(botPose.pose.getTranslation(), rotation);
-        poseEstimator.addVisionMeasurement(visionPose, botPose.timestampSeconds,
+      if(BotPoseEstimate_wpiBlue_MegaTag2.pose != null){
+        trustWorthPoseEstimate = new Pose2d(BotPoseEstimate_wpiBlue_MegaTag2.pose.getTranslation(), rawNavXRot);
+        poseEstimator.addVisionMeasurement(trustWorthPoseEstimate, BotPoseEstimate_wpiBlue_MegaTag2.timestampSeconds,
            VecBuilder.fill(.5,.5, Units.degreesToRadians(10)));
       }else return;
-      //poseEstimator.addVisionMeasurement(visionPose, botPose.timestampSeconds);
     }
 
   /**
@@ -533,6 +522,14 @@ public class DriveSubsystem extends SubsystemBase {
 
   public double getVisionGyroRotation(){
     return (-Nav_x.getAngle());
+  }
+
+  public Rotation2d getRawNavXRotation(){
+    return Nav_x.getRotation2d();
+  }
+
+  public double getRawNavXAngle(){
+    return Nav_x.getAngle();
   }
 
   public Rotation2d getTrueRotation2DHeading(){

@@ -293,19 +293,23 @@ public final class Constants {
   }
 
   public static final class VisionConstants{
-      public static final double MIN_MT_TAG_COUNT = 2;
-      public static final double AVG_MT2_TAG_DIST = 3;
-      public static final double TRUSTWORTHY_DISTANCE = 4; //Meters
-      public static final double MAX_ANGULAR = 180; //Degrees
-      public static final String FRONT_LEFT_APRIL_TAG_LL = "limelight-orange";
-      public static final String FRONT_RIGHT_APRIL_TAG_LL = "limelight-purple";
-      public static final double DEFAULT_CROP_SIZE = 0.85;
-      public static final double FOV_X = 82; //for 3G's
-      public static final double FOV_Y = 56.2;
-      public static final double FOV_AREA = FOV_X * FOV_Y;
-      public static final int[] ALL_TAG_IDS = new int[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22};
-      public static final int[] TRUSTWORTHY_TAGS = new int[]{6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
-    public static final double RECENT_DATA_CUTOFF = 3.5;
+    public static final String FRONT_LEFT_APRIL_TAG_LL = "limelight-orange";
+    public static final String FRONT_RIGHT_APRIL_TAG_LL = "limelight-purple";
+    public static final double FRONT_LEFT_LL_OFFSET_BLUE = 23;
+    public static final double FRONT_RIGHT_LL_OFFSET_BLUE = -23;
+    public static final double FRONT_LEFT_LL_OFFSET_RED = 203;
+    public static final double FRONT_RIGHT_LL_OFFSET_RED = -203;
+    //   public static final double MIN_MT_TAG_COUNT = 2;
+    //   public static final double AVG_MT2_TAG_DIST = 3;
+    //   public static final double TRUSTWORTHY_DISTANCE = 4; //Meters
+    //   public static final double MAX_ANGULAR = 180; //Degrees
+    //   public static final double DEFAULT_CROP_SIZE = 0.85;
+    //   public static final double FOV_X = 82; //for 3G's
+    //   public static final double FOV_Y = 56.2;
+    //   public static final double FOV_AREA = FOV_X * FOV_Y;
+    //   public static final int[] ALL_TAG_IDS = new int[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22};
+    //   public static final int[] TRUSTWORTHY_TAGS = new int[]{6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
+    // public static final double RECENT_DATA_CUTOFF = 3.5;
   }
 
   public static final class PPLibConstants{
