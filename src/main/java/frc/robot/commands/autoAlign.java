@@ -48,12 +48,12 @@ public class autoAlign extends Command{
         SmartDashboard.putData("TargetField", targetfield);
         this.driveSubsystem = driveSubsystem;
         this.targetPose = targetPose;
-        xController = new PIDController(1.5, 0, 0);
-        yController = new PIDController(1.5, 0, 0);
+        xController = new PIDController(3.5, 0, 0.25);
+        yController = new PIDController(3.5, 0, 0.25);
 
-        rotController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(5, 5));
+        rotController = new ProfiledPIDController(2, 0, 0, new TrapezoidProfile.Constraints(5, 5));
         holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
-        holonomicDriveController.setTolerance(new Pose2d(new Translation2d(0.05, 0.05),
+        holonomicDriveController.setTolerance(new Pose2d(new Translation2d(0.025, 0.025),
                 Rotation2d.fromDegrees(0)));
 
         addRequirements(DriveSubsystem.getInstance());
