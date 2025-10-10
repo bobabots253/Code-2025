@@ -293,8 +293,8 @@ public final class Constants {
   }
 
   public static final class VisionConstants{
-    public static final String FRONT_LEFT_APRIL_TAG_LL = "limelight-orange";
-    public static final String FRONT_RIGHT_APRIL_TAG_LL = "limelight-purple";
+    public static final String FRONT_LEFT_APRIL_TAG_LL = "limelight-purple";
+    public static final String FRONT_RIGHT_APRIL_TAG_LL = "limelight-orange";
     public static final double FRONT_LEFT_LL_OFFSET_BLUE = 23;
     public static final double FRONT_RIGHT_LL_OFFSET_BLUE = -23;
     public static final double FRONT_LEFT_LL_OFFSET_RED = 203;

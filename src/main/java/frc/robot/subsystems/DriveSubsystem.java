@@ -292,8 +292,8 @@ public class DriveSubsystem extends SubsystemBase {
       if(!LimelightHelpers.getTV(limelightName)){
         return;
       }
-      PoseEstimate BotPoseEstimate_wpiBlue_MegaTag2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-      //PoseEstimate BotPoseEstimate_wpiBlue_MegaTag1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
+      //PoseEstimate BotPoseEstimate_wpiBlue_MegaTag2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
+      PoseEstimate BotPoseEstimate_wpiBlue_MegaTag1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
       Pose2d trustWorthPoseEstimate = new Pose2d();
       var allianceColor = DriverStation.getAlliance();
       Rotation2d rawNavXRot = getRawNavXRotation();
@@ -319,9 +319,9 @@ public class DriveSubsystem extends SubsystemBase {
           rawNavXRot = Nav_x.getRotation2d().plus(Rotation2d.fromDegrees(180));
       }else return;
 
-      if(BotPoseEstimate_wpiBlue_MegaTag2.pose != null){
-        trustWorthPoseEstimate = new Pose2d(BotPoseEstimate_wpiBlue_MegaTag2.pose.getTranslation(), rawNavXRot);
-        poseEstimator.addVisionMeasurement(trustWorthPoseEstimate, BotPoseEstimate_wpiBlue_MegaTag2.timestampSeconds,
+      if(BotPoseEstimate_wpiBlue_MegaTag1.pose != null){
+        trustWorthPoseEstimate = new Pose2d(BotPoseEstimate_wpiBlue_MegaTag1.pose.getTranslation(), rawNavXRot);
+        poseEstimator.addVisionMeasurement(trustWorthPoseEstimate, BotPoseEstimate_wpiBlue_MegaTag1.timestampSeconds,
            VecBuilder.fill(.5,.5, Units.degreesToRadians(10)));
       }else return;
     }
