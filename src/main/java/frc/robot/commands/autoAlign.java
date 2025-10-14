@@ -53,8 +53,8 @@ public class autoAlign extends Command{
 
         rotController = new ProfiledPIDController(2, 0, 0, new TrapezoidProfile.Constraints(5, 5));
         holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
-        holonomicDriveController.setTolerance(new Pose2d(new Translation2d(0.03, 0.03),
-                Rotation2d.fromDegrees(2)));
+        holonomicDriveController.setTolerance(new Pose2d(new Translation2d(0.0254, 0.0254),
+                Rotation2d.fromDegrees(1)));
 
         addRequirements(DriveSubsystem.getInstance());
     }

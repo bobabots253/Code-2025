@@ -175,14 +175,14 @@ public class FieldSetup {
 
         public static Supplier<Pose2d> allianceReefASupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(3.271, 4.186)), 
+                        ? new Pose2d((new Translation2d(3.2812, 4.190238)), //new Translation2d(3.271, 4.186) //Claude value 3.2512
                         new Rotation2d(0))
                         : new Pose2d ((new Translation2d(14.265, 3.857)), 
                         new Rotation2d(180 * (Math.PI/180)));
         
         public static Supplier<Pose2d> allianceReefBSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d( 3.273, 3.857)), 
+                        ? new Pose2d((new Translation2d( 3.2512, 3.861562)),// new Translation2d( 3.273, 3.857)
                         new Rotation2d(0))
                         : new Pose2d ((new Translation2d(14.268, 4.188)), 
                         new Rotation2d(180 * (Math.PI/180)));
