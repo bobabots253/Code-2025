@@ -108,154 +108,154 @@ public class FieldSetup {
         // }
         //Centered with the Tag
         //Use this format for examples.
-        public static Supplier<Pose2d> allianceTopFeedingStationSupplier = () -> DriverStation.getAlliance()
-                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d(new Translation2d(1.170, 7.010), 
-                                new Rotation2d(306 * (Math.PI/180)))
-                        : new Pose2d(new Translation2d(16.380, 7.010),
-                                new Rotation2d(234 * (Math.PI/180)));
+        // public static Supplier<Pose2d> allianceTopFeedingStationSupplier = () -> DriverStation.getAlliance()
+        //         .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+        //                 ? new Pose2d(new Translation2d(1.170, 7.010), 
+        //                         new Rotation2d(306 * (Math.PI/180)))
+        //                 : new Pose2d(new Translation2d(16.380, 7.010),
+        //                         new Rotation2d(234 * (Math.PI/180)));
 
-        public static Supplier<Pose2d> allianceBottomFeedingStationSupplier = () -> DriverStation.getAlliance()
-                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d(new Translation2d(1.070, 0.970),
-                                new Rotation2d(0))
-                        : new Pose2d(new Translation2d(16.470, 0.970),
-                                new Rotation2d(0));
+        // public static Supplier<Pose2d> allianceBottomFeedingStationSupplier = () -> DriverStation.getAlliance()
+        //         .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+        //                 ? new Pose2d(new Translation2d(1.070, 0.970),
+        //                         new Rotation2d(0))
+        //                 : new Pose2d(new Translation2d(16.470, 0.970),
+        //                         new Rotation2d(0));
 
-        public static Supplier<Pose2d> allianceProccessorSupplier = () -> DriverStation.getAlliance()
-                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(5.988, 0.511)),
-                                new Rotation2d(0))
-                        : new Pose2d((new Translation2d(11.561, 7.534)),
-                                 new Rotation2d(0));
+        // public static Supplier<Pose2d> allianceProccessorSupplier = () -> DriverStation.getAlliance()
+        //         .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+        //                 ? new Pose2d((new Translation2d(5.988, 0.511)),
+        //                         new Rotation2d(0))
+        //                 : new Pose2d((new Translation2d(11.561, 7.534)),
+        //                          new Rotation2d(0));
 
-        public static Supplier<Pose2d> allianceReefFarSupplier = () -> DriverStation.getAlliance()
-                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(5.803, 4.025)), 
-                        new Rotation2d(0))
-                        : new Pose2d ((new Translation2d( 11.746,4.025)), 
-                        new Rotation2d(0));
+        // public static Supplier<Pose2d> allianceReefFarSupplier = () -> DriverStation.getAlliance()
+        //         .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+        //                 ? new Pose2d((new Translation2d(5.803, 4.025)), 
+        //                 new Rotation2d(0))
+        //                 : new Pose2d ((new Translation2d( 11.746,4.025)), 
+        //                 new Rotation2d(0));
 
-        public static Supplier<Pose2d> allianceReefCloseSupplier = () -> DriverStation.getAlliance()
-                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(3.127,4.025)), 
-                        new Rotation2d(0))
-                        : new Pose2d ((new Translation2d( 14.379,4.025)), 
-                        new Rotation2d(0));
+        // public static Supplier<Pose2d> allianceReefCloseSupplier = () -> DriverStation.getAlliance()
+        //         .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+        //                 ? new Pose2d((new Translation2d(3.127,4.025)), 
+        //                 new Rotation2d(0))
+        //                 : new Pose2d ((new Translation2d( 14.379,4.025)), 
+        //                 new Rotation2d(0));
         
-        public static Supplier<Pose2d> allianceReefLeftFrontSupplier = () -> DriverStation.getAlliance()
-                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(5.147,5.163)), 
-                        new Rotation2d(0))
-                        : new Pose2d ((new Translation2d( 12.403,2.887)), 
-                        new Rotation2d(0));
+        // public static Supplier<Pose2d> allianceReefLeftFrontSupplier = () -> DriverStation.getAlliance()
+        //         .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+        //                 ? new Pose2d((new Translation2d(5.147,5.163)), 
+        //                 new Rotation2d(0))
+        //                 : new Pose2d ((new Translation2d( 12.403,2.887)), 
+        //                 new Rotation2d(0));
         
-        public static Supplier<Pose2d> allianceReefLeftBackSupplier = () -> DriverStation.getAlliance()
-                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(3.832, 5.166)), 
-                        new Rotation2d(0))
-                        : new Pose2d (getTagTranslation(kRedReefPosKId)
-                        .plus(new Translation2d(13.718, 2.885)), 
-                        new Rotation2d(0));
+        // public static Supplier<Pose2d> allianceReefLeftBackSupplier = () -> DriverStation.getAlliance()
+        //         .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+        //                 ? new Pose2d((new Translation2d(3.832, 5.166)), 
+        //                 new Rotation2d(0))
+        //                 : new Pose2d (getTagTranslation(kRedReefPosKId)
+        //                 .plus(new Translation2d(13.718, 2.885)), 
+        //                 new Rotation2d(0));
 
-        public static Supplier<Pose2d> allianceReefRightFrontSupplier = () -> DriverStation.getAlliance()
-                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(5.147, 2.889)), 
-                        new Rotation2d(0))
-                        : new Pose2d ((new Translation2d(12.403, 5.159)), 
-                        new Rotation2d(0));
+        // public static Supplier<Pose2d> allianceReefRightFrontSupplier = () -> DriverStation.getAlliance()
+        //         .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+        //                 ? new Pose2d((new Translation2d(5.147, 2.889)), 
+        //                 new Rotation2d(0))
+        //                 : new Pose2d ((new Translation2d(12.403, 5.159)), 
+        //                 new Rotation2d(0));
 
-        public static Supplier<Pose2d> allianceReefRightBackSupplier = () -> DriverStation.getAlliance()
-                .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d(new Translation2d(3.831, 2.884), 
-                        new Rotation2d(0))
-                        : new Pose2d (getTagTranslation(kRedReefPosDId)
-                        .plus(new Translation2d(13.715, 5.164)), 
-                        new Rotation2d(0));
+        // public static Supplier<Pose2d> allianceReefRightBackSupplier = () -> DriverStation.getAlliance()
+        //         .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
+        //                 ? new Pose2d(new Translation2d(3.831, 2.884), 
+        //                 new Rotation2d(0))
+        //                 : new Pose2d (getTagTranslation(kRedReefPosDId)
+        //                 .plus(new Translation2d(13.715, 5.164)), 
+        //                 new Rotation2d(0));
 
         public static Supplier<Pose2d> allianceReefASupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(3.2812, 4.190238)), //new Translation2d(3.271, 4.186) //Claude value 3.2512
+                        ? new Pose2d((new Translation2d(3.2812, 4.190238)), // last:(new Translation2d(3.2812, 4.190238)
                         new Rotation2d(0))
-                        : new Pose2d ((new Translation2d(14.265, 3.857)), 
+                        : new Pose2d ((new Translation2d(14.256818, 3.8549)), 
                         new Rotation2d(180 * (Math.PI/180)));
         
         public static Supplier<Pose2d> allianceReefBSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d( 3.2512, 3.861562)),// new Translation2d( 3.273, 3.857)
+                        ? new Pose2d((new Translation2d( 3.2812, 3.861562)), 
                         new Rotation2d(0))
-                        : new Pose2d ((new Translation2d(14.268, 4.188)), 
+                        : new Pose2d ((new Translation2d(14.256818, 4.1851)), 
                         new Rotation2d(180 * (Math.PI/180)));
 
         public static Supplier<Pose2d> allianceReefCSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(3.738, 3.064)), 
+                        ? new Pose2d((new Translation2d(3.74221189, 3.062764156)), 
                         new Rotation2d(60 * (Math.PI/180)))
-                        : new Pose2d ((new Translation2d(13.800, 4.992)), 
+                        : new Pose2d ((new Translation2d(13.80570011, 4.98901196)), 
                         new Rotation2d(-120 * (Math.PI/180)));
 
         public static Supplier<Pose2d> allianceReefDSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(4.032, 2.903)), 
+                        ? new Pose2d((new Translation2d(4.02919931, 2.897664156)), 
                         new Rotation2d(60 * (Math.PI/180)))
-                        : new Pose2d ((new Translation2d(13.511, 5.155)), 
+                        : new Pose2d ((new Translation2d(13.51959189, 5.15411196)), 
                         new Rotation2d(-120 * (Math.PI/180)));
 
         public static Supplier<Pose2d> allianceReefESupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(4.952, 2.899)), 
+                        ? new Pose2d((new Translation2d(4.94939989, 2.89768804)), 
                         new Rotation2d(120 * (Math.PI/180)))
-                        : new Pose2d ((new Translation2d(12.595, 5.162)), 
+                        : new Pose2d ((new Translation2d(12.59816289, 5.15411196)), 
                         new Rotation2d(-60 * (Math.PI/180)));
 
         public static Supplier<Pose2d> allianceReefFSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(5.230, 3.056)), 
+                        ? new Pose2d((new Translation2d(5.23550811, 3.06278804)), 
                         new Rotation2d(120 * (Math.PI/180)))
-                        : new Pose2d ((new Translation2d(12.312, 4.999)), 
+                        : new Pose2d ((new Translation2d(12.31215311, 4.98901196)), 
                         new Rotation2d(-60 * (Math.PI/180)));
 
         public static Supplier<Pose2d> allianceReefGSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(5.698, 3.857)), 
+                        ? new Pose2d((new Translation2d(5.686646, 3.8549)), 
                         new Rotation2d(180 * (Math.PI/180)))
                         : new Pose2d (getTagTranslation(kRedReefPosGId)
-                        .plus(new Translation2d(11.845, 4.190)),
+                        .plus(new Translation2d(11.850906, 4.1851)),
                         new Rotation2d(0));
 
         public static Supplier<Pose2d> allianceReefHSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(5.696, 4.184)), 
+                        ? new Pose2d((new Translation2d(5.686646, 4.1851)), 
                         new Rotation2d(180 * (Math.PI/180)))
-                        : new Pose2d ((new Translation2d(11.851, 3.857)), 
+                        : new Pose2d ((new Translation2d(11.850906, 3.8549)), 
                         new Rotation2d(0));
 
         public static Supplier<Pose2d> allianceReefISupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(5.228, 4.977)), 
+                        ? new Pose2d((new Translation2d(5.23550811, 4.98901196)), 
                         new Rotation2d(-120 * (Math.PI/180)))
-                        : new Pose2d ((new Translation2d(12.311, 3.059)), 
+                        : new Pose2d ((new Translation2d(12.31215311, 3.06278804)), 
                         new Rotation2d(60 * (Math.PI/180)));
 
         public static Supplier<Pose2d> allianceReefJSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(4.956, 5.139)), 
+                        ? new Pose2d((new Translation2d(4.94939989, 5.15411196)), 
                         new Rotation2d(-120 * (Math.PI/180)))
-                        : new Pose2d ((new Translation2d(12.600, 2.886)), 
+                        : new Pose2d ((new Translation2d(12.59816289, 2.89768804)), 
                         new Rotation2d(60 * (Math.PI/180)));
 
         public static Supplier<Pose2d> allianceReefKSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(4.027, 5.152)), 
+                        ? new Pose2d((new Translation2d(4.02876089, 5.15412281)), 
                         new Rotation2d(-60 * (Math.PI/180)))
-                        : new Pose2d ((new Translation2d(13.524, 2.886)), 
+                        : new Pose2d ((new Translation2d(13.51964111, 2.89768804)), 
                         new Rotation2d(120 * (Math.PI/180)));
 
         public static Supplier<Pose2d> allianceReefLSupplier = () -> DriverStation.getAlliance()
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
-                        ? new Pose2d((new Translation2d(3.749, 4.986)), 
+                        ? new Pose2d((new Translation2d(3.74265111, 4.98902281)), 
                         new Rotation2d(-60 * (Math.PI/180)))
-                        : new Pose2d ((new Translation2d(13.815, 3.053)), 
+                        : new Pose2d ((new Translation2d(13.80565089, 3.06278804)), 
                         new Rotation2d(120 * (Math.PI/180)));
 
         public static Supplier<Pose2d> majorStartingPosASupplier = () -> DriverStation.getAlliance()
