@@ -1,15 +1,10 @@
 package frc.robot.Bobaboard;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.EndEffectorConstants;
-import frc.robot.commands.PathfindClosest;
 import frc.robot.RobotContainer;
-import frc.robot.Autonomous.DefaultCommands.StandStillCommand;
+import frc.robot.commands.autoAlign;
 //import frc.robot.subsystems.TestSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -19,8 +14,10 @@ public class BotControls {
 	RobotContainer rContainer = RobotContainer.getInstance();
     ControlHub controlHub = ControlHub.getInstance();
     boolean interruptedPPLib;
+    
 
     final static SendableChooser<Boolean> ControllerMode = new SendableChooser<>();
+    public boolean interruptAutoAlign = false;
     public boolean OneControllerQuery = true;
 
     public final void PutControllerOption(){
@@ -58,6 +55,23 @@ public class BotControls {
         SmartDashboard.putBoolean("OPR/LTrigger", controlHub.operatorController.L_Trigger.isBeingPressed());
         SmartDashboard.putBoolean("OPR/RTrigger", controlHub.operatorController.R_Trigger.isBeingPressed());
     }
+
+    public void toggleCoralAutoAlign(boolean branchSide) {
+    boolean autoAlignActive = SmartDashboard.getBoolean("AutoAlign Status", true);
+    if (!autoAlignActive) {
+        // Turn ON
+        rContainer.autoAlignCommand(branchSide).schedule();
+        SmartDashboard.putBoolean("AutoAlign Status", true);
+        System.out.println("autoAlign Activated");
+    } else {
+        // Turn OFF
+        if (rContainer.autoAlignCommand(branchSide) != null) {
+            CommandScheduler.getInstance().cancel(rContainer.autoAlignCommand(branchSide));
+        }
+        SmartDashboard.putBoolean("AutoAlign Status", false);
+        System.out.println("autoAlign Deactivated");
+    }
+}
 
     public void RunRobot(){
     if (OneControllerQuery == true){
@@ -139,11 +153,12 @@ public class BotControls {
                 DriveSubsystem.getInstance().zeroHeading();
         }
         if (controlHub.driverController.X_Button.wasActivated()) {
-            rContainer.autoAlignCommand(false).schedule();
+
+            toggleCoralAutoAlign(false);
         }
 
         if (controlHub.driverController.B_Button.wasActivated()) {
-            rContainer.autoAlignCommand(true).schedule();
+            toggleCoralAutoAlign(true);
         }
 
         // if (controlHub.driverController.L_Bumper.wasActivated() && !controlHub.driverController.R_Bumper.wasActivated()){

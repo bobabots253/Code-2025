@@ -27,6 +27,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Bobaboard.ControlHub;
 import frc.robot.commands.autoAlign;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -73,6 +74,7 @@ public class RobotContainer {
     // m_Climb = ClimbSubsystem.getInstance();
     // Configure default commands
     SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
+    SmartDashboard.putBoolean("AutoAlign Status", false);
     m_robotDrive.setDefaultCommand(new RunCommand(
       () -> m_robotDrive.drive(
           -MathUtil.applyDeadband(m_ControlHub.driverController.getLeftY(), OIConstants.kDriveDeadband),
@@ -183,6 +185,7 @@ public class RobotContainer {
       SmartDashboard.putData("TargetPose", targetField);
       return new autoAlign(m_robotDrive, desiredPos);
     }
+
 
     // public Command intakeCoralCommand(){
     //   return new SequentialCommandGroup(
