@@ -157,6 +157,34 @@ public class RobotContainer {
       );
     }
 
+    public Command tierOneHandoffCommand(){
+      return new RunCommand(() -> {
+              m_Elevator.setLazyElevatorState(States.ElevatorPos.L1HANDOFF);
+              }, m_Elevator);
+    }
+
+    public Command tierOneExecuteCommand(){
+      return new ParallelCommandGroup(
+        new RunCommand(() -> { //.withTimeout()?
+          m_Elevator.setLazyElevatorState(States.ElevatorPos.L1HANDOFF);
+          }, m_Elevator),
+          new SequentialCommandGroup(
+            new WaitCommand(0.2),
+            new ParallelCommandGroup(
+              new RunCommand(() -> {
+              m_Elevator.setLazyElevatorState(States.ElevatorPos.L1FLICK);
+                }, m_Elevator),
+                new SequentialCommandGroup(
+                  new WaitCommand(0.3),
+                  new InstantCommand(() -> {
+                  m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+                    }, m_Effector).withTimeout(2.0)
+              )
+            )
+          )
+        );
+    }
+
     public Command autoAlignCommand(Boolean isRight){
       Pose2d currentPos = m_robotDrive.getPose();
       Pose2d desiredPos;

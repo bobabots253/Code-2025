@@ -270,6 +270,12 @@ private ElevatorSubsystem() {
                 profiledPIDCalculation(ElevatorConstants.L3Score);
                 //setLazyPositionSetpoint(ElevatorConstants.L3Score);
                 break;
+            case L1HANDOFF:
+                profiledPIDCalculation(ElevatorConstants.L1Handoff);
+                break;
+            case L1FLICK:
+                profiledPIDCalculation(ElevatorConstants.L1Flick);
+                break;
             default:
                 //setLazyPositionSetpoint(ElevatorConstants.softZeroLinearPosition);
                 break;
