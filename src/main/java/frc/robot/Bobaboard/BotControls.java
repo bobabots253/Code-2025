@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.EndEffectorConstants;
+import frc.robot.Constants.OIConstants;
 import frc.robot.commands.PathfindClosest;
 import frc.robot.RobotContainer;
 import frc.robot.Autonomous.DefaultCommands.StandStillCommand;
@@ -19,6 +20,7 @@ public class BotControls {
 	RobotContainer rContainer = RobotContainer.getInstance();
     ControlHub controlHub = ControlHub.getInstance();
     boolean interruptedPPLib;
+    boolean alignRunning = false;
 
     final static SendableChooser<Boolean> ControllerMode = new SendableChooser<>();
     public boolean OneControllerQuery = true;
@@ -57,6 +59,11 @@ public class BotControls {
         SmartDashboard.putBoolean("DRV/RTrigger", controlHub.driverController.R_Trigger.isBeingPressed());
         SmartDashboard.putBoolean("OPR/LTrigger", controlHub.operatorController.L_Trigger.isBeingPressed());
         SmartDashboard.putBoolean("OPR/RTrigger", controlHub.operatorController.R_Trigger.isBeingPressed());
+    }
+
+    public void runAutoAlign(Boolean branchSide){
+        alignRunning = true;
+        rContainer.autoAlignCommand(branchSide).schedule();
     }
 
     public void RunRobot(){
@@ -133,17 +140,31 @@ public class BotControls {
         else{
 // 2 Controller Here
         // Driver Controls
-
+        if(alignRunning){
+            if(controlHub.driverController.getLeftY()>=OIConstants.kDriveDeadband || 
+            controlHub.driverController.getLeftX()>OIConstants.kDriveDeadband ||
+            controlHub.driverController.getRightX()>OIConstants.kDriveDeadband ){
+                if(rContainer.autoAlignCommand(true)!= null){
+                    CommandScheduler.getInstance().cancel(rContainer.autoAlignCommand(true));
+                }else if(rContainer.autoAlignCommand(false)!= null){
+                    CommandScheduler.getInstance().cancel(rContainer.autoAlignCommand(false));
+                }else{
+                    alignRunning = false;
+                }
+            }
+        }
         //Resets the virtual heading based on the current heading (fixes drift)
         if (controlHub.driverController.Y_Button.wasActivated()) {
                 DriveSubsystem.getInstance().zeroHeading();
         }
         if (controlHub.driverController.X_Button.wasActivated()) {
-            rContainer.autoAlignCommand(false).schedule();
+            runAutoAlign(false);
+            //rContainer.autoAlignCommand(false).schedule();
         }
 
         if (controlHub.driverController.B_Button.wasActivated()) {
-            rContainer.autoAlignCommand(true).schedule();
+            runAutoAlign(true);
+            // rContainer.autoAlignCommand(true).schedule();
         }
 
         // if (controlHub.driverController.L_Bumper.wasActivated() && !controlHub.driverController.R_Bumper.wasActivated()){
