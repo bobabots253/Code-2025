@@ -2,6 +2,7 @@ package frc.robot.Bobaboard;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
 import frc.robot.commands.autoAlign;
@@ -19,6 +20,9 @@ public class BotControls {
     final static SendableChooser<Boolean> ControllerMode = new SendableChooser<>();
     public boolean interruptAutoAlign = false;
     public boolean OneControllerQuery = true;
+    public Command leftCommand;
+    public Command rightCommand;
+    public Command algaeCommand;
 
     public final void PutControllerOption(){
         ControllerMode.addOption("One Controller", true);
@@ -65,9 +69,8 @@ public class BotControls {
         System.out.println("autoAlign Activated");
     } else {
         // Turn OFF
-        if (rContainer.autoAlignCommand(branchSide) != null) {
-            CommandScheduler.getInstance().cancel(rContainer.autoAlignCommand(branchSide));
-        }
+
+        CommandScheduler.getInstance().cancel(rContainer.autoAlignCommand(branchSide));
         SmartDashboard.putBoolean("AutoAlign Status", false);
         System.out.println("autoAlign Deactivated");
     }
@@ -154,11 +157,31 @@ public class BotControls {
         }
         if (controlHub.driverController.X_Button.wasActivated()) {
 
-            toggleCoralAutoAlign(false);
+            leftCommand = rContainer.autoAlignCommand(false);
+            leftCommand.schedule();
+            // toggleCoralAutoAlign(false);
         }
 
+
         if (controlHub.driverController.B_Button.wasActivated()) {
-            toggleCoralAutoAlign(true);
+                    rightCommand = rContainer.autoAlignCommand(true);
+            rightCommand.schedule();
+            //toggleCoralAutoAlign(true);
+        }
+
+        if (controlHub.driverController.A_Button.wasActivated()) {
+            algaeCommand = rContainer.autoAlignAlgaeCommad();
+            algaeCommand.schedule();
+        }
+
+        if (controlHub.driverController.L_Bumper.wasActivated()){
+            if (leftCommand != null){
+                leftCommand.cancel();
+            } else if (rightCommand != null){
+                rightCommand.cancel();
+            } else if (algaeCommand != null){
+                algaeCommand.cancel();
+            }
         }
 
         // if (controlHub.driverController.L_Bumper.wasActivated() && !controlHub.driverController.R_Bumper.wasActivated()){
@@ -202,7 +225,7 @@ public class BotControls {
                     rContainer.stowElevatorCommand().schedule();
             }else if (controlHub.operatorController.A_Button.wasActivated() && !controlHub.operatorController.B_Button.isBeingPressed()
                         && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()) {
-                    rContainer.tierOneHandoffCommand().schedule();
+                    rContainer.tierTwoScoreCommand().schedule(); //tierOneHandoffCommand
             }else if (controlHub.operatorController.X_Button.wasActivated() && !controlHub.operatorController.A_Button.isBeingPressed()
                         && !controlHub.operatorController.B_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()){
                     rContainer.tierTwoElevatorCommand().schedule();

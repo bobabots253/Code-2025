@@ -137,10 +137,10 @@ public class RobotContainer {
             new InstantCommand(() -> {
               m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
             }, m_Effector),
-            new WaitCommand(1.2),
-            new InstantCommand(() -> {
-              m_Effector.setIntakeLazyPercentageOpenLoop(0);
-              }, m_Effector)
+            new WaitCommand(1.2)
+            // new InstantCommand(() -> {
+            //   m_Effector.setIntakeLazyPercentageOpenLoop(0);
+            //   }, m_Effector)
 
             // new ParallelCommandGroup(
             //   new SequentialCommandGroup(
@@ -177,7 +177,7 @@ public class RobotContainer {
                 new SequentialCommandGroup(
                   new WaitCommand(0.3),
                   new InstantCommand(() -> {
-                  m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+                  m_Effector.setIntakeLazyPercentageOpenLoop(.5);
                     }, m_Effector).withTimeout(2.0)
               )
             )
@@ -209,6 +209,24 @@ public class RobotContainer {
       } else {
         desiredPos = currentPos.nearest(leftReefTags);
       }
+      targetField.setRobotPose(desiredPos);
+      SmartDashboard.putData("TargetPose", targetField);
+      return new autoAlign(m_robotDrive, desiredPos);
+    }
+
+    public Command autoAlignAlgaeCommad(){
+      Pose2d currentPos = m_robotDrive.getPose();
+      Pose2d desiredPos;
+      Field2d targetField = new Field2d();
+      List<Pose2d> algaeTags = new ArrayList<Pose2d>();
+      algaeTags.add(FieldSetup.allianceAlgaeABSupplier.get());
+      algaeTags.add(FieldSetup.allianceAlgaeCDSupplier.get());
+      algaeTags.add(FieldSetup.allianceAlgaeEFSupplier.get());
+      algaeTags.add(FieldSetup.allianceAlgaeGHSupplier.get());
+      algaeTags.add(FieldSetup.allianceAlgaeIJSupplier.get());
+      algaeTags.add(FieldSetup.allianceAlgaeKLSupplier.get());
+
+      desiredPos = currentPos.nearest(algaeTags);
       targetField.setRobotPose(desiredPos);
       SmartDashboard.putData("TargetPose", targetField);
       return new autoAlign(m_robotDrive, desiredPos);

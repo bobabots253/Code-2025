@@ -191,8 +191,8 @@ public final class Constants {
     public static final double L3Score = 19.585; // 2/24/25 18.9
     public static final double L3Algae = 0.120;
     public static final double L3Misc = 0.120;
-    public static final double L1Handoff = 0.120;
-    public static final double L1Flick = 0.120;
+    public static final double L1Handoff = 5.9047;
+    public static final double L1Flick = 12.55;
     public static final double pos1 = 0.120; 
     public static final double pos2 = 4.85; 
     public static final double codeStop = 0.120;

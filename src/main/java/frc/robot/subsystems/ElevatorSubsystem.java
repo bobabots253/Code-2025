@@ -86,12 +86,23 @@ private ElevatorSubsystem() {
 //     slaveHallEffectSensor = new DigitalInput(ElevatorConstants.pivotSlaveHallEffectDIO);
 //     //Preferences.putDouble(kTunableP , ElevatorConstants.kIncrementalPostionP);
 //     resetEncoders();
-//     //setCoastMode(true);
-// }
+    //setCoastMode(true);
+    }
 
 // @Override
-// public void periodic() {
-
+    public void periodic() {
+        SmartDashboard.putNumber("Elevator /relativePosition", m_LiftingEncoder.getPosition());
+        SmartDashboard.putNumber("Elevator /relativePositionMEters", rotToMeters(m_LiftingEncoder.getPosition()));
+        SmartDashboard.putNumber("Elevator /relativePosition", m_LiftingEncoder.getPosition());
+        SmartDashboard.putNumber("Elevator /relativePositionMEters", rotToMeters(m_LiftingEncoder.getPosition()));
+        SmartDashboard.putNumber("Elevator /masterCurrent", m_masterLiftingSparkMax.getOutputCurrent());
+        SmartDashboard.putNumber("Elevator /followerCurrent", m_slaveLiftingSparkMax.getOutputCurrent());
+        SmartDashboard.putBoolean("Elevator /withinExtensionRange", isWithinExtensionRange());
+        SmartDashboard.putNumber("Elevator /requestedPosition", currentIntSetpointElevator);
+        SmartDashboard.putNumber("Elevator /trapezoid", trapezoid);
+        SmartDashboard.putNumber("Elevator /masterInputCurrent", m_masterLiftingSparkMax.getAppliedOutput());
+        SmartDashboard.putNumber("Elevator/secondStageVelocity ", rpmToVelocity(m_LiftingEncoder.getVelocity()));
+    }
 
 //     if (!isWithinExtensionRange()){
 //         System.out.println("Elevator Hitting Code Stop");
@@ -100,18 +111,10 @@ private ElevatorSubsystem() {
 
 //     SmartDashboard.putNumber("Elevator /elevatorVel",getElevatorVelocity());
     
-    SmartDashboard.putNumber("Elevator /relativePosition", m_LiftingEncoder.getPosition());
-    SmartDashboard.putNumber("Elevator /relativePositionMEters", rotToMeters(m_LiftingEncoder.getPosition()));
-    SmartDashboard.putNumber("Elevator /masterCurrent", m_masterLiftingSparkMax.getOutputCurrent());
-    SmartDashboard.putNumber("Elevator /followerCurrent", m_slaveLiftingSparkMax.getOutputCurrent());
-    SmartDashboard.putBoolean("Elevator /withinExtensionRange", isWithinExtensionRange());
-    SmartDashboard.putNumber("Elevator /requestedPosition", currentIntSetpointElevator);
-    SmartDashboard.putNumber("Elevator /trapezoid", trapezoid);
-    SmartDashboard.putNumber("Elevator /masterInputCurrent", m_masterLiftingSparkMax.getAppliedOutput());
-    SmartDashboard.putNumber("Elevator/secondStageVelocity ", rpmToVelocity(m_LiftingEncoder.getVelocity()));
+
 
     
-}
+
 
     public void setLazyPercentageOpenLoop(double OpenLoopPercentage) {
         SmartDashboard.putNumber("Elevator /Raw Output Speed (#.##)", OpenLoopPercentage);
