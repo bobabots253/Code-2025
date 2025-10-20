@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.OIConstants;
 import frc.robot.RobotContainer;
 import frc.robot.commands.autoAlign;
 //import frc.robot.subsystems.TestSubsystem;
@@ -150,7 +151,18 @@ public class BotControls {
         else{
 // 2 Controller Here
         // Driver Controls
-
+            if(controlHub.driverController.getLeftY()>=OIConstants.kDriveDeadband || 
+            controlHub.driverController.getLeftX()>=OIConstants.kDriveDeadband ||
+            controlHub.driverController.getRightX()>=OIConstants.kDriveDeadband ){
+                if (leftCommand != null){
+                    leftCommand.cancel();
+                } if (rightCommand != null){
+                    rightCommand.cancel();
+                } if (algaeCommand != null){
+                    algaeCommand.cancel();
+                }
+            }
+    
         //Resets the virtual heading based on the current heading (fixes drift)
         if (controlHub.driverController.Y_Button.wasActivated()) {
                 DriveSubsystem.getInstance().zeroHeading();
@@ -174,15 +186,15 @@ public class BotControls {
             algaeCommand.schedule();
         }
 
-        if (controlHub.driverController.L_Bumper.wasActivated()){
-            if (leftCommand != null){
-                leftCommand.cancel();
-            } else if (rightCommand != null){
-                rightCommand.cancel();
-            } else if (algaeCommand != null){
-                algaeCommand.cancel();
-            }
-        }
+        // if (controlHub.driverController.L_Bumper.wasActivated()){
+        //     if (leftCommand != null){
+        //         leftCommand.cancel();
+        //     } else if (rightCommand != null){
+        //         rightCommand.cancel();
+        //     } else if (algaeCommand != null){
+        //         algaeCommand.cancel();
+        //     }
+        // }
 
         // if (controlHub.driverController.L_Bumper.wasActivated() && !controlHub.driverController.R_Bumper.wasActivated()){
         //     interruptedPPLib = !interruptedPPLib;

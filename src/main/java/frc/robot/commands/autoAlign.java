@@ -74,6 +74,7 @@ public class autoAlign extends Command{
     @Override
     public void end(boolean interrupted){
         SmartDashboard.putBoolean("AutoAlign Status", false);
+        System.out.println("Ended AutoAlignCommand Early");
     }
 
     @Override
