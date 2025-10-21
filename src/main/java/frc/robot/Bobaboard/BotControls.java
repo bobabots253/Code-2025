@@ -185,6 +185,10 @@ public class BotControls {
             algaeCommand = rContainer.autoAlignAlgaeCommad();
             algaeCommand.schedule();
         }
+        if (controlHub.driverController.L_Bumper.wasActivated()){
+            rContainer.l1RollerCommand().schedule();
+        }
+
 
         // if (controlHub.driverController.L_Bumper.wasActivated()){
         //     if (leftCommand != null){

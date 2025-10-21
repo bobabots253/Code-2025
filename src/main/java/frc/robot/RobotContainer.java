@@ -163,6 +163,29 @@ public class RobotContainer {
               }, m_Elevator);
     }
 
+    public Command l1RollerCommand(){
+      return new SequentialCommandGroup(
+        new InstantCommand(() -> {
+          m_Effector.setIntakeLazyPercentageOpenLoop(.7);
+        }, m_Effector),
+        new WaitCommand(.05),
+        new InstantCommand(() -> {
+          m_Effector.setIntakeLazyPercentageOpenLoop(0);
+        }, m_Effector),
+        new WaitCommand(.2),
+        new InstantCommand(() -> {
+          m_Effector.setIntakeLazyPercentageOpenLoop(.7);
+        }, m_Effector),
+        new WaitCommand(1),
+        new InstantCommand(() -> {
+          m_Effector.setIntakeLazyPercentageOpenLoop(0);
+        }, m_Effector)
+
+        
+      );
+      
+    }
+
     public Command tierOneExecuteCommand(){
       return new ParallelCommandGroup(
         new RunCommand(() -> { //.withTimeout()?
@@ -231,6 +254,7 @@ public class RobotContainer {
       SmartDashboard.putData("TargetPose", targetField);
       return new autoAlign(m_robotDrive, desiredPos);
     }
+
 
 
     // public Command intakeCoralCommand(){
