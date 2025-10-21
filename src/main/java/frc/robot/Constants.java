@@ -182,7 +182,7 @@ public final class Constants {
 
     public static final double idealHomingLinearPosition = 0.000; //revs
     public static final double softZeroLinearPosition = 0.100; //revs0.023809418082237244
-    public static final double L1Score = 7.470; // 2/24/25
+    public static final double L1Score = 8.2; // 2/24/25
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Elevator 
 
     public static final double L2Score = 12.55; // 2/24/25 //works
