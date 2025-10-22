@@ -45,7 +45,7 @@ public class autoAlign extends Command{
         holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
         holonomicDriveController.setTolerance(new Pose2d(new Translation2d(0.025, 0.025),
                 Rotation2d.fromDegrees(1)));
-        rotController.enableContinuousInput(-Math.PI, Math.PI);
+        //rotController.enableContinuousInput(-Math.PI, Math.PI);
 
         addRequirements(DriveSubsystem.getInstance());
     }
@@ -65,18 +65,18 @@ public class autoAlign extends Command{
     @Override
     public void execute(){
         chassis = holonomicDriveController.calculate(driveSubsystem.getPose(), targetPose, 0.0, targetPose.getRotation());
-        
-        driveSubsystem.setModuleStates(input);
 
-        //TO DO Test on 10.22.25
-        ChassisSpeeds robotRelative = ChassisSpeeds.fromFieldRelativeSpeeds(
-            chassis.vxMetersPerSecond, 
-            chassis.vyMetersPerSecond, 
-            chassis.omegaRadiansPerSecond, 
-            Rotation2d.fromDegrees(driveSubsystem.getVisionGyroRotation()));
-        //TODO to try the line 78 instead of 79
+        // TO DO Test on 10.22.25
+        // ChassisSpeeds robotRelative = ChassisSpeeds.fromFieldRelativeSpeeds(
+        //     chassis.vxMetersPerSecond, 
+        //     chassis.vyMetersPerSecond, 
+        //     chassis.omegaRadiansPerSecond, 
+        //     Rotation2d.fromDegrees(driveSubsystem.getVisionGyroRotation()));
+        // TODO to try the line 78 instead of 79
         // input = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(robotRelative);
+
         input = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(chassis);
+        driveSubsystem.setModuleStates(input);
         // autoAlignCommand = new RunCommand(() -> driveSubsystem.setModuleStates(input), driveSubsystem);
         System.out.println("running");
 

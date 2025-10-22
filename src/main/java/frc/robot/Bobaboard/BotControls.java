@@ -151,16 +151,18 @@ public class BotControls {
         else{
 // 2 Controller Here
         // Driver Controls
-            if(controlHub.driverController.getLeftY()>=OIConstants.kDriveDeadband || 
-            controlHub.driverController.getLeftX()>=OIConstants.kDriveDeadband ||
-            controlHub.driverController.getRightX()>=OIConstants.kDriveDeadband ){
-                if (leftCommand != null){
+            if(Math.abs(controlHub.driverController.getLeftY())>=OIConstants.kDriveDeadband || 
+            Math.abs(controlHub.driverController.getLeftX())>=OIConstants.kDriveDeadband ||
+            Math.abs(controlHub.driverController.getRightX())>=OIConstants.kDriveDeadband ){
+                if (leftCommand != null && leftCommand.isScheduled()){
                     leftCommand.cancel();
                 } if (rightCommand != null){
                     rightCommand.cancel();
                 } if (algaeCommand != null){
                     algaeCommand.cancel();
                 }
+                //TODO check to see if this works
+                //rContainer.cancelAutoAlignFunction();
             }
     
         //Resets the virtual heading based on the current heading (fixes drift)

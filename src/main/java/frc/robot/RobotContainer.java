@@ -82,6 +82,7 @@ public class RobotContainer {
           -MathUtil.applyDeadband(m_ControlHub.driverController.getRightX(), OIConstants.kDriveDeadband),
           true, true),
       m_robotDrive));
+
   }
 
 
@@ -126,6 +127,13 @@ public class RobotContainer {
               }, m_Elevator)
           );
       }
+
+    public void cancelAutoAlignFunction(){
+      Command currentCommand = m_robotDrive.getCurrentCommand();
+      if(currentCommand != null && currentCommand != m_robotDrive.getDefaultCommand()){
+        currentCommand.cancel();
+      }
+    }
 
     public Command tierTwoScoreCommand(){
       return new ParallelCommandGroup(
