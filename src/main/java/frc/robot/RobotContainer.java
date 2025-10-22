@@ -163,7 +163,7 @@ public class RobotContainer {
               }, m_Elevator);
     }
 
-    public Command l1RollerCommand(){
+    public Command doubleRollerCommand(){
       return new SequentialCommandGroup(
         new InstantCommand(() -> {
           m_Effector.setIntakeLazyPercentageOpenLoop(.7);
@@ -179,6 +179,33 @@ public class RobotContainer {
         new WaitCommand(1),
         new InstantCommand(() -> {
           m_Effector.setIntakeLazyPercentageOpenLoop(0);
+        }, m_Effector)
+
+        
+      );
+      
+    }
+
+    public Command tripleRollerCommand(){
+      return new SequentialCommandGroup(
+        new InstantCommand(() -> {
+          m_Effector.setIntakeLazyPercentageOpenLoop(.7);
+        }, m_Effector),
+        new WaitCommand(.003),
+        new InstantCommand(() -> {
+          m_Effector.setIntakeLazyPercentageOpenLoop(0);
+        }, m_Effector),
+        new WaitCommand(.003),
+        new InstantCommand(() -> {
+          m_Effector.setIntakeLazyPercentageOpenLoop(.7);
+        }, m_Effector),
+        new WaitCommand(0.01),
+        new InstantCommand(() -> {
+          m_Effector.setIntakeLazyPercentageOpenLoop(0);
+        }, m_Effector),
+        new WaitCommand(0.2),
+        new InstantCommand(() -> {
+          m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
         }, m_Effector)
 
         

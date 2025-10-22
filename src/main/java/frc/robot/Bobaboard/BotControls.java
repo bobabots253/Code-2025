@@ -186,7 +186,7 @@ public class BotControls {
             algaeCommand.schedule();
         }
         if (controlHub.driverController.L_Bumper.wasActivated()){
-            rContainer.l1RollerCommand().schedule();
+            rContainer.doubleRollerCommand().schedule();
         }
 
 
