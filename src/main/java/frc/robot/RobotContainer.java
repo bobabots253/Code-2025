@@ -134,6 +134,7 @@ public class RobotContainer {
         currentCommand.cancel();
       }
     }
+    
 
     public Command tierTwoScoreCommand(){
       return new ParallelCommandGroup(
@@ -176,15 +177,15 @@ public class RobotContainer {
         new InstantCommand(() -> {
           m_Effector.setIntakeLazyPercentageOpenLoop(.7);
         }, m_Effector),
-        new WaitCommand(.05),
+        new WaitCommand(.075),
         new InstantCommand(() -> {
           m_Effector.setIntakeLazyPercentageOpenLoop(0);
         }, m_Effector),
-        new WaitCommand(.2),
+        new WaitCommand(.1),
         new InstantCommand(() -> {
           m_Effector.setIntakeLazyPercentageOpenLoop(.7);
         }, m_Effector),
-        new WaitCommand(1),
+        new WaitCommand(2),
         new InstantCommand(() -> {
           m_Effector.setIntakeLazyPercentageOpenLoop(0);
         }, m_Effector)

@@ -333,11 +333,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public Pose2d getPose() {
     //return m_odometry.getPoseMeters();
-    if(DriverStation.isAutonomous()){
-      return m_odometry.getPoseMeters();
-    }else{
       return refinedodometryVision.getEstimatedPosition();
-    }
     //This is for testing for pathplanner Remove this in the future and replace this switch either a switch or fuse positions.
     // return refinedodometryVision.getEstimatedPosition();
     // return m_odometry.getPoseMeters();

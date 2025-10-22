@@ -23,7 +23,8 @@ public final class AutoModeManager{
         AB_MIDLEAVE,
         AB_MIDSCOREONE,
         STAND_STILL,
-        CROSS_LINE
+        CROSS_LINE,
+        L1
 	}
 
     public static AutoModeManager AutoQueue;
@@ -46,6 +47,8 @@ public final class AutoModeManager{
     // mModeChooser.addOption("Mid 1 Coral", DesiredMode.AB_MIDSCOREONE);
     // mModeChooser.addOption("Stand Still Boi", DesiredMode.STAND_STILL);
     mModeChooser.addOption("Simple Cross Line", DesiredMode.CROSS_LINE);
+    mModeChooser.addOption("L1", DesiredMode.L1);
+
     }
 
     public static void updateAutoMode(){

@@ -187,9 +187,9 @@ public class BotControls {
             algaeCommand = rContainer.autoAlignAlgaeCommad();
             algaeCommand.schedule();
         }
-        if (controlHub.driverController.L_Bumper.wasActivated()){
-            rContainer.doubleRollerCommand().schedule();
-        }
+        // if (controlHub.driverController.L_Bumper.wasActivated()){
+        //     rContainer.doubleRollerCommand().schedule();
+        // }
 
 
         // if (controlHub.driverController.L_Bumper.wasActivated()){
@@ -226,8 +226,8 @@ public class BotControls {
                 && controlHub.operatorController.L_Bumper.isNotBeingPressed() && controlHub.operatorController.R_Bumper.isNotBeingPressed()){
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
         } else{
-            if (controlHub.operatorController.L_Bumper.isBeingPressed() && !controlHub.operatorController.R_Bumper.isBeingPressed()) {
-                rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.7);
+            if (controlHub.operatorController.L_Bumper.wasActivated() && !controlHub.operatorController.R_Bumper.isBeingPressed()) {
+                rContainer.doubleRollerCommand().schedule();
                 }else if (controlHub.operatorController.R_Bumper.isBeingPressed() && !controlHub.operatorController.L_Bumper.isBeingPressed()) {
                 rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
                 }
@@ -256,9 +256,9 @@ public class BotControls {
             if(controlHub.operatorController.L_Trigger.isNotBeingPressed() && controlHub.operatorController.R_Trigger.isNotBeingPressed()){
                 rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0);
             }else if(controlHub.operatorController.L_Trigger.wasActivated()){
-                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0.7);
-            }else if (controlHub.operatorController.R_Trigger.wasActivated()){
                 rContainer.m_Effector.setPivotLazyPercentageOpenLoop(-0.7);
+            }else if (controlHub.operatorController.R_Trigger.wasActivated()){
+                rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0.7);
             }
 
             // if(!controlHub.operatorController.POV90.isBeingPressed() && !controlHub.operatorController.POV270.isBeingPressed()){
