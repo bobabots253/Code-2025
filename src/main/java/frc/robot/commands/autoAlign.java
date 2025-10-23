@@ -43,7 +43,7 @@ public class autoAlign extends Command{
 
         rotController = new ProfiledPIDController(2, 0, 0, new TrapezoidProfile.Constraints(5, 5));
         holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
-        holonomicDriveController.setTolerance(new Pose2d(new Translation2d(0.025, 0.025),
+        holonomicDriveController.setTolerance(new Pose2d(new Translation2d(0.015, 0.015),
                 Rotation2d.fromDegrees(1)));
         //rotController.enableContinuousInput(-Math.PI, Math.PI);
 

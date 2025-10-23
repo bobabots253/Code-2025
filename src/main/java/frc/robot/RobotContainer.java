@@ -134,7 +134,7 @@ public class RobotContainer {
         currentCommand.cancel();
       }
     }
-    
+
 
     public Command tierTwoScoreCommand(){
       return new ParallelCommandGroup(
@@ -252,17 +252,17 @@ public class RobotContainer {
       List<Pose2d> leftReefTags = new ArrayList<Pose2d>();
       rightReefTags.add(FieldSetup.allianceReefBSupplier.get());
       rightReefTags.add(FieldSetup.allianceReefDSupplier.get());
-      rightReefTags.add(FieldSetup.allianceReefESupplier.get());
+      rightReefTags.add(FieldSetup.allianceReefFSupplier.get());
       rightReefTags.add(FieldSetup.allianceReefHSupplier.get());
       rightReefTags.add(FieldSetup.allianceReefJSupplier.get());
-      rightReefTags.add(FieldSetup.allianceReefKSupplier.get());
+      rightReefTags.add(FieldSetup.allianceReefLSupplier.get());
 
       leftReefTags.add(FieldSetup.allianceReefASupplier.get());
       leftReefTags.add(FieldSetup.allianceReefCSupplier.get());
-      leftReefTags.add(FieldSetup.allianceReefFSupplier.get());
+      leftReefTags.add(FieldSetup.allianceReefESupplier.get());
       leftReefTags.add(FieldSetup.allianceReefGSupplier.get());
       leftReefTags.add(FieldSetup.allianceReefISupplier.get());
-      leftReefTags.add(FieldSetup.allianceReefLSupplier.get());
+      leftReefTags.add(FieldSetup.allianceReefKSupplier.get());
       if(isRight){
         desiredPos = currentPos.nearest(rightReefTags);
       } else {
