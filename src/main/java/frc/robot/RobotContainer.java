@@ -383,6 +383,27 @@ public class RobotContainer {
   );
 }
 
+    public Command ReturnL3AutoCommand(Pose2d targetPose){
+      return Commands.sequence(
+          spinMove(),
+          PIDPathfindToPose(targetPose).withTimeout(3),
+      Commands.parallel(
+              setElevatorL3Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
+          Commands.sequence(
+              new WaitCommand(1.0), //tune
+              new InstantCommand(() -> {
+                m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+              }, m_Effector),
+              new WaitCommand(1.0),
+              new InstantCommand(() -> {
+                m_Effector.setIntakeLazyPercentageOpenLoop(0);
+              }, m_Effector) //tune 
+          )
+      )
+
+    );
+    }
+
     // public Command intakeCoralCommand(){
     //   return new SequentialCommandGroup(
     //         new InstantCommand(() -> {

@@ -164,10 +164,14 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    Pose2d requestPose2d = new Pose2d((new Translation2d(5.686646, 4.0200)), new Rotation2d(180 * (Math.PI/180)));
+    Pose2d BlueEFAlgaePose2d = new Pose2d((new Translation2d(5.686646, 4.0200)),
+                                              new Rotation2d(180 * (Math.PI/180)));
+    Pose2d blueECoralPose2d = new Pose2d((new Translation2d(5.686646, 3.8549)), //good 10/22
+    new Rotation2d(180 * (Math.PI/180)));
     AutoModeManager.updateAutoMode();
     if (AutoModeManager.m_autonomousCommand == null){
-      m_robotContainer.ReturnAutoCommand(requestPose2d).schedule();;
+      //m_robotContainer.ReturnAutoCommand(BlueEFAlgaePose2d).schedule();
+      m_robotContainer.ReturnL3AutoCommand(blueECoralPose2d).schedule();
     } else {
       AutoModeManager.m_autonomousCommand.schedule();
     }
