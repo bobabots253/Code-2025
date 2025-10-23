@@ -4,8 +4,6 @@ import java.util.Optional;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Autonomous.BlueAutos.BlueBottomCommand;
-import frc.robot.Autonomous.BlueAutos.BlueMidSafetyCommand;
 import frc.robot.Autonomous.BlueAutos.CrossLineCommand;
 //import frc.robot.subsystems.TestSubsystem;
 import frc.robot.Autonomous.DefaultCommands.DoNothingCommand;
@@ -18,10 +16,6 @@ public final class AutoModeManager{
 		DO_NOTHING,
         GO_AUTO,
         RETURN_AUTO,
-        AB_BOTAUTO,
-        NEW_AUTO,
-        AB_MIDLEAVE,
-        AB_MIDSCOREONE,
         STAND_STILL,
         CROSS_LINE,
         L1
@@ -71,18 +65,7 @@ public final class AutoModeManager{
                 break;
             case RETURN_AUTO:
                 m_autonomousCommand = ReturnAutoCommand.runDefaultedAutoCommand();
-            break;
-            case AB_BOTAUTO:
-                m_autonomousCommand = BlueBottomCommand.runFullAutoCommand();
                 break;
-            case AB_MIDLEAVE:
-                m_autonomousCommand = BlueMidSafetyCommand.runDefaultedAutoCommand();
-                break;
-            case AB_MIDSCOREONE:
-                m_autonomousCommand = BlueMidSafetyCommand.runScoreOneAutoCommand();
-                break;
-            case STAND_STILL:
-                m_autonomousCommand = StandStillCommand.runDefaultedAutoCommand();  
             case CROSS_LINE:
                 m_autonomousCommand = CrossLineCommand.runDefaultedAutoCommand(); 
             default:
