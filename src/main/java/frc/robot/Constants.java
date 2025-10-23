@@ -74,6 +74,7 @@ public final class Constants {
 
     //Use to globally fix Gyro Flip
     public static final boolean kGyroReversed = false;
+    public static double kTimedTurnSpeed = 2; //2.0 rad/s ~= 115 deg/s
   }
 
   public static final class ModuleConstants {

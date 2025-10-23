@@ -5,20 +5,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Autonomous.BlueAutos.CrossLineCommand;
+import frc.robot.Autonomous.BlueAutos.MidSingleScore;
 //import frc.robot.subsystems.TestSubsystem;
 import frc.robot.Autonomous.DefaultCommands.DoNothingCommand;
 import frc.robot.Autonomous.DefaultCommands.GoAutoCommand;
 import frc.robot.Autonomous.DefaultCommands.ReturnAutoCommand;
 import frc.robot.Autonomous.DefaultCommands.StandStillCommand;
 
-public final class AutoModeManager{
+public class AutoModeManager{
     public enum DesiredMode {
 		DO_NOTHING,
         GO_AUTO,
         RETURN_AUTO,
         STAND_STILL,
         CROSS_LINE,
-        L1
+        L1,
+        MIDSINGLESCORE
 	}
 
     public static AutoModeManager AutoQueue;
@@ -42,6 +44,7 @@ public final class AutoModeManager{
     // mModeChooser.addOption("Stand Still Boi", DesiredMode.STAND_STILL);
     mModeChooser.addOption("Simple Cross Line", DesiredMode.CROSS_LINE);
     mModeChooser.addOption("L1", DesiredMode.L1);
+    mModeChooser.addOption("Blue Mid L1-1P", DesiredMode.MIDSINGLESCORE);
 
     }
 
@@ -68,6 +71,10 @@ public final class AutoModeManager{
                 break;
             case CROSS_LINE:
                 m_autonomousCommand = CrossLineCommand.runDefaultedAutoCommand(); 
+                break;
+            case MIDSINGLESCORE:
+                m_autonomousCommand = MidSingleScore.ReturnAutoCommand();
+                break;
             default:
 			    System.out.println("ERROR: unexpected auto mode!");
 				break;

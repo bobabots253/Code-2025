@@ -45,6 +45,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
@@ -505,9 +507,21 @@ public class DriveSubsystem extends SubsystemBase {
     Nav_x.reset();
   }
 
-  // public static void zeroGyro(){
-  //   Nav_x.zeroYaw();
-  // }
+  public Command spinMoveCommand(double timeoutSeconds) { //tune for 180 degrees
+        final double rotationRate = DriveConstants.kTimedTurnSpeed;
+        Command turnCommand = new RunCommand(
+            () -> driveRobotRelative(new ChassisSpeeds(
+                0, 
+                0, 
+                rotationRate //angularVelocity
+            )),
+            this
+        );
+        return turnCommand
+            .withTimeout(timeoutSeconds)
+            .andThen(() -> driveRobotRelative(
+              new ChassisSpeeds(0, 0, 0))); 
+    }
 
   /**
    * Returns the heading of the robot.
