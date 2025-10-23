@@ -73,7 +73,7 @@ public class AutoModeManager{
                 m_autonomousCommand = CrossLineCommand.runDefaultedAutoCommand(); 
                 break;
             case MIDSINGLESCORE:
-                m_autonomousCommand = MidSingleScore.ReturnAutoCommand();
+                m_autonomousCommand = null;
                 break;
             default:
 			    System.out.println("ERROR: unexpected auto mode!");

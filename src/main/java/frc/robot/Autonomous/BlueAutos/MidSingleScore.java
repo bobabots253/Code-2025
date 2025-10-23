@@ -18,8 +18,8 @@ public class MidSingleScore extends AutoModeBase {
     
         public static Command ReturnAutoCommand(){
             return Commands.sequence(
-                spinMove(),
-                PIDPathfindToPose(requestPose2d).withTimeout(3),
+                // spinMove(),
+                PIDPathfindToPose(requestPose2d).withTimeout(5),
             Commands.parallel(
                     setElevatorL1Auto().withTimeout(1.6).andThen(setElevatorStowAuto()),
                 Commands.sequence(

@@ -29,8 +29,10 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -162,8 +164,13 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    Pose2d requestPose2d = new Pose2d((new Translation2d(5.686646, 4.0200)), new Rotation2d(180 * (Math.PI/180)));
     AutoModeManager.updateAutoMode();
-    AutoModeManager.m_autonomousCommand.schedule();
+    if (AutoModeManager.m_autonomousCommand == null){
+      m_robotContainer.ReturnAutoCommand(requestPose2d).schedule();;
+    } else {
+      AutoModeManager.m_autonomousCommand.schedule();
+    }
   }
 
   /** This function is called periodically during autonomous. */

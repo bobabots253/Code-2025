@@ -28,6 +28,7 @@ import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Bobaboard.ControlHub;
 import frc.robot.commands.autoAlign;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 // import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -244,6 +245,8 @@ public class RobotContainer {
         );
     }
 
+    
+
     public Command autoAlignCommand(Boolean isRight){
       Pose2d currentPos = m_robotDrive.getPose();
       Pose2d desiredPos;
@@ -291,7 +294,94 @@ public class RobotContainer {
       return new autoAlign(m_robotDrive, desiredPos);
     }
 
+      public Command coralRollersAuto(double requestedSpeed){
+                   return Commands.sequence(
+                       new InstantCommand(() -> {
+                        m_Effector.setIntakeLazyPercentageOpenLoop(requestedSpeed);
+                         }, m_Effector)
+           );
+       }
+       
+       public Command setElevatorStowAuto(){
+           return Commands.sequence(
+               new RunCommand(() -> {
+                m_Elevator.setLazyElevatorState(States.ElevatorPos.STOW);
+               }, m_Elevator)
+            );
+        }
+       
+        public Command setElevatorL1Auto(){
+            return Commands.sequence(
+                new RunCommand(() -> {
+                  m_Elevator.setLazyElevatorState(States.ElevatorPos.L1Score);
+                }, m_Elevator)
+            );
+        }
+       
+        public Command setElevatorL2Auto(){
+            return Commands.sequence(
+                new RunCommand(() -> {
+                  m_Elevator.setLazyElevatorState(States.ElevatorPos.L2Score);
+                }, m_Elevator)
+            );
+        }
+       
+        public Command setElevatorL3Auto(){
+            return Commands.sequence(
+                new RunCommand(() -> {
+                  m_Elevator.setLazyElevatorState(States.ElevatorPos.L3SCORE);
+                }, m_Elevator)
+            );
+        }
+       
+        public Command flickL1CoralAuto(){
+            return Commands.sequence(
+                coralRollersAuto(0.7).withTimeout(0.075),
+                new WaitCommand(0.1),
+                coralRollersAuto(0.7).withTimeout(2.0)
+            );
+        }
+       
+        public Command rollerDefaultScore(){
+            return Commands.sequence(
+                coralRollersAuto(1.0)
+            );
+        }
+    
+        public Command rollerDefaultStop(){
+            return Commands.sequence(
+                coralRollersAuto(0.0)
+            );
+        }
+    
+        public static Command spinMove(){
+            return m_robotDrive.spinMoveCommand(1.5);
+        // Command.sequence(
+        //     new RunCommand(() -> {
+        //         mDriveSubsystem.spinMoveCommand(2);
+        //     }, mDriveSubsystem)
+        // );
+    }
 
+    public static Command PIDPathfindToPose(Pose2d targetPose){
+        return new autoAlign(m_robotDrive, targetPose);
+    }
+
+    public Command ReturnAutoCommand(Pose2d targetPose){
+      return Commands.sequence(
+          spinMove(),
+          PIDPathfindToPose(targetPose).withTimeout(5),
+      Commands.parallel(
+              setElevatorL1Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
+          Commands.sequence(
+              new WaitCommand(0.8), //tune
+              doubleRollerCommand().withTimeout(2.5) //tune
+                  .andThen(rollerDefaultStop()) 
+          )
+      )
+
+  );
+}
 
     // public Command intakeCoralCommand(){
     //   return new SequentialCommandGroup(

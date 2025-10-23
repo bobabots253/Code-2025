@@ -90,7 +90,7 @@ public class AutoModeBase {
         public Command flickL1CoralAuto(){
             return Commands.sequence(
                 coralRollersAuto(0.7).withTimeout(0.075),
-                coralRollersAuto(0.7).withTimeout(0.1),
+                new WaitCommand(0.1),
                 coralRollersAuto(0.7).withTimeout(2.0)
             );
         }
