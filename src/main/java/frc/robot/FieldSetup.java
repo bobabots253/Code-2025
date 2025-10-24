@@ -241,8 +241,7 @@ public class FieldSetup {
                 .orElse(DriverStation.Alliance.Blue) == Alliance.Blue
                         ? new Pose2d((new Translation2d(5.686646, 3.8549)), //good 10/22
                         new Rotation2d(180 * (Math.PI/180)))
-                        : new Pose2d (getTagTranslation(kRedReefPosGId)
-                        .plus(new Translation2d(11.850906, 4.1851)), //good 10/22
+                        : new Pose2d ((new Translation2d(11.850906, 4.1851)), //good 10/22
                         new Rotation2d(0));
 
         public static Supplier<Pose2d> allianceAlgaeGHSupplier = () -> DriverStation.getAlliance()
