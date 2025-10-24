@@ -38,6 +38,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -164,14 +165,69 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+
     Pose2d BlueEFAlgaePose2d = new Pose2d((new Translation2d(5.686646, 4.0200)),
                                               new Rotation2d(180 * (Math.PI/180)));
-    Pose2d blueECoralPose2d = new Pose2d((new Translation2d(5.686646, 3.8549)), //good 10/22
-    new Rotation2d(180 * (Math.PI/180)));
+    Pose2d RedEFAlgaePose2d = new Pose2d((new Translation2d(11.850906, 4.0200)), new Rotation2d(0 * (Math.PI/180)));//testing pose
+    ///Pose2d blueECoralPose2d = new Pose2d((new Translation2d(5.686646, 3.8549)), //good 10/22
+    // new Rotation2d(180 * (Math.PI/180)));
+
+    //C side Poses
+    Pose2d blueECoralPose2d = new Pose2d((new Translation2d(4.94939989, 2.89768804)), //good 10/22
+    new Rotation2d(120 * (Math.PI/180)));
+    Pose2d redECoralPose2d = new Pose2d ((new Translation2d(12.59816289, 5.15411196)), //good 10/22
+    new Rotation2d(-60 * (Math.PI/180)));
+    Pose2d blueFCoralPose2d = new Pose2d((new Translation2d(5.23550811, 3.06278804)), //good 10/22
+    new Rotation2d(120 * (Math.PI/180)));
+    Pose2d redFCoralPose2d = new Pose2d ((new Translation2d(12.31215311, 4.98901196)), //good 10/22
+    new Rotation2d(-60 * (Math.PI/180)));
+
+    //E side Poses
+    Pose2d blueICoralPose2d = new Pose2d((new Translation2d(5.23550811, 4.98901196)), //good 10/22
+    new Rotation2d(-120 * (Math.PI/180)));
+    Pose2d redICoralPose2d = new Pose2d ((new Translation2d(12.31215311, 3.06278804)), //good 10/22
+    new Rotation2d(60 * (Math.PI/180)));
+    Pose2d blueJCoralPose2d = new Pose2d((new Translation2d(5.092454, 5.07156196)), //fixed rot 10/22
+    new Rotation2d(-120 * (Math.PI/180)));
+    Pose2d redJCoralPose2d = new Pose2d((new Translation2d(12.455158, 2.98023804)), //fixed rot 10/22
+    new Rotation2d(60 * (Math.PI/180)));
+
     AutoModeManager.updateAutoMode();
+    
     if (AutoModeManager.m_autonomousCommand == null){
+      if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.L1_MIDDLE_START){
+        if(DriverStation.getAlliance().get() == Alliance.Blue){
+          m_robotContainer.ReturnAutoCommand(BlueEFAlgaePose2d).schedule();
+        }else{
+          m_robotContainer.ReturnAutoCommand(RedEFAlgaePose2d).schedule();//testing
+        }
+      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.C_SIDE_LEFT_L2){
+        if(DriverStation.getAlliance().get() == Alliance.Blue){
+          m_robotContainer.ReturnL2AutoCommand(blueECoralPose2d).schedule();//testing
+        }else{
+          m_robotContainer.ReturnL2AutoCommand(redECoralPose2d).schedule();//testing
+        }
+      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.C_SIDE_RIGHT_L2){
+          if(DriverStation.getAlliance().get() == Alliance.Blue){
+            m_robotContainer.ReturnL2AutoCommand(blueFCoralPose2d).schedule();//testing
+          }else{
+            m_robotContainer.ReturnL2AutoCommand(redFCoralPose2d).schedule();//testing
+          }
+      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.E_SIDE_LEFT_L2){
+        if(DriverStation.getAlliance().get() == Alliance.Blue){
+          m_robotContainer.ReturnL2AutoCommand(blueICoralPose2d).schedule();//testing
+        }else{
+          m_robotContainer.ReturnL2AutoCommand(redICoralPose2d).schedule();//testing
+        }
+      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.E_SIDE_RIGHT_L2){
+        if(DriverStation.getAlliance().get() == Alliance.Blue){
+          m_robotContainer.ReturnL2AutoCommand(blueJCoralPose2d).schedule();//testing
+        }else{
+          m_robotContainer.ReturnL2AutoCommand(redJCoralPose2d).schedule();//testing
+        }
+      }
       //m_robotContainer.ReturnAutoCommand(BlueEFAlgaePose2d).schedule();
-      m_robotContainer.ReturnL3AutoCommand(blueECoralPose2d).schedule();
+      //m_robotContainer.ReturnL3AutoCommand(blueECoralPose2d).schedule();
     } else {
       AutoModeManager.m_autonomousCommand.schedule();
     }

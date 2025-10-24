@@ -19,8 +19,15 @@ public class AutoModeManager{
         RETURN_AUTO,
         STAND_STILL,
         CROSS_LINE,
-        L1,
-        MIDSINGLESCORE
+        L1_MIDDLE_START,
+        MIDSINGLESCORE,
+        L3,
+        C_SIDE_LEFT_L2,
+        C_SIDE_RIGHT_L2,
+        E_SIDE_LEFT_L2,
+        E_SIDE_RIGHT_L2,
+        C_SIDE_L1,
+        E_SIDE_L1
 	}
 
     public static AutoModeManager AutoQueue;
@@ -33,6 +40,7 @@ public class AutoModeManager{
     //private Optional<AutoModeBase> mAutoMode = Optional.empty();
     public static SendableChooser<DesiredMode> mModeChooser = new SendableChooser<>();
     public static Command m_autonomousCommand;
+    public static DesiredMode desiredMode;
 
     public AutoModeManager() {
     mModeChooser.setDefaultOption("Default Auto", DesiredMode.DO_NOTHING);
@@ -43,13 +51,17 @@ public class AutoModeManager{
     // mModeChooser.addOption("Mid 1 Coral", DesiredMode.AB_MIDSCOREONE);
     // mModeChooser.addOption("Stand Still Boi", DesiredMode.STAND_STILL);
     mModeChooser.addOption("Simple Cross Line", DesiredMode.CROSS_LINE);
-    mModeChooser.addOption("L1", DesiredMode.L1);
+    mModeChooser.addOption("L1 from middle ", DesiredMode.L1_MIDDLE_START);
     mModeChooser.addOption("Blue Mid L1-1P", DesiredMode.MIDSINGLESCORE);
+    mModeChooser.addOption("C Side Left Branch l2", DesiredMode.C_SIDE_LEFT_L2);
+    mModeChooser.addOption("C Side Right Branch l2", DesiredMode.C_SIDE_RIGHT_L2);
+    mModeChooser.addOption("E Side Left Branch l2", DesiredMode.E_SIDE_LEFT_L2);
+    mModeChooser.addOption("E Side Right Branch l2", DesiredMode.E_SIDE_RIGHT_L2);
 
     }
 
     public static void updateAutoMode(){
-        DesiredMode desiredMode = mModeChooser.getSelected();
+        desiredMode = mModeChooser.getSelected();
         if (desiredMode == null) {
 			    desiredMode = DesiredMode.DO_NOTHING;
         }else{
@@ -73,6 +85,21 @@ public class AutoModeManager{
                 m_autonomousCommand = CrossLineCommand.runDefaultedAutoCommand(); 
                 break;
             case MIDSINGLESCORE:
+                m_autonomousCommand = null;
+                break;
+            case L1_MIDDLE_START:
+                m_autonomousCommand = null;
+                break;
+            case C_SIDE_LEFT_L2:
+                m_autonomousCommand = null;
+                break;
+            case C_SIDE_RIGHT_L2:
+                m_autonomousCommand = null;
+                break;
+            case E_SIDE_LEFT_L2:
+                m_autonomousCommand = null;
+                break;
+            case E_SIDE_RIGHT_L2:
                 m_autonomousCommand = null;
                 break;
             default:
