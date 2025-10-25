@@ -279,10 +279,11 @@ public class Robot extends TimedRobot {
         }
       }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.E_SIDE_RIGHT_L2){
         if(DriverStation.getAlliance().get() == Alliance.Blue){
-          m_robotContainer.ReturnL2AutoCommand(blueJCoralPose2d).schedule();//testing
+          //m_robotContainer.ReturnL2AutoCommand(blueJCoralPose2d).schedule();
+          m_robotContainer.ReturnL2SimpleHumanCommand(blueJCoralPose2d, blueLeftASecondPose2d, blueLeftHumanPlayerPose2d, blueLeftASecondPose2d, blueJCoralPose2d, 3.5, 0.1, 2.5, 2.5).schedule();//testing
         }else{
           //m_robotContainer.ReturnL2AutoCommand(redJCoralPose2d).schedule();
-          m_robotContainer.ReturnL2HumanCommand(redJCoralPose2d, redCoralSecondOutPose2d, redLeftPlayerStationPose2d).schedule();
+          m_robotContainer.ReturnL2HumanCommand(redJCoralPose2d, redCoralSecondOutPose2d, redRightPlayerStationPose2d, redRightASecondPose2d, redACoralPose2d, 3.5, 0.1, 2.5, 2.5).schedule();
           //m_robotContainer.PIDAtonomousMoveTwiceToPose(redCoralSecondOutPose2d, redLeftPlayerStationPose2d).schedule();
           //testing
         }

@@ -27,7 +27,9 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Bobaboard.ControlHub;
 import frc.robot.commands.autoAlign;
+import frc.robot.commands.autoAlignWithTimeout;
 import frc.robot.commands.autonomousMovementAlign;
+import frc.robot.commands.autonomousMovementAlignWithTimeOut;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 // import frc.robot.subsystems.ClimbSubsystem;
@@ -356,7 +358,7 @@ public class RobotContainer {
         }
     
         public static Command spinMove(){
-            return m_robotDrive.spinMoveCommand(1.5);
+            return m_robotDrive.spinMoveCommand(.75);
         // Command.sequence(
         //     new RunCommand(() -> {
         //         mDriveSubsystem.spinMoveCommand(2);
@@ -368,29 +370,37 @@ public class RobotContainer {
         return new autoAlign(m_robotDrive, targetPose);
     }
 
+    public static Command pIDPathfindToPoseWithTimeout(Pose2d targetPose, double timeoutSeconds){
+      return new autoAlignWithTimeout(m_robotDrive, targetPose, timeoutSeconds);
+    }
+
     public static Command PIDAutonomousMoveToPose(Pose2d targetPose){
         return new autonomousMovementAlign(m_robotDrive, targetPose);
     }
 
-    public Command PIDAtonomousMoveTwiceToPose(Pose2d lowTolerance, Pose2d highTolerance){
-      return Commands.sequence(
-        PIDAutonomousMoveToPose(lowTolerance).withTimeout(2.1),
-        PIDPathfindToPose(highTolerance).withTimeout(2.5)
-      );
-    }
+    public static Command PIDAutonomousMoveToPoseWithTimeout(Pose2d targetPose, double timeoutSeconds){
+      return new autonomousMovementAlignWithTimeOut(m_robotDrive, targetPose, timeoutSeconds);
+  }
+
+    // public Command PIDAtonomousMoveTwiceToPose(Pose2d lowTolerance, Pose2d highTolerance){
+    //   return Commands.sequence(
+    //     PIDAutonomousMoveToPose(lowTolerance).withTimeout(2.1),
+    //     PIDPathfindToPose(highTolerance).withTimeout(2.5)
+    //   );
+    // }
 
     public Command ReturnAutoCommand(Pose2d targetPose){
       return Commands.sequence(
           spinMove(),
-          PIDPathfindToPose(targetPose).withTimeout(5),
-      Commands.parallel(
-              setElevatorL1Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
-          Commands.sequence(
-              new WaitCommand(0.8), //tune
-              doubleRollerCommand().withTimeout(2.5) //tune
-                  .andThen(rollerDefaultStop()) 
-          )
-      )
+          PIDPathfindToPose(targetPose).withTimeout(5)
+      // Commands.parallel(
+      //         setElevatorL1Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
+      //     Commands.sequence(
+      //         new WaitCommand(0.8), //tune
+      //         doubleRollerCommand().withTimeout(2.5) //tune
+      //             .andThen(rollerDefaultStop()) 
+      //     )
+      // )
 
   );
 }
@@ -460,12 +470,42 @@ public class RobotContainer {
     );
     }
 
-    public Command ReturnL2HumanCommand(Pose2d targetPose, Pose2d outReef, Pose2d humanPlayer){
+    public Command ReturnL2HumanCommand(Pose2d targetPose, Pose2d outReef, Pose2d humanPlayer, Pose2d secondOutReef, Pose2d secondTarget, double firstTimeout, double secondTimeout, double thirdTimeout, double quadTimeout){
       return Commands.sequence(
           spinMove(),
-          PIDPathfindToPose(targetPose).withTimeout(3.5),
+          pIDPathfindToPoseWithTimeout(targetPose, firstTimeout).withTimeout(3.5),
       Commands.parallel(
-              setElevatorL2Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
+              setElevatorL2Auto().withTimeout(1.8).andThen(setElevatorStowAuto()),
+          Commands.sequence(
+              new WaitCommand(1), //tune
+              new InstantCommand(() -> {
+                m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+              }, m_Effector),
+              new WaitCommand(0.5),
+              new InstantCommand(() -> {
+                m_Effector.setIntakeLazyPercentageOpenLoop(0);
+              }, m_Effector) //tune 
+          )
+      ).withTimeout(2.7),
+      PIDAutonomousMoveToPoseWithTimeout(outReef, secondTimeout).withTimeout(0.1),
+      pIDPathfindToPoseWithTimeout(humanPlayer, thirdTimeout).withTimeout(3),
+      new WaitCommand(1.25),
+      Commands.parallel(
+        PIDPathfindToPose(secondTarget),
+        //PIDAutonomousMoveToPoseWithTimeout(secondOutReef, quadTimeout),
+        Commands.sequence(
+          new InstantCommand(() -> {
+            m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+          }, m_Effector),
+          new WaitCommand(.5),
+          new InstantCommand(() -> {
+            m_Effector.setIntakeLazyPercentageOpenLoop(0);
+          }, m_Effector)
+        )
+        ),
+        //PIDPathfindToPose(secondTarget),
+        Commands.parallel(
+          setElevatorL2Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
           Commands.sequence(
               new WaitCommand(1), //tune
               new InstantCommand(() -> {
@@ -475,11 +515,61 @@ public class RobotContainer {
               new InstantCommand(() -> {
                 m_Effector.setIntakeLazyPercentageOpenLoop(0);
               }, m_Effector) //tune 
-          )
-      ),
-      PIDAutonomousMoveToPose(outReef).withTimeout(2.1),
-      PIDPathfindToPose(humanPlayer).withTimeout(2.5)
+      )
+      ).withTimeout(5)
     );
+    }
+
+    public Command ReturnL2SimpleHumanCommand(Pose2d targetPose, Pose2d outReef, Pose2d humanPlayer, Pose2d secondOutReef, Pose2d secondTarget, double firstTimeout, double secondTimeout, double thirdTimeout, double quadTimeout){
+      return Commands.sequence(
+          spinMove(),
+          pIDPathfindToPoseWithTimeout(targetPose, firstTimeout).withTimeout(3.5),
+      Commands.parallel(
+              setElevatorL2Auto().withTimeout(1.8).andThen(setElevatorStowAuto()),
+          Commands.sequence(
+              new WaitCommand(1), //tune
+              new InstantCommand(() -> {
+                m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+              }, m_Effector),
+              new WaitCommand(0.5),
+              new InstantCommand(() -> {
+                m_Effector.setIntakeLazyPercentageOpenLoop(0);
+              }, m_Effector) //tune 
+          )
+      ).withTimeout(2.7),
+      PIDAutonomousMoveToPoseWithTimeout(outReef, secondTimeout).withTimeout(0.1),
+      pIDPathfindToPoseWithTimeout(humanPlayer, thirdTimeout).withTimeout(3),
+      new WaitCommand(2.5),
+      Commands.parallel(
+        PIDPathfindToPose(secondTarget),
+        //PIDAutonomousMoveToPoseWithTimeout(secondOutReef, quadTimeout),
+        Commands.sequence(
+          new InstantCommand(() -> {
+            m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+          }, m_Effector),
+          new WaitCommand(.5),
+          new InstantCommand(() -> {
+            m_Effector.setIntakeLazyPercentageOpenLoop(0);
+          }, m_Effector)
+        )
+        )
+      );
+
+        //PIDPathfindToPose(secondTarget),
+    //     Commands.parallel(
+    //       setElevatorL2Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
+    //       Commands.sequence(
+    //           new WaitCommand(1), //tune
+    //           new InstantCommand(() -> {
+    //             m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+    //           }, m_Effector),
+    //           new WaitCommand(1.0),
+    //           new InstantCommand(() -> {
+    //             m_Effector.setIntakeLazyPercentageOpenLoop(0);
+    //           }, m_Effector) //tune 
+    //   )
+    //   ).withTimeout(5)
+    // );
     }
     
 

@@ -20,7 +20,7 @@ import frc.robot.Constants;
 import frc.robot.Bobaboard.BotControls;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class autonomousMovementAlignWithTimeOut extends Command{
+public class autoAlignWithTimeout extends Command{
     private DriveSubsystem driveSubsystem;
     private Pose2d targetPose;
     public Field2d targetfield = new Field2d();
@@ -32,10 +32,11 @@ public class autonomousMovementAlignWithTimeOut extends Command{
     private final ProfiledPIDController rotController;
     public SwerveModuleState[] input;
     public ChassisSpeeds chassis;
-    private final Timer mTimer = new Timer();    
-    private double timeoutSeconds;
+    public double timeoutSeconds;
+    private final Timer mTimer = new Timer(); 
+    
 
-    public autonomousMovementAlignWithTimeOut(DriveSubsystem driveSubsystem, Pose2d targetPose, double timeoutSeconds){
+    public autoAlignWithTimeout(DriveSubsystem driveSubsystem, Pose2d targetPose, double timeoutSeconds){
         targetfield.setRobotPose(targetPose);
         SmartDashboard.putData("TargetField", targetfield);
         this.driveSubsystem = driveSubsystem;
@@ -45,12 +46,10 @@ public class autonomousMovementAlignWithTimeOut extends Command{
 
         rotController = new ProfiledPIDController(2, 0, 0, new TrapezoidProfile.Constraints(5, 5));
         holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
-        holonomicDriveController.setTolerance(new Pose2d(new Translation2d(0.38, 0.38),
-                Rotation2d.fromDegrees(5)));
+        holonomicDriveController.setTolerance(new Pose2d(new Translation2d(0.015, 0.015),
+                Rotation2d.fromDegrees(1)));
         //rotController.enableContinuousInput(-Math.PI, Math.PI);
-
         this.timeoutSeconds = timeoutSeconds;
-
         addRequirements(DriveSubsystem.getInstance());
     }
 
@@ -59,10 +58,11 @@ public class autonomousMovementAlignWithTimeOut extends Command{
         SmartDashboard.putBoolean("AutoAlign Status", true);
         mTimer.reset();
         mTimer.start();
+
     }
 
     public SwerveModuleState[] positionPIDCommand(DriveSubsystem driveSubsystem, Pose2d goalPose){
-        ChassisSpeeds chassis = holonomicDriveController.calculate(driveSubsystem.getPose(), targetPose, 3.5, targetPose.getRotation());
+        ChassisSpeeds chassis = holonomicDriveController.calculate(driveSubsystem.getPose(), targetPose, 0, targetPose.getRotation());
         SwerveModuleState[] swerveModuleStates = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(chassis);
         return swerveModuleStates;
     }
@@ -92,7 +92,6 @@ public class autonomousMovementAlignWithTimeOut extends Command{
     public void end(boolean interrupted){
         SmartDashboard.putBoolean("AutoAlign Status", false);
         System.out.println("Ended AutoAlignCommand Early");
-        mTimer.stop();
     }
 
     @Override
