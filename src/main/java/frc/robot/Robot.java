@@ -281,6 +281,18 @@ public class Robot extends TimedRobot {
         }else{
           m_robotContainer.ReturnL2AutoCommand(redJCoralPose2d).schedule();//testing
         }
+      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.LEFT_A2){
+        if(DriverStation.getAlliance().get() == Alliance.Blue){
+          m_robotContainer.aSideL2AutoCommand(blueLeftAIntialPose2d, blueLeftASecondPose2d, blueACoralPose2d, blueLeftHumanPlayerPose2d).schedule();//testing
+        }else{
+          m_robotContainer.aSideL2AutoCommand(redRightAInitialPose2d, redRightASecondPose2d, redACoralPose2d, redRightPlayerStationPose2d).schedule();//testing
+      }
+      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.RIGHT_A2){
+        if(DriverStation.getAlliance().get() == Alliance.Blue){
+          m_robotContainer.aSideL2AutoCommand(blueRightAIntialPose2d, blueRightASecondPose2d, blueBCoralPose2d, blueRightHumanPlayerPose2d).schedule();//testing
+        }else{
+          m_robotContainer.aSideL2AutoCommand(redLeftAIntialPose2d, redLeftASecondPose2d, redBCoralPose2d, redLeftPlayerStationPose2d).schedule();//testing
+        }
       }
       //m_robotContainer.ReturnAutoCommand(BlueEFAlgaePose2d).schedule();
       //m_robotContainer.ReturnL3AutoCommand(blueECoralPose2d).schedule();

@@ -27,6 +27,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Autonomous.AutoModeManager;
 import frc.robot.Bobaboard.ControlHub;
 import frc.robot.commands.autoAlign;
+import frc.robot.commands.autonomousMovementAlign;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 // import frc.robot.subsystems.ClimbSubsystem;
@@ -367,6 +368,10 @@ public class RobotContainer {
         return new autoAlign(m_robotDrive, targetPose);
     }
 
+    public static Command PIDAutonomousMoveToPose(Pose2d targetPose){
+        return new autonomousMovementAlign(m_robotDrive, targetPose);
+    }
+
     public Command ReturnAutoCommand(Pose2d targetPose){
       return Commands.sequence(
           spinMove(),
@@ -382,6 +387,29 @@ public class RobotContainer {
 
   );
 }
+    public Command aSideL2AutoCommand(Pose2d initialLinearPose, Pose2d beforeAlign, Pose2d targetPose, Pose2d humanStationPose){
+      return Commands.sequence(
+        spinMove(),
+        PIDAutonomousMoveToPose(initialLinearPose).withTimeout(3.25),
+        PIDAutonomousMoveToPose(beforeAlign).withTimeout(2.2),
+        PIDPathfindToPose(targetPose).withTimeout(1.4),
+        Commands.parallel(
+          setElevatorL2Auto().withTimeout(2).andThen(setElevatorStowAuto()),
+          Commands.sequence(
+            new WaitCommand(.9),
+            new InstantCommand(() -> {
+              m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+            }, m_Effector),
+            new WaitCommand(1),
+            new InstantCommand(() -> {
+              m_Effector.setIntakeLazyPercentageOpenLoop(0);
+            }, m_Effector)
+            )
+          ),
+        PIDPathfindToPose(humanStationPose)
+        
+        );
+    }
 
     public Command ReturnL3AutoCommand(Pose2d targetPose){
       return Commands.sequence(

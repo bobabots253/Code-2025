@@ -28,10 +28,13 @@ public class AutoModeManager{
         E_SIDE_RIGHT_L2,
         C_SIDE_L1,
         E_SIDE_L1,
-        BLUE_LEFT_A2,
-        BLUE_RIGHT_A2,
-        RED_LEFT_A2,
-        RED_RIGHT_A2
+        // BLUE_LEFT_A2,
+        // BLUE_RIGHT_A2,
+        // RED_LEFT_A2,
+        // RED_RIGHT_A2,
+        RIGHT_A2,
+        LEFT_A2
+
 
 	}
 
@@ -62,10 +65,10 @@ public class AutoModeManager{
     mModeChooser.addOption("C Side Right Branch l2", DesiredMode.C_SIDE_RIGHT_L2);
     mModeChooser.addOption("E Side Left Branch l2", DesiredMode.E_SIDE_LEFT_L2);
     mModeChooser.addOption("E Side Right Branch l2", DesiredMode.E_SIDE_RIGHT_L2);
-    mModeChooser.addOption("Blue Left A2", DesiredMode.BLUE_LEFT_A2);
-    mModeChooser.addOption("Blue Right A2", DesiredMode.BLUE_LEFT_A2);
-    mModeChooser.addOption("Red Left A2", DesiredMode.RED_LEFT_A2);
-    mModeChooser.addOption("Red RIght A2", DesiredMode.RED_LEFT_A2);
+    mModeChooser.addOption("Left A2", DesiredMode.LEFT_A2);
+    mModeChooser.addOption("Right A2", DesiredMode.RIGHT_A2);
+    // mModeChooser.addOption("Red Left A2", DesiredMode.RED_LEFT_A2);
+    // mModeChooser.addOption("Red RIght A2", DesiredMode.RED_LEFT_A2);
 
     }
 
@@ -111,18 +114,18 @@ public class AutoModeManager{
             case E_SIDE_RIGHT_L2:
                 m_autonomousCommand = null;
                 break;
-            case BLUE_LEFT_A2:
+            case LEFT_A2:
                 m_autonomousCommand = null;
                 break;
-            case BLUE_RIGHT_A2:
+            case RIGHT_A2:
                 m_autonomousCommand = null;
                 break;
-            case RED_LEFT_A2:
-                m_autonomousCommand = null;
-                break;
-            case RED_RIGHT_A2:
-                m_autonomousCommand = null;
-                break;
+            // case RED_LEFT_A2:
+            //     m_autonomousCommand = null;
+            //     break;
+            // case RED_RIGHT_A2:
+            //     m_autonomousCommand = null;
+                // break;
             default:
 			    System.out.println("ERROR: unexpected auto mode!");
 				break;

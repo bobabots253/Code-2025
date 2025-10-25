@@ -56,7 +56,7 @@ public class autonomousMovementAlign extends Command{
     }
 
     public SwerveModuleState[] positionPIDCommand(DriveSubsystem driveSubsystem, Pose2d goalPose){
-        ChassisSpeeds chassis = holonomicDriveController.calculate(driveSubsystem.getPose(), targetPose, 0, targetPose.getRotation());
+        ChassisSpeeds chassis = holonomicDriveController.calculate(driveSubsystem.getPose(), targetPose, 1, targetPose.getRotation());
         SwerveModuleState[] swerveModuleStates = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(chassis);
         return swerveModuleStates;
     }
