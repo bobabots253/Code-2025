@@ -192,6 +192,62 @@ public class Robot extends TimedRobot {
     Pose2d redJCoralPose2d = new Pose2d((new Translation2d(12.455158, 2.98023804)), //fixed rot 10/22
     new Rotation2d(60 * (Math.PI/180)));
 
+    //Advance Auto Pose
+    //2.41
+    Pose2d redLeftAIntialPose2d = new Pose2d((new Translation2d(14.349, 5.625)), //fixed rot 10/22
+    new Rotation2d(-120 * (Math.PI/180)));
+    //1.46
+    Pose2d redLeftASecondPose2d = new Pose2d((new Translation2d(14.805, 4.463)), //fixed rot 10/22
+    new Rotation2d(180 * (Math.PI/180)));
+    //.9
+    Pose2d redBCoralPose2d = new Pose2d ((new Translation2d(14.256818, 4.1851)), //good 10/22
+    new Rotation2d(180 * (Math.PI/180)));
+    //2.21
+    Pose2d redLeftPlayerStationPose2d = new Pose2d ((new Translation2d(15.872, 7.507)), //good 10/22 
+    new Rotation2d(-125 * (Math.PI/180)));
+    //2.21 then goes toward reLeftASecondPose2d then another 1.05
+    Pose2d redACoralPose2d = new Pose2d ((new Translation2d(14.256818, 3.8549)), //good 10/22 
+    new Rotation2d(180 * (Math.PI/180)));
+
+    //2.34s
+    Pose2d redRightAInitialPose2d = new Pose2d ((new Translation2d(14.134, 2.509)), //good 10/22 
+    new Rotation2d(120 * (Math.PI/180)));
+    //1.7s
+    Pose2d redRightASecondPose2d = new Pose2d ((new Translation2d(14.805, 3.554)), //good 10/22 
+    new Rotation2d(180 * (Math.PI/180)));
+
+    Pose2d redRightPlayerStationPose2d = new Pose2d ((new Translation2d(15.944, 0.567)), //good 10/22 
+    new Rotation2d(125 * (Math.PI/180)));
+
+    
+    //BlueSide Poses
+    //2.51
+    Pose2d blueLeftAIntialPose2d = new Pose2d((new Translation2d(3.560, 5.625)), //fixed rot 10/22
+    new Rotation2d(-60 * (Math.PI/180)));
+    //1.84
+    Pose2d blueLeftASecondPose2d = new Pose2d((new Translation2d(2.697, 4.463)), //fixed rot 10/22
+    new Rotation2d(0));
+    //1.00
+    Pose2d blueACoralPose2d = new Pose2d((new Translation2d(3.2812, 4.190238)), // good 10/22
+    new Rotation2d(0));
+    //2.33
+    Pose2d blueLeftHumanPlayerPose2d = new Pose2d((new Translation2d(1.678, 7.495)), // good 10/22
+    new Rotation2d(-55 * (Math.PI/180)));
+
+    //Blue Right
+    //2.5
+    Pose2d blueRightAIntialPose2d = new Pose2d((new Translation2d(3.560, 2.509)), //fixed rot 10/22
+    new Rotation2d(60 * (Math.PI/180)));
+    //1.8
+    Pose2d blueRightASecondPose2d = new Pose2d((new Translation2d(2.697, 3.554)), //fixed rot 10/22
+    new Rotation2d(0));
+    //1.04s
+    Pose2d blueBCoralPose2d = new Pose2d((new Translation2d(3.2812, 3.861562)), //good 10/22
+    new Rotation2d(0));
+
+    Pose2d blueRightHumanPlayerPose2d = new Pose2d((new Translation2d(1.630, 0.579)), // good 10/22
+    new Rotation2d(55 * (Math.PI/180)));
+
     AutoModeManager.updateAutoMode();
     
     if (AutoModeManager.m_autonomousCommand == null){

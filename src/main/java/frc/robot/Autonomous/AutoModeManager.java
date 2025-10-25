@@ -27,7 +27,12 @@ public class AutoModeManager{
         E_SIDE_LEFT_L2,
         E_SIDE_RIGHT_L2,
         C_SIDE_L1,
-        E_SIDE_L1
+        E_SIDE_L1,
+        BLUE_LEFT_A2,
+        BLUE_RIGHT_A2,
+        RED_LEFT_A2,
+        RED_RIGHT_A2
+
 	}
 
     public static AutoModeManager AutoQueue;
@@ -57,6 +62,10 @@ public class AutoModeManager{
     mModeChooser.addOption("C Side Right Branch l2", DesiredMode.C_SIDE_RIGHT_L2);
     mModeChooser.addOption("E Side Left Branch l2", DesiredMode.E_SIDE_LEFT_L2);
     mModeChooser.addOption("E Side Right Branch l2", DesiredMode.E_SIDE_RIGHT_L2);
+    mModeChooser.addOption("Blue Left A2", DesiredMode.BLUE_LEFT_A2);
+    mModeChooser.addOption("Blue Right A2", DesiredMode.BLUE_LEFT_A2);
+    mModeChooser.addOption("Red Left A2", DesiredMode.RED_LEFT_A2);
+    mModeChooser.addOption("Red RIght A2", DesiredMode.RED_LEFT_A2);
 
     }
 
@@ -100,6 +109,18 @@ public class AutoModeManager{
                 m_autonomousCommand = null;
                 break;
             case E_SIDE_RIGHT_L2:
+                m_autonomousCommand = null;
+                break;
+            case BLUE_LEFT_A2:
+                m_autonomousCommand = null;
+                break;
+            case BLUE_RIGHT_A2:
+                m_autonomousCommand = null;
+                break;
+            case RED_LEFT_A2:
+                m_autonomousCommand = null;
+                break;
+            case RED_RIGHT_A2:
                 m_autonomousCommand = null;
                 break;
             default:
