@@ -181,6 +181,8 @@ public class Robot extends TimedRobot {
     new Rotation2d(120 * (Math.PI/180)));
     Pose2d redFCoralPose2d = new Pose2d ((new Translation2d(12.31215311, 4.98901196)), //good 10/22
     new Rotation2d(-60 * (Math.PI/180)));
+    Pose2d redCoralSecondOutPose2d = new Pose2d ((new Translation2d(12.899, 1.538)), //good 10/22
+    new Rotation2d(120 * (Math.PI/180)));
 
     //E side Poses
     Pose2d blueICoralPose2d = new Pose2d((new Translation2d(5.23550811, 4.98901196)), //good 10/22
@@ -189,7 +191,7 @@ public class Robot extends TimedRobot {
     new Rotation2d(60 * (Math.PI/180)));
     Pose2d blueJCoralPose2d = new Pose2d((new Translation2d(5.092454, 5.07156196)), //fixed rot 10/22
     new Rotation2d(-120 * (Math.PI/180)));
-    Pose2d redJCoralPose2d = new Pose2d((new Translation2d(12.455158, 2.98023804)), //fixed rot 10/22
+    Pose2d redJCoralPose2d = new Pose2d((new Translation2d(12.59816289, 2.89768804)), //fixed rot 10/22
     new Rotation2d(60 * (Math.PI/180)));
 
     //Advance Auto Pose
@@ -205,12 +207,12 @@ public class Robot extends TimedRobot {
     //2.21
     Pose2d redLeftPlayerStationPose2d = new Pose2d ((new Translation2d(15.872, 7.507)), //good 10/22 
     new Rotation2d(-125 * (Math.PI/180)));
-    //2.21 then goes toward reLeftASecondPose2d then another 1.05
+    //2.21 then goes toward redLeftASecondPose2d then another 1.05
     Pose2d redACoralPose2d = new Pose2d ((new Translation2d(14.256818, 3.8549)), //good 10/22 
     new Rotation2d(180 * (Math.PI/180)));
 
     //2.34s
-    Pose2d redRightAInitialPose2d = new Pose2d ((new Translation2d(14.134, 2.509)), //good 10/22 
+    Pose2d redRightAInitialPose2d = new Pose2d ((new Translation2d(14.134, 2.309)), //good 10/22 
     new Rotation2d(120 * (Math.PI/180)));
     //1.7s
     Pose2d redRightASecondPose2d = new Pose2d ((new Translation2d(14.805, 3.554)), //good 10/22 
@@ -279,7 +281,10 @@ public class Robot extends TimedRobot {
         if(DriverStation.getAlliance().get() == Alliance.Blue){
           m_robotContainer.ReturnL2AutoCommand(blueJCoralPose2d).schedule();//testing
         }else{
-          m_robotContainer.ReturnL2AutoCommand(redJCoralPose2d).schedule();//testing
+          //m_robotContainer.ReturnL2AutoCommand(redJCoralPose2d).schedule();
+          m_robotContainer.ReturnL2HumanCommand(redJCoralPose2d, redCoralSecondOutPose2d, redLeftPlayerStationPose2d).schedule();
+          //m_robotContainer.PIDAtonomousMoveTwiceToPose(redCoralSecondOutPose2d, redLeftPlayerStationPose2d).schedule();
+          //testing
         }
       }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.LEFT_A2){
         if(DriverStation.getAlliance().get() == Alliance.Blue){

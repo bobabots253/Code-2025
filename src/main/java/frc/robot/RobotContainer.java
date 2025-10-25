@@ -372,6 +372,13 @@ public class RobotContainer {
         return new autonomousMovementAlign(m_robotDrive, targetPose);
     }
 
+    public Command PIDAtonomousMoveTwiceToPose(Pose2d lowTolerance, Pose2d highTolerance){
+      return Commands.sequence(
+        PIDAutonomousMoveToPose(lowTolerance).withTimeout(2.1),
+        PIDPathfindToPose(highTolerance).withTimeout(2.5)
+      );
+    }
+
     public Command ReturnAutoCommand(Pose2d targetPose){
       return Commands.sequence(
           spinMove(),
@@ -435,11 +442,11 @@ public class RobotContainer {
     public Command ReturnL2AutoCommand(Pose2d targetPose){
       return Commands.sequence(
           spinMove(),
-          PIDPathfindToPose(targetPose).withTimeout(3),
+          PIDPathfindToPose(targetPose).withTimeout(3.5),
       Commands.parallel(
               setElevatorL2Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
           Commands.sequence(
-              new WaitCommand(0.9), //tune
+              new WaitCommand(1), //tune
               new InstantCommand(() -> {
                 m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
               }, m_Effector),
@@ -452,6 +459,30 @@ public class RobotContainer {
 
     );
     }
+
+    public Command ReturnL2HumanCommand(Pose2d targetPose, Pose2d outReef, Pose2d humanPlayer){
+      return Commands.sequence(
+          spinMove(),
+          PIDPathfindToPose(targetPose).withTimeout(3.5),
+      Commands.parallel(
+              setElevatorL2Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
+          Commands.sequence(
+              new WaitCommand(1), //tune
+              new InstantCommand(() -> {
+                m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+              }, m_Effector),
+              new WaitCommand(1.0),
+              new InstantCommand(() -> {
+                m_Effector.setIntakeLazyPercentageOpenLoop(0);
+              }, m_Effector) //tune 
+          )
+      ),
+      PIDAutonomousMoveToPose(outReef).withTimeout(2.1),
+      PIDPathfindToPose(humanPlayer).withTimeout(2.5)
+    );
+    }
+    
+
 
     // public Command intakeCoralCommand(){
     //   return new SequentialCommandGroup(
