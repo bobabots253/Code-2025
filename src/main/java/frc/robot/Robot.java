@@ -189,7 +189,7 @@ public class Robot extends TimedRobot {
     new Rotation2d(-120 * (Math.PI/180)));
     Pose2d redICoralPose2d = new Pose2d ((new Translation2d(12.31215311, 3.06278804)), //good 10/22
     new Rotation2d(60 * (Math.PI/180)));
-    Pose2d blueJCoralPose2d = new Pose2d((new Translation2d(5.092454, 5.07156196)), //fixed rot 10/22
+    Pose2d blueJCoralPose2d = new Pose2d((new Translation2d(4.94939989, 5.15411196)), //fixed rot 10/22
     new Rotation2d(-120 * (Math.PI/180)));
     Pose2d redJCoralPose2d = new Pose2d((new Translation2d(12.59816289, 2.89768804)), //fixed rot 10/22
     new Rotation2d(60 * (Math.PI/180)));
@@ -236,6 +236,8 @@ public class Robot extends TimedRobot {
     Pose2d blueLeftHumanPlayerPose2d = new Pose2d((new Translation2d(1.678, 7.495)), // good 10/22
     new Rotation2d(-55 * (Math.PI/180)));
 
+    Pose2d blueLeftKickPose2d = new Pose2d((new Translation2d(4.867, 5.721 )), new Rotation2d( -120 * (Math.PI/180)));
+
     //Blue Right
     //2.5
     Pose2d blueRightAIntialPose2d = new Pose2d((new Translation2d(3.560, 2.509)), //fixed rot 10/22
@@ -280,7 +282,7 @@ public class Robot extends TimedRobot {
       }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.E_SIDE_RIGHT_L2){
         if(DriverStation.getAlliance().get() == Alliance.Blue){
           //m_robotContainer.ReturnL2AutoCommand(blueJCoralPose2d).schedule();
-          m_robotContainer.ReturnL2SimpleHumanCommand(blueJCoralPose2d, blueLeftASecondPose2d, blueLeftHumanPlayerPose2d, blueLeftASecondPose2d, blueJCoralPose2d, 3.5, 0.1, 2.5, 2.5).schedule();//testing
+          m_robotContainer.ReturnL2SimpleHumanCommand(blueJCoralPose2d, blueLeftKickPose2d, blueLeftHumanPlayerPose2d, blueLeftKickPose2d, blueJCoralPose2d, 3.5, 0.1, 2.5, 2.5).schedule();//testing
         }else{
           //m_robotContainer.ReturnL2AutoCommand(redJCoralPose2d).schedule();
           m_robotContainer.ReturnL2HumanCommand(redJCoralPose2d, redCoralSecondOutPose2d, redRightPlayerStationPose2d, redRightASecondPose2d, redACoralPose2d, 3.5, 0.1, 2.5, 2.5).schedule();
