@@ -576,9 +576,8 @@ public class RobotContainer {
     }
     
     public Command returnChosenSpinMove(){
-      return DriverStation.getAlliance().get() == Alliance.Red ?  spinMove() : inverseSpinMove();
+      return DriverStation.getAlliance().get() == Alliance.Red ?  inverseSpinMove() : spinMove();
     }
-            
 
     public Command returnBlueLeftAACommand(Pose2d offReef, double offReefTimeout, Pose2d firstScorePose2d, 
       double firstScoreTimeout, Pose2d humanPlayerPose2d, double humanPlayerTimeout, double stationPeriod,
