@@ -40,8 +40,8 @@ public class autonomousMovementAlignWithTimeOut extends Command{
         SmartDashboard.putData("TargetField", targetfield);
         this.driveSubsystem = driveSubsystem;
         this.targetPose = targetPose;
-        xController = new PIDController(3.25, 0, 0.5); //Max Low Accuracy: 3.5, 0, 0.25
-        yController = new PIDController(3.25, 0, 0.5); //Testing: 3.5, 0, 0.5
+        xController = new PIDController(3.25, 0, 0.25); //Max Low Accuracy: 3.5, 0, 0.25
+        yController = new PIDController(3.25, 0, 0.25); //Testing: 3.5, 0, 0.5
 
         rotController = new ProfiledPIDController(2, 0, 0, new TrapezoidProfile.Constraints(5, 5));
         holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);

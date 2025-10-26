@@ -584,7 +584,7 @@ public class RobotContainer {
           Commands.parallel(
             setElevatorL2Auto().withTimeout(elevtorTimeout).andThen(setElevatorStowAuto()),
           Commands.sequence(
-            new WaitCommand(.8), //tune
+            new WaitCommand(1.8), //tune
             new InstantCommand(() -> {
               m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
             }, m_Effector),
@@ -592,17 +592,27 @@ public class RobotContainer {
             new InstantCommand(() -> {
               m_Effector.setIntakeLazyPercentageOpenLoop(0);
             }, m_Effector)
-          ).withTimeout(elevtorTimeout+.4)
-          )
-
+          ).withTimeout(elevtorTimeout+.5)
+          ).withTimeout(elevtorTimeout+.5)
         ),
         pIDPathfindToPoseWithTimeout(humanPlayerPose2d, humanPlayerTimeout).withTimeout(humanPlayerTimeout),
         new WaitCommand(stationPeriod),
+        Commands.parallel(
         pIDPathfindToPoseWithTimeout(secondScorePose2d, secondScoreTimeout).withTimeout(secondScoreTimeout),
+        Commands.sequence(
+          new InstantCommand(() -> {
+            m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+          }, m_Effector),
+          new WaitCommand(.5),
+          new InstantCommand(() -> {
+            m_Effector.setIntakeLazyPercentageOpenLoop(0);
+          }, m_Effector)
+        ).withTimeout(0.6)
+        ).withTimeout(3.3),
         Commands.parallel(
           setElevatorL2Auto().withTimeout(elevtorTimeout).andThen(setElevatorStowAuto()),
           Commands.sequence(
-            new WaitCommand(.8), //tune
+            new WaitCommand(1.5), //tune
             new InstantCommand(() -> {
               m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
             }, m_Effector),

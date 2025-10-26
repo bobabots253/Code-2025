@@ -218,7 +218,7 @@ public final class Constants {
     public static final double kUniversalPIDOutputLow = -1; //max output is capped @ 1
     public static final double kUniversalPIDOutputHigh = 1;
     public static final double ELEVATOR_MAX_TRAVEL = 19.39500; //heuristic
-    public static final double ELEVATOR_MIN_TRAVEL = -0.075000; //heuristic
+    public static final double ELEVATOR_MIN_TRAVEL = -0.20000; //heuristic
     public static final double ELEVATOR_OUTPUT_LOW = -0.75;
     public static final double ELEVATOR_OUTPUT_HIGH = 0.75;
     public static final double arbFFVolatge = 0.05;
