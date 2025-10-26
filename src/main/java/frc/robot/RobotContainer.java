@@ -556,6 +556,29 @@ public class RobotContainer {
         )
       );
 
+        }
+
+      public Command ReturnL2StaggeredCommand(Pose2d kickOut, Pose2d targetPose, double kickOutTimeout, double targetTimeout, double waitTime){
+        return Commands.sequence(
+            new WaitCommand(waitTime),
+            spinMove(),
+            PIDAutonomousMoveToPoseWithTimeout(kickOut, kickOutTimeout).withTimeout(kickOutTimeout),
+            pIDPathfindToPoseWithTimeout(targetPose, targetTimeout).withTimeout(targetTimeout),
+        Commands.parallel(
+                setElevatorL2Auto().withTimeout(1.8).andThen(setElevatorStowAuto()),
+            Commands.sequence(
+                new WaitCommand(1), //tune
+                new InstantCommand(() -> {
+                  m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+                }, m_Effector),
+                new WaitCommand(0.5),
+                new InstantCommand(() -> {
+                  m_Effector.setIntakeLazyPercentageOpenLoop(0);
+                }, m_Effector) //tune 
+            )
+        ).withTimeout(2.7)
+          );
+        }
 
 
         //PIDPathfindToPose(secondTarget),
@@ -573,7 +596,7 @@ public class RobotContainer {
     //   )
     //   ).withTimeout(5)
     // );
-    }
+
     
     public Command returnChosenSpinMove(){
       return DriverStation.getAlliance().get() == Alliance.Red ?  inverseSpinMove() : spinMove();

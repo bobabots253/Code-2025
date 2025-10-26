@@ -272,6 +272,11 @@ public class Robot extends TimedRobot {
     Pose2d redLeftHumanPose2d = new Pose2d((new Translation2d(16.219, 0.890)), // good 10/22
     new Rotation2d(125 * (Math.PI/180)));
 
+    // Eliminatiion
+
+    Pose2d blueESideKickOffPose2d = new Pose2d((new Translation2d(6.377, 5.634)), new Rotation2d(-120 * (Math.PI/180)));
+    Pose2d blueCSideKickOffPose2d = new Pose2d((new Translation2d(6.133, 2.358)), new Rotation2d(120 * (Math.PI/180)));
+    Pose2d redESideKickOffPose2d = new Pose2d((new Translation2d(11.632, 2.582)), new Rotation2d(60 * (Math.PI/180)));
 
     AutoModeManager.updateAutoMode();
     
@@ -294,11 +299,12 @@ public class Robot extends TimedRobot {
           }else{
             m_robotContainer.ReturnL2AutoCommand(redFCoralPose2d).schedule();//testing
           }
+      //Tagger
       }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.E_SIDE_LEFT_L2){
         if(DriverStation.getAlliance().get() == Alliance.Blue){
-          m_robotContainer.ReturnL2AutoCommand(blueICoralPose2d).schedule();//testing
+          m_robotContainer.ReturnL2StaggeredCommand(blueESideKickOffPose2d, blueICoralPose2d, 2.0, 4, 1.5).schedule();//testing
         }else{
-          m_robotContainer.ReturnL2AutoCommand(redICoralPose2d).schedule();//testing
+          m_robotContainer.ReturnL2StaggeredCommand(redESideKickOffPose2d, redICoralPose2d, 2.0, 4, 1.5).schedule();//testing
         }
       }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.E_SIDE_RIGHT_L2){
         if(DriverStation.getAlliance().get() == Alliance.Blue){
