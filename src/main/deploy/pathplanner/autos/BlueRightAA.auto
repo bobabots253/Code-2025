@@ -7,25 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BlueLeftAAStart"
+            "pathName": "BlueRightAAStart"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BlueLeftFirstScore"
+            "pathName": "BlueRightFirstScore"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BlueLeftHuman"
+            "pathName": "BlueRightHuman"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BlueLeftSecondScore"
+            "pathName": "BlueRightSecondScore"
           }
         }
       ]

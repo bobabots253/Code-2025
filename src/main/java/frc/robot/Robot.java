@@ -260,6 +260,13 @@ public class Robot extends TimedRobot {
     // Pose2d blueLeftInitialOffPose2d = new Pose2d((new Translation2d(2.429, 5.305)), // good 10/22
     // new Rotation2d(0 * (Math.PI/180)));
 
+    //BlueRightAA
+    Pose2d blueRightInitialOffPose2d = new Pose2d((new Translation2d(2.429, 2.745)), // good 10/22
+    new Rotation2d(0 * (Math.PI/180)));
+    Pose2d blueRightHumanPose2d = new Pose2d((new Translation2d(1.256, 0.969)), // good 10/22
+    new Rotation2d(55 * (Math.PI/180)));
+
+
 
     AutoModeManager.updateAutoMode();
     
@@ -318,14 +325,23 @@ public class Robot extends TimedRobot {
         }
       }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.BLUE_LEFT_AA){
         if(DriverStation.getAlliance().get() == Alliance.Blue){
-          m_robotContainer.returnBlueLeftAACommand(blueLeftInitialOffPose2d, 2.5, blueACoralPose2d, 
-          1.5, blueLeftHumanPose2d, 2.3, 1.0, blueBCoralPose2d, 
+          m_robotContainer.returnBlueLeftAACommand(blueRightInitialOffPose2d, 2.5, blueBCoralPose2d, 
+          1.5, blueRightHumanPose2d, 2.3, 1.0, blueACoralPose2d, 
           kDefaultPeriod, kDefaultPeriod);
           // m_robotContainer.aSideL2AutoCommand(blueRightAIntialPose2d, blueRightASecondPose2d, blueBCoralPose2d, blueRightHumanPlayerPose2d).schedule();//testing
         }else{
           // m_robotContainer.aSideL2AutoCommand(redLeftAIntialPose2d, redLeftASecondPose2d, redBCoralPose2d, redLeftPlayerStationPose2d).schedule();//testing
         }
-      }
+      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.BLUE_RIGHT_AA){
+          if(DriverStation.getAlliance().get() == Alliance.Blue){
+            m_robotContainer.returnBlueLeftAACommand(blueLeftInitialOffPose2d, 2.5, blueACoralPose2d, 
+          1.5, blueLeftHumanPose2d, 2.3, 1.0, blueACoralPose2d, 
+          2.5, 1.8);
+          }else{
+
+          }
+        }
+      
       //m_robotContainer.ReturnAutoCommand(BlueEFAlgaePose2d).schedule();
       //m_robotContainer.ReturnL3AutoCommand(blueECoralPose2d).schedule();
     } else {
