@@ -266,6 +266,11 @@ public class Robot extends TimedRobot {
     Pose2d blueRightHumanPose2d = new Pose2d((new Translation2d(1.256, 0.969)), // good 10/22
     new Rotation2d(55 * (Math.PI/180)));
 
+    //RedLeftAA
+    Pose2d redLeftInitialOffPose2d = new Pose2d((new Translation2d(15.308, 2.745)), // good 10/22
+    new Rotation2d(180 * (Math.PI/180)));
+    Pose2d redLeftHumanPose2d = new Pose2d((new Translation2d(16.219, 0.890)), // good 10/22
+    new Rotation2d(125 * (Math.PI/180)));
 
 
     AutoModeManager.updateAutoMode();
@@ -340,7 +345,16 @@ public class Robot extends TimedRobot {
           }else{
 
           }
+      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.RED_LEFT_AA){
+        if(DriverStation.getAlliance().get() == Alliance.Red){
+          m_robotContainer.returnBlueLeftAACommand(redLeftAIntialPose2d, 2.5, redACoralPose2d, 
+          3.2, redLeftHumanPose2d, 2.3, 1.0, redBCoralPose2d, 
+          3, 2.4).schedule();
+        }else{
+
         }
+      }
+      
       
       //m_robotContainer.ReturnAutoCommand(BlueEFAlgaePose2d).schedule();
       //m_robotContainer.ReturnL3AutoCommand(blueECoralPose2d).schedule();
