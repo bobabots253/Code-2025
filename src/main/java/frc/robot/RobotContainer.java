@@ -555,6 +555,8 @@ public class RobotContainer {
         )
       );
 
+
+
         //PIDPathfindToPose(secondTarget),
     //     Commands.parallel(
     //       setElevatorL2Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
@@ -570,6 +572,48 @@ public class RobotContainer {
     //   )
     //   ).withTimeout(5)
     // );
+    }
+    public Command returnBlueLeftAACommand(Pose2d offReef, double offReefTimeout, Pose2d firstScorePose2d, 
+      double firstScoreTimeout, Pose2d humanPlayerPose2d, double humanPlayerTimeout, double stationPeriod,
+      Pose2d secondScorePose2d, double secondScoreTimeout, double elevtorTimeout){
+      return Commands.sequence(
+        spinMove(),
+        PIDAutonomousMoveToPoseWithTimeout(offReef, offReefTimeout).withTimeout(offReefTimeout),
+        Commands.parallel(
+          pIDPathfindToPoseWithTimeout(firstScorePose2d, firstScoreTimeout).withTimeout(firstScoreTimeout),
+          Commands.parallel(
+            setElevatorL2Auto().withTimeout(elevtorTimeout).andThen(setElevatorStowAuto()),
+          Commands.sequence(
+            new WaitCommand(.8), //tune
+            new InstantCommand(() -> {
+              m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+            }, m_Effector),
+            new WaitCommand(.5),
+            new InstantCommand(() -> {
+              m_Effector.setIntakeLazyPercentageOpenLoop(0);
+            }, m_Effector)
+          ).withTimeout(elevtorTimeout+.4)
+          )
+
+        ),
+        pIDPathfindToPoseWithTimeout(humanPlayerPose2d, humanPlayerTimeout).withTimeout(humanPlayerTimeout),
+        new WaitCommand(stationPeriod),
+        pIDPathfindToPoseWithTimeout(secondScorePose2d, secondScoreTimeout).withTimeout(secondScoreTimeout),
+        Commands.parallel(
+          setElevatorL2Auto().withTimeout(elevtorTimeout).andThen(setElevatorStowAuto()),
+          Commands.sequence(
+            new WaitCommand(.8), //tune
+            new InstantCommand(() -> {
+              m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+            }, m_Effector),
+            new WaitCommand(.5),
+            new InstantCommand(() -> {
+              m_Effector.setIntakeLazyPercentageOpenLoop(0);
+            }, m_Effector)
+          ).withTimeout(elevtorTimeout+.4)//This .4 is arbitraty and is what Joshua thinks how long to stow
+        )
+
+        );
     }
     
 

@@ -33,7 +33,11 @@ public class AutoModeManager{
         // RED_LEFT_A2,
         // RED_RIGHT_A2,
         RIGHT_A2,
-        LEFT_A2
+        LEFT_A2,
+        BLUE_LEFT_AA,
+        BLUE_RIGHT_AA,
+        RED_LEFT_AA,
+        RED_RIGHT_AA,
 
 
 	}
@@ -67,6 +71,7 @@ public class AutoModeManager{
     mModeChooser.addOption("E Side Right Branch l2", DesiredMode.E_SIDE_RIGHT_L2);
     mModeChooser.addOption("Left A2", DesiredMode.LEFT_A2);
     mModeChooser.addOption("Right A2", DesiredMode.RIGHT_A2);
+    mModeChooser.addOption("Blue Left AA", DesiredMode.BLUE_LEFT_AA);
     // mModeChooser.addOption("Red Left A2", DesiredMode.RED_LEFT_A2);
     // mModeChooser.addOption("Red RIght A2", DesiredMode.RED_LEFT_A2);
 
@@ -118,6 +123,9 @@ public class AutoModeManager{
                 m_autonomousCommand = null;
                 break;
             case RIGHT_A2:
+                m_autonomousCommand = null;
+                break;
+            case BLUE_LEFT_AA:
                 m_autonomousCommand = null;
                 break;
             // case RED_LEFT_A2:
