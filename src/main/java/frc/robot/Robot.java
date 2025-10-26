@@ -347,8 +347,8 @@ public class Robot extends TimedRobot {
           }
       }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.RED_LEFT_AA){
         if(DriverStation.getAlliance().get() == Alliance.Red){
-          m_robotContainer.returnBlueLeftAACommand(redLeftAIntialPose2d, 2.5, redACoralPose2d, 
-          3.2, redLeftHumanPose2d, 2.3, 1.0, redBCoralPose2d, 
+          m_robotContainer.returnBlueLeftAACommand(redLeftInitialOffPose2d, 2.5, redACoralPose2d, 
+          3.6, redLeftHumanPose2d, 2.3, 1.0, redBCoralPose2d, 
           3, 2.4).schedule();
         }else{
 

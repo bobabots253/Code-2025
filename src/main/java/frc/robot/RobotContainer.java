@@ -55,6 +55,7 @@ public class RobotContainer {
   public static DriveSubsystem m_robotDrive;
   public final ElevatorSubsystem m_Elevator;
   public final EndEffectorSubsystem m_Effector;
+  public Command chosenSpinMove;
   // public final ClimbSubsystem m_Climb;
    /*READ ME:
   A static instance of the Robot Container with all its contents
@@ -359,12 +360,12 @@ public class RobotContainer {
     
         public static Command spinMove(){
             return m_robotDrive.spinMoveCommand(.75);
-        // Command.sequence(
-        //     new RunCommand(() -> {
-        //         mDriveSubsystem.spinMoveCommand(2);
-        //     }, mDriveSubsystem)
-        // );
-    }
+
+        }
+
+        public static Command inverseSpinMove(){
+          return m_robotDrive.inverseSpinMoveCommand(0.75);
+        }
 
     public static Command PIDPathfindToPose(Pose2d targetPose){
         return new autoAlign(m_robotDrive, targetPose);
@@ -573,18 +574,24 @@ public class RobotContainer {
     //   ).withTimeout(5)
     // );
     }
+    
+    public Command returnChosenSpinMove(){
+      return DriverStation.getAlliance().get() == Alliance.Red ?  spinMove() : inverseSpinMove();
+    }
+            
+
     public Command returnBlueLeftAACommand(Pose2d offReef, double offReefTimeout, Pose2d firstScorePose2d, 
       double firstScoreTimeout, Pose2d humanPlayerPose2d, double humanPlayerTimeout, double stationPeriod,
       Pose2d secondScorePose2d, double secondScoreTimeout, double elevtorTimeout){
       return Commands.sequence(
-        spinMove(),
+        returnChosenSpinMove(),
         PIDAutonomousMoveToPoseWithTimeout(offReef, offReefTimeout).withTimeout(offReefTimeout),
         Commands.parallel(
           pIDPathfindToPoseWithTimeout(firstScorePose2d, firstScoreTimeout).withTimeout(firstScoreTimeout),
           Commands.parallel(
             setElevatorL2Auto().withTimeout(elevtorTimeout).andThen(setElevatorStowAuto()),
           Commands.sequence(
-            new WaitCommand(1.8), //tune
+            new WaitCommand(2.2), //tune
             new InstantCommand(() -> {
               m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
             }, m_Effector),
@@ -593,7 +600,7 @@ public class RobotContainer {
               m_Effector.setIntakeLazyPercentageOpenLoop(0);
             }, m_Effector)
           ).withTimeout(elevtorTimeout+.5)
-          ).withTimeout(elevtorTimeout+.5)
+          ).withTimeout(elevtorTimeout+.9)
         ),
         pIDPathfindToPoseWithTimeout(humanPlayerPose2d, humanPlayerTimeout).withTimeout(humanPlayerTimeout),
         new WaitCommand(stationPeriod),

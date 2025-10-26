@@ -523,6 +523,22 @@ public class DriveSubsystem extends SubsystemBase {
               new ChassisSpeeds(0, 0, 0))); 
     }
 
+    public Command inverseSpinMoveCommand(double timeoutSeconds) { //tune for 180 degrees
+      final double rotationRate = DriveConstants.kTimedTurnSpeed;
+      Command turnCommand = new RunCommand(
+          () -> driveRobotRelative(new ChassisSpeeds(
+              0, 
+              0, 
+              -(rotationRate) //angularVelocity
+          )),
+          this
+      );
+      return turnCommand
+          .withTimeout(timeoutSeconds)
+          .andThen(() -> driveRobotRelative(
+            new ChassisSpeeds(0, 0, 0))); 
+  }
+
   /**
    * Returns the heading of the robot.
    */
