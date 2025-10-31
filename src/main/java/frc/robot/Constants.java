@@ -342,5 +342,12 @@ public final class Constants {
     public static final int kUniversalSoftLimit = 40;
     public static final int kSuperHighOutputLimit = 60;
     }
+
+  public static final class SuperstructureConstants {
+      public enum AutomationLevel {
+      AUTO_RELEASE,
+      AUTO_DRIVE_AND_MANUAL_RELEASE,
+    }
+  }
   
 }

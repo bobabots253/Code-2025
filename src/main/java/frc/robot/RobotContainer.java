@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Autonomous.AutoModeManager;
@@ -34,8 +35,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 // import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.EndEffectorSubsystem;
+import frc.robot.subsystems.TestSubsystem;
 
 /*
  * This class is where the bulk of the robot (including the subsystems) should be declared.  Since Command-based is a
@@ -44,51 +44,74 @@ import frc.robot.subsystems.EndEffectorSubsystem;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // 
-  /*READ ME:
-  The robot's subsystems
-  */
-  //public final TestSubsystem m_TestSubsystem;
-  private static RobotContainer instance = null;
-  public final AutoModeManager m_AutoModeManager;
-  public final ControlHub m_ControlHub;
-  public static DriveSubsystem m_robotDrive;
-  public final ElevatorSubsystem m_Elevator;
-  public final EndEffectorSubsystem m_Effector;
-  public Command chosenSpinMove;
-  // public final ClimbSubsystem m_Climb;
-   /*READ ME:
-  A static instance of the Robot Container with all its contents
-  */
+  private final TestSubsystem m_TestSubsystem;
+  private static DriveSubsystem m_robotDrive;
 
-  public static RobotContainer getInstance() {
-      if(instance == null) instance = new RobotContainer();
-      return instance;
-  }
+  private final Superstructure superstructure;
+
+  private final CommandXboxController driverController = new CommandXboxController(0);
+  private final CommandXboxController operatorController = new CommandXboxController(1);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     //m_TestSubsystem =TestSubsystem.getInstance();
     m_robotDrive = DriveSubsystem.getInstance();
-    m_AutoModeManager = new AutoModeManager();
-    m_ControlHub = ControlHub.getInstance();
+    m_TestSubsystem = TestSubsystem.getInstance();
     //VisionSubsystem.getInstance(m_robotDrive);
-    m_Elevator = ElevatorSubsystem.getInstance();
-    m_Effector = EndEffectorSubsystem.getInstance();
-    // m_Climb = ClimbSubsystem.getInstance();
+
     // Configure default commands
     SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
     SmartDashboard.putBoolean("AutoAlign Status", false);
     m_robotDrive.setDefaultCommand(new RunCommand(
       () -> m_robotDrive.drive(
-          -MathUtil.applyDeadband(m_ControlHub.driverController.getLeftY(), OIConstants.kDriveDeadband),
-          -MathUtil.applyDeadband(m_ControlHub.driverController.getLeftX(), OIConstants.kDriveDeadband),
-          -MathUtil.applyDeadband(m_ControlHub.driverController.getRightX(), OIConstants.kDriveDeadband),
+          -MathUtil.applyDeadband(driverController.getLeftY(), OIConstants.kDriveDeadband),
+          -MathUtil.applyDeadband(driverController.getLeftX(), OIConstants.kDriveDeadband),
+          -MathUtil.applyDeadband(driverController.getRightX(), OIConstants.kDriveDeadband),
           true, true),
       m_robotDrive));
 
+
+      superstructure = new Superstructure(
+        m_robotDrive,
+        m_TestSubsystem
+        );
+
+      configureBindings();
   }
+
+  private void configureBindings() {
+    driverController
+          .leftBumper()
+          .onTrue(superstructure.configureButtonBinding(
+            Superstructure.WantedSuperState.SCORE_L1
+            )
+          .onFalse(superstructure.setStateCommand(Superstructure.WantedSuperState.DEFAULT_STATE))
+          );
+  }
+
+  public DriveSubsystem getDriveSubsystem(){
+    return m_robotDrive;
+  }
+
+  public TestSubsystem getTestSubsystem(){
+    return m_TestSubsystem;
+  }
+
+  public Superstructure getSuperStructure(){
+    return superstructure;
+  }
+
+  // Allow Taring via Instant Commands during Disabled
+  private static InstantCommand instantCommand(Runnable runnable) {
+    return new InstantCommand(runnable) {
+        @Override
+        public boolean runsWhenDisabled() {
+            return true;
+        }
+    };
+}
 
 
   /**

@@ -30,25 +30,37 @@ import frc.robot.States;
 
 public class ElevatorSubsystem extends SubsystemBase{
 
-private static SparkMax m_masterLiftingSparkMax;
-private static SparkMax m_slaveLiftingSparkMax;
-private final RelativeEncoder m_LiftingEncoder;
-private final RelativeEncoder m_followerEncoder;
-private static DigitalInput masterHallEffectSensor;
-private static DigitalInput slaveHallEffectSensor;
-private static SparkClosedLoopController m_LiftingPIDController;
-private static ProfiledPIDController m_profiledPIDController;
+    private static SparkMax m_masterLiftingSparkMax;
+    private static SparkMax m_slaveLiftingSparkMax;
+    private final RelativeEncoder m_LiftingEncoder;
+    private final RelativeEncoder m_followerEncoder;
+    private static DigitalInput masterHallEffectSensor;
+    private static DigitalInput slaveHallEffectSensor;
+    private static ProfiledPIDController m_profiledPIDController;
 
-//Tunable Values
-// public final String kTunableP = "Tunable_P";
-// public final String kTunableI = "Tunable_I";
-// public final String kTunableD = "Tunable_D";
-public int currentIntSetpointElevator;
-// private static ElevatorSubsystem instance;
-public static ElevatorFeedforward m_feedForward;
-public static double trapezoid;
+    private static ElevatorFeedforward m_feedForward;
+    private static double trapezoid;
 
-public double volting;
+    private boolean hasInitialHomeCompleted = false;
+    private boolean isExtensionHomed = false;
+
+    private double wantedElevatorPosition;
+
+    public enum WantedState {
+        HOME,
+        IDLE,
+        MOVE_TO_POSITION,
+    }
+
+    private enum SystemState {
+        HOMING_EXTENSION,
+        IDLING,
+        MOVING_TO_POSITION
+    }
+
+    private WantedState wantedState = WantedState.IDLE;
+    private WantedState previousWantedState = WantedState.IDLE;
+    private SystemState systemState = SystemState.IDLING;
 
     private static class ElevatorSubsystemHandler {
         private static final ElevatorSubsystem instance = new ElevatorSubsystem();
@@ -58,39 +70,38 @@ public double volting;
         return ElevatorSubsystemHandler.instance;
     }
 
-private ElevatorSubsystem() {
-    m_masterLiftingSparkMax = new SparkMax(ElevatorConstants.masterLiftingCANId, MotorType.kBrushless);
-    m_slaveLiftingSparkMax = new SparkMax(ElevatorConstants.slaveLiftingCANId, MotorType.kBrushless);
+    private ElevatorSubsystem() {
+        m_masterLiftingSparkMax = new SparkMax(ElevatorConstants.masterLiftingCANId, MotorType.kBrushless);
+        m_slaveLiftingSparkMax = new SparkMax(ElevatorConstants.slaveLiftingCANId, MotorType.kBrushless);
 
-    // Setup encoders and PID controllers for the driving SPARKS MAX.
-    m_LiftingEncoder = m_masterLiftingSparkMax.getEncoder();
-    m_followerEncoder = m_slaveLiftingSparkMax.getEncoder();
-    m_LiftingPIDController = m_masterLiftingSparkMax.getClosedLoopController();
+        // Setup encoders and PID controllers for the driving SPARKS MAX.
+        m_LiftingEncoder = m_masterLiftingSparkMax.getEncoder();
+        m_followerEncoder = m_slaveLiftingSparkMax.getEncoder();
 
-    m_feedForward = new ElevatorFeedforward(0.45, .75, .0, 0.0);
-    m_profiledPIDController = new ProfiledPIDController(
-        Constants.ElevatorConstants.profiledP, 
-        Constants.ElevatorConstants.profiledI, 
-        Constants.ElevatorConstants.profiledD, 
-        new TrapezoidProfile.Constraints(Constants.ElevatorConstants.elevatorMaxVelocity, Constants.ElevatorConstants.elevaotrMaxAccerleration), 0.02
-    );
-    m_profiledPIDController.setIZone(0);
+        m_feedForward = new ElevatorFeedforward(0.45, .75, .0, 0.0);
+        m_profiledPIDController = new ProfiledPIDController(
+            Constants.ElevatorConstants.profiledP, 
+            Constants.ElevatorConstants.profiledI, 
+            Constants.ElevatorConstants.profiledD, 
+            new TrapezoidProfile.Constraints(Constants.ElevatorConstants.elevatorMaxVelocity, Constants.ElevatorConstants.elevaotrMaxAccerleration), 0.02
+        );
+        m_profiledPIDController.setIZone(0);
 
-    m_masterLiftingSparkMax.configure(Configs.ElevatorSubsystem.masterLiftingConfig, ResetMode.kResetSafeParameters,
-    PersistMode.kPersistParameters);
-    m_slaveLiftingSparkMax.configure(Configs.ElevatorSubsystem.slaveLiftingConfig, ResetMode.kResetSafeParameters,
-    PersistMode.kPersistParameters);
-
-//     //Homing & Safe Code Stop
-//     masterHallEffectSensor = new DigitalInput(ElevatorConstants.pivotMasterHallEffectDIO);
-//     slaveHallEffectSensor = new DigitalInput(ElevatorConstants.pivotSlaveHallEffectDIO);
-//     //Preferences.putDouble(kTunableP , ElevatorConstants.kIncrementalPostionP);
-//     resetEncoders();
-    //setCoastMode(true);
-    }
+        m_masterLiftingSparkMax.configure(Configs.ElevatorSubsystem.masterLiftingConfig, ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
+        m_slaveLiftingSparkMax.configure(Configs.ElevatorSubsystem.slaveLiftingConfig, ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
+}
 
 // @Override
     public void periodic() {
+
+        systemState = handleStateTransitions();
+
+        applyStates();
+
+        previousWantedState = this.wantedState;
+
         SmartDashboard.putNumber("Elevator /relativePosition", m_LiftingEncoder.getPosition());
         SmartDashboard.putNumber("Elevator /relativePositionMEters", rotToMeters(m_LiftingEncoder.getPosition()));
         SmartDashboard.putNumber("Elevator /relativePosition", m_LiftingEncoder.getPosition());
@@ -98,23 +109,74 @@ private ElevatorSubsystem() {
         SmartDashboard.putNumber("Elevator /masterCurrent", m_masterLiftingSparkMax.getOutputCurrent());
         SmartDashboard.putNumber("Elevator /followerCurrent", m_slaveLiftingSparkMax.getOutputCurrent());
         SmartDashboard.putBoolean("Elevator /withinExtensionRange", isWithinExtensionRange());
-        SmartDashboard.putNumber("Elevator /requestedPosition", currentIntSetpointElevator);
         SmartDashboard.putNumber("Elevator /trapezoid", trapezoid);
         SmartDashboard.putNumber("Elevator /masterInputCurrent", m_masterLiftingSparkMax.getAppliedOutput());
         SmartDashboard.putNumber("Elevator/secondStageVelocity ", rpmToVelocity(m_LiftingEncoder.getVelocity()));
     }
 
-//     if (!isWithinExtensionRange()){
-//         System.out.println("Elevator Hitting Code Stop");
-//         stopElevator();
-//     }
+    public SystemState handleStateTransitions() {
+        switch (wantedState) {
+            case HOME: //Homing Sequence Here
+                if (previousWantedState != WantedState.HOME) {
+                    isExtensionHomed = false;
+                }
+            case IDLE:
+                return SystemState.IDLING;
+            case MOVE_TO_POSITION:
+                return SystemState.MOVING_TO_POSITION;
+            }
+        return SystemState.IDLING;
+    }
 
-//     SmartDashboard.putNumber("Elevator /elevatorVel",getElevatorVelocity());
-    
+    public void applyStates() {
+        switch (systemState) {
+            case HOMING_EXTENSION:
+            // add tare code
+            break;
+            case IDLING:
+            //add idle code
+            break;
+            case MOVING_TO_POSITION:
+                setTargetExtension(wantedElevatorPosition);
+            break;
+        }
+    }
+
+    public double setTargetExtension(double desiredPos){
+        if(isWithinExtensionRange()){
+            //possible divide the feed forward by 2 because it is a 2 stage cascading elevator
+            //feed forward  m_feedForward.calculateWithVelocities(rpmToVelocity(m_LiftingEncoder.getVelocity()), m_profiledPIDController.getSetpoint().velocity)
+            m_masterLiftingSparkMax.setVoltage(
+                m_profiledPIDController.calculate(
+                    rotToMeters(m_LiftingEncoder.getPosition()),
+                    rotToMeters(desiredPos))+ 0.7); //What is the 0.68 for?
+        }else{
+            System.out.println("ELEVATOR POSITION OUT OF TOLERANCE - PROFILED PID REQUEST");
+        }
+        //System.out.println("calculating = "+ m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition)));
+        trapezoid = m_profiledPIDController.calculate(rotToMeters(m_LiftingEncoder.getPosition()), rotToMeters(goalPosition))+ .7; // doesn't match up with the other one???
+    }
+
+    public boolean isWithinExtensionRange(){
+        if (m_LiftingEncoder.getPosition() < ElevatorConstants.ELEVATOR_MAX_TRAVEL 
+            && m_LiftingEncoder.getPosition() > ElevatorConstants.ELEVATOR_MIN_TRAVEL){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 
-    
+    public void setWantedState(WantedState wantedState) {
+        this.wantedState = wantedState;
+    }
 
+    public void setWantedState(WantedState wantedState, Double armPosition) {
+        this.wantedState = wantedState;
+        this.wantedElevatorPosition = armPosition;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////
 
     public void setLazyPercentageOpenLoop(double OpenLoopPercentage) {
         SmartDashboard.putNumber("Elevator /Raw Output Speed (#.##)", OpenLoopPercentage);
@@ -171,15 +233,6 @@ private ElevatorSubsystem() {
     }
 
 
-    public boolean isWithinExtensionRange(){
-        if (m_LiftingEncoder.getPosition() < ElevatorConstants.ELEVATOR_MAX_TRAVEL 
-            && m_LiftingEncoder.getPosition() > ElevatorConstants.ELEVATOR_MIN_TRAVEL){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
     public boolean isWithinMotorAlignment(){
         return m_LiftingEncoder.getPosition() == m_followerEncoder.getPosition();
     }
@@ -209,21 +262,6 @@ private ElevatorSubsystem() {
                  m_LiftingEncoder.getPosition(), 0.05);
       }
     
-    //Back up 
-    public void setLazyPositionSetpoint(double requestedSetpoint) {
-        SmartDashboard.putNumber("Elevator /requestedSetpoint", requestedSetpoint);
-        if (isWithinExtensionRange()) {
-            if(isHomed()){
-                m_LiftingPIDController.setIAccum(0);
-            }
-            m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kMAXMotionPositionControl,
-             ClosedLoopSlot.kSlot0, ElevatorConstants.kIncrementalPositionFF,
-             SparkClosedLoopController.ArbFFUnits.kVoltage);
-            //m_LiftingPIDController.setReference(requestedSetpoint, ControlType.kPosition, ClosedLoopSlot.kSlot0, volting);
-        } else {
-            System.out.println("ELEVATOR POSITION OUT OF TOLERANCE - SETPOINT REQUEST");
-        }
-    }
 
     public void profiledPIDCalculation(double goalPosition){
         if(isWithinExtensionRange()){
@@ -254,7 +292,6 @@ private ElevatorSubsystem() {
     //Add the Rest & Add Button Bindings
     public void setLazyElevatorState(States.ElevatorPos requestedState) {
         SmartDashboard.putNumber("Elevator /Position", requestedState.val);
-        currentIntSetpointElevator = requestedState.val;
         switch (requestedState) {
             case STOW:
                 profiledPIDCalculation(ElevatorConstants.softZeroLinearPosition);

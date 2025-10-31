@@ -116,6 +116,7 @@ Driveteam wanted a direct drive to place (Waiting for April Tag Map to make Tree
  */
 public class Robot extends TimedRobot {
   public RobotContainer m_robotContainer;
+  //private AutoChooser autoChooser;
   private final ControlHub mControlBoard = ControlHub.getInstance();
   private final BotControls mDriveControls = new BotControls();
   /**
@@ -124,7 +125,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_robotContainer = RobotContainer.getInstance();
+    m_robotContainer = new RobotContainer();
 
     //Advantage Scope Reference:
     DataLogManager.start();

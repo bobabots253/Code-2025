@@ -26,7 +26,7 @@ package frc.robot.subsystems.ExampleSubsystems;
 // import frc.utils.Util;
 
 
-// public class TestSubsystem extends SubsystemBase {
+// public class Example extends SubsystemBase {
 //     private static final SparkMax motorR = Util.createSparkMAX(TestSubsystemConstants.rightArmMotorID, MotorType.kBrushless, false); //ID,MotorType
 //     private static final SparkMax motorL = Util.createSparkMAX(TestSubsystemConstants.leftArmMotorID, MotorType.kBrushless, false); //ID,MotorType
 //     private final RelativeEncoder relativeEncoder;
