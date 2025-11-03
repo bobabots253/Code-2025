@@ -127,7 +127,7 @@ private ElevatorSubsystem() {
 
     public void setSafePercentageOpenLoop(double OpenLoopPercentage){
         SmartDashboard.putNumber("Elevator / Safe Output Speed (#.##)", OpenLoopPercentage);
-        if (isWithinExtensionRange() && !MathUtil.isNear(18.85, getEncoder(), 0.2)){
+        if (isWithinExtensionRange() && !MathUtil.isNear(18.85, getEncoder(), 0.15)){
             m_masterLiftingSparkMax.set(
                 MathUtil.clamp(OpenLoopPercentage,
                  ElevatorConstants.ELEVATOR_OUTPUT_LOW, ElevatorConstants.ELEVATOR_OUTPUT_HIGH));

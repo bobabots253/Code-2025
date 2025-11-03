@@ -562,6 +562,7 @@ public class RobotContainer {
         return Commands.sequence(
             new WaitCommand(waitTime),
             spinMove(),
+            new WaitCommand(1.0),
             PIDAutonomousMoveToPoseWithTimeout(kickOut, kickOutTimeout).withTimeout(kickOutTimeout),
             pIDPathfindToPoseWithTimeout(targetPose, targetTimeout).withTimeout(targetTimeout),
         Commands.parallel(

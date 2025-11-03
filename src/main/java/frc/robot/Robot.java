@@ -274,9 +274,10 @@ public class Robot extends TimedRobot {
 
     // Eliminatiion
 
-    Pose2d blueESideKickOffPose2d = new Pose2d((new Translation2d(6.377, 5.634)), new Rotation2d(-120 * (Math.PI/180)));
-    Pose2d blueCSideKickOffPose2d = new Pose2d((new Translation2d(6.133, 2.358)), new Rotation2d(120 * (Math.PI/180)));
+    Pose2d blueESideKickOffPose2d = new Pose2d((new Translation2d(6.230, 5.780)), new Rotation2d(-120 * (Math.PI/180)));
     Pose2d redESideKickOffPose2d = new Pose2d((new Translation2d(11.632, 2.582)), new Rotation2d(60 * (Math.PI/180)));
+    Pose2d blueCSideKickOffPose2d = new Pose2d((new Translation2d(6.133, 2.358)), new Rotation2d(120 * (Math.PI/180)));
+    Pose2d redCSideKickOffPose2d = new Pose2d((new Translation2d(11.690, 5.712)), new Rotation2d(-60 * (Math.PI/180)));
 
     AutoModeManager.updateAutoMode();
     
@@ -289,9 +290,11 @@ public class Robot extends TimedRobot {
         }
       }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.C_SIDE_LEFT_L2){
         if(DriverStation.getAlliance().get() == Alliance.Blue){
-          m_robotContainer.ReturnL2AutoCommand(blueECoralPose2d).schedule();//testing
+          //m_robotContainer.ReturnL2AutoCommand(blueECoralPose2d).schedule();//testing
+        m_robotContainer.ReturnL2StaggeredCommand(blueCSideKickOffPose2d, blueECoralPose2d, 2.0, 4.0, 1.5).schedule();
         }else{
-          m_robotContainer.ReturnL2AutoCommand(redECoralPose2d).schedule();//testing
+          m_robotContainer.ReturnL2StaggeredCommand(redCSideKickOffPose2d, redECoralPose2d, 2.0, 4.0, 1.5).schedule();
+          //m_robotContainer.ReturnL2AutoCommand(redECoralPose2d).schedule();//testing
         }
       }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.C_SIDE_RIGHT_L2){
           if(DriverStation.getAlliance().get() == Alliance.Blue){
@@ -302,17 +305,19 @@ public class Robot extends TimedRobot {
       //Tagger
       }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.E_SIDE_LEFT_L2){
         if(DriverStation.getAlliance().get() == Alliance.Blue){
-          m_robotContainer.ReturnL2StaggeredCommand(blueESideKickOffPose2d, blueICoralPose2d, 2.0, 4, 1.5).schedule();//testing
+          m_robotContainer.ReturnL2StaggeredCommand(blueESideKickOffPose2d, blueICoralPose2d, 2.0, 4, 2).schedule();//testing
         }else{
-          m_robotContainer.ReturnL2StaggeredCommand(redESideKickOffPose2d, redICoralPose2d, 2.0, 4, 1.5).schedule();//testing
+          m_robotContainer.ReturnL2StaggeredCommand(redESideKickOffPose2d, redICoralPose2d, 2.0, 4, 2).schedule();//testing
         }
       }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.E_SIDE_RIGHT_L2){
         if(DriverStation.getAlliance().get() == Alliance.Blue){
           //m_robotContainer.ReturnL2AutoCommand(blueJCoralPose2d).schedule();
-          m_robotContainer.ReturnL2SimpleHumanCommand(blueJCoralPose2d, blueLeftKickPose2d, blueLeftHumanPlayerPose2d, blueLeftKickPose2d, blueJCoralPose2d, 3.5, 0.1, 2.5, 2.5).schedule();//testing
+          m_robotContainer.ReturnL2StaggeredCommand(blueESideKickOffPose2d, blueJCoralPose2d, 2.0, 4, 2).schedule();//testing
+          //m_robotContainer.ReturnL2SimpleHumanCommand(blueJCoralPose2d, blueLeftKickPose2d, blueLeftHumanPlayerPose2d, blueLeftKickPose2d, blueJCoralPose2d, 3.5, 0.1, 2.5, 2.5).schedule();//testing
         }else{
           //m_robotContainer.ReturnL2AutoCommand(redJCoralPose2d).schedule();
-          m_robotContainer.ReturnL2HumanCommand(redJCoralPose2d, redCoralSecondOutPose2d, redRightPlayerStationPose2d, redRightASecondPose2d, redACoralPose2d, 3.5, 0.1, 2.5, 2.5).schedule();
+          m_robotContainer.ReturnL2StaggeredCommand(redESideKickOffPose2d, redJCoralPose2d, 2.0, 4, 2).schedule();//testing
+          // m_robotContainer.ReturnL2HumanCommand(redJCoralPose2d, redCoralSecondOutPose2d, redRightPlayerStationPose2d, redRightASecondPose2d, redACoralPose2d, 3.5, 0.1, 2.5, 2.5).schedule();
           //m_robotContainer.PIDAtonomousMoveTwiceToPose(redCoralSecondOutPose2d, redLeftPlayerStationPose2d).schedule();
           //testing
         }
