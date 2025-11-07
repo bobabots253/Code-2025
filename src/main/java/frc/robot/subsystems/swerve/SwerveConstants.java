@@ -68,7 +68,7 @@ public class SwerveConstants {
     public static final boolean kTurningEncoderInverted = true;
 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
+    public static final double kDrivingMotorFreeSpeedRps = VortexMotorConstants.kFreeSpeedRpm / 60;
     public static final double kWheelDiameterMeters = 0.072475761; //REV Spikey Wheel Treads, Replacable, Screw-On
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
@@ -104,6 +104,9 @@ public class SwerveConstants {
     public static final double kTurningMaxOutput = 1;
     public static final double kAutoTurningP = 1;
 
+    public static final double kRotationLockTurningP = 1;
+    public static final double kRotationLockTurningI = 0;
+    public static final double kRotationLockTurningD = 0;
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 

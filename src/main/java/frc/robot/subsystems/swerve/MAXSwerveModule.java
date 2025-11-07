@@ -1,5 +1,15 @@
 package frc.robot.subsystems.swerve;
 
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -8,22 +18,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.RelativeEncoder;
-
 public class MAXSwerveModule {
-  private final SparkMax m_drivingSparkMax;
+  private final SparkFlex m_drivingSparkFlex;
   private final SparkMax m_turningSparkMax;
 
   private final RelativeEncoder m_drivingEncoder;
@@ -38,23 +34,25 @@ public class MAXSwerveModule {
   /**
    * Constructs a MAXSwerveModule and configures the driving and turning motor,
    * encoder, and PID controller. This configuration is specific to the REV
-   * MAXSwerve Module built with NEOs, SPARKS MAX, and a Through Bore
+   * MAXSwerve Module built with the NEO Vortex for Driving, NEO 550s for Turning, and a Through Bore
    * Encoder.
+   * 
+   * Documentation:
+   *  <SparkFlex> https://codedocs.revrobotics.com/java/com/revrobotics/spark/sparkflex 
+   * WIP
    */
   public MAXSwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-    m_drivingSparkMax = new SparkMax(drivingCANId, MotorType.kBrushless);
+    m_drivingSparkFlex = new SparkFlex(drivingCANId, MotorType.kBrushless);
     m_turningSparkMax = new SparkMax(turningCANId, MotorType.kBrushless);
 
     // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
-    m_drivingEncoder = m_drivingSparkMax.getEncoder();
+    m_drivingEncoder = m_drivingSparkFlex.getEncoder();
     m_turningEncoder = m_turningSparkMax.getAbsoluteEncoder();
 
-    m_drivingPIDController = m_drivingSparkMax.getClosedLoopController();
+    m_drivingPIDController = m_drivingSparkFlex.getClosedLoopController();
     m_turningPIDController = m_turningSparkMax.getClosedLoopController();
-    //m_drivingPIDController.setFeedbackDevice(m_drivingEncoder);
-    //m_turningPIDController.setFeedbackDevice(m_turningEncoder);
 
-    m_drivingSparkMax.configure(SwerveConfigs.MAXSwerveModule.drivingConfig, ResetMode.kResetSafeParameters,
+    m_drivingSparkFlex.configure(SwerveConfigs.MAXSwerveModule.drivingConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
     m_turningSparkMax.configure(SwerveConfigs.MAXSwerveModule.turningConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
@@ -116,7 +114,7 @@ public class MAXSwerveModule {
   }
 
   public double getDriveCurrent() {
-    return m_drivingSparkMax.getOutputCurrent();
+    return m_drivingSparkFlex.getOutputCurrent();
   }
 
   public double getTurnCurrent() {

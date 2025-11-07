@@ -1,13 +1,13 @@
 package frc.robot.subsystems.swerve;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,10 +20,12 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.swerve.SwerveConstants.DriveConstants;
+import frc.robot.subsystems.swerve.SwerveConstants.ModuleConstants;
 import frc.utils.SwerveUtils;
 
 public class SwerveSubsystem extends SubsystemBase{
@@ -48,8 +50,10 @@ public class SwerveSubsystem extends SubsystemBase{
       DriveConstants.kRearRightTurningCanId,
       DriveConstants.kBackRightChassisAngularOffset);
 
-  private final static AHRS Nav_x = new AHRS(NavXComType.kMXP_SPI);
-  public final boolean fieldFlipped = DriverStation.getAlliance().get() == Alliance.Red;
+    private final CommandXboxController driverController = new CommandXboxController(0);
+
+  private Pigeon2 m_gyroPigeon = new Pigeon2(25);
+  public final boolean isBlueAlliance = DriverStation.getAlliance().get() == Alliance.Blue;
 
   Translation2d m_frontLeftLocation = new Translation2d(0.4086, 0.4086);
   Translation2d m_frontRightLocation = new Translation2d(0.4086, -0.4086);
@@ -69,12 +73,16 @@ public class SwerveSubsystem extends SubsystemBase{
   private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
+
+  private PIDController m_rotationLockPIDController = new PIDController(
+        ModuleConstants.kRotationLockTurningP, ModuleConstants.kRotationLockTurningI , ModuleConstants.kRotationLockTurningD );
+
   public static Pose2d refinedVisionPose;
 
   // Odometry class for tracking robot pose (Gyro-Only)
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
-      Rotation2d.fromDegrees(-Nav_x.getAngle()),
+      getInitialRotation2dBasedOnAlliance(),
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -98,8 +106,9 @@ public class SwerveSubsystem extends SubsystemBase{
         IDLE
     }
 
-    private SystemState systemState = SystemState.TELEOP_DRIVE;
-    private WantedState wantedState = WantedState.TELEOP_DRIVE;
+    private SystemState systemState = SystemState.IDLE;
+    private WantedState wantedState = WantedState.IDLE;
+    private WantedState previousWantedState = WantedState.IDLE;
 
     private Rotation2d desiredRotationForRotationLockState;
     private Pose2d desiredPoseForDriveToPoint = new Pose2d();
@@ -140,7 +149,7 @@ public class SwerveSubsystem extends SubsystemBase{
         systemState = handleStateTransition();
 
         m_odometry.update(
-        Rotation2d.fromDegrees(-Nav_x.getAngle()),
+        getInitialRotation2dBasedOnAlliance(),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -152,43 +161,43 @@ public class SwerveSubsystem extends SubsystemBase{
     }
 
     private SystemState handleStateTransition() {
-        return switch (wantedState) {
-            case TELEOP_DRIVE -> SystemState.TELEOP_DRIVE;
-            case PATHPLANNER_AUTO_PATH -> SystemState.PATHPLANNER_AUTO_PATH;
-            case ROTATION_LOCK -> SystemState.ROTATION_LOCK;
-            case HOLONOMIC_DRIVE_TO_POINT -> SystemState.HOLONOMIC_DRIVE_TO_POINT;
-            default -> SystemState.IDLE;
-        };
+        if (wantedState != previousWantedState) {
+            previousWantedState = wantedState;
+        }       
+        switch (wantedState) {
+        case TELEOP_DRIVE:
+             return SystemState.TELEOP_DRIVE;
+        case PATHPLANNER_AUTO_PATH:
+             return SystemState.PATHPLANNER_AUTO_PATH;
+        case ROTATION_LOCK:
+             return SystemState.ROTATION_LOCK;
+        case HOLONOMIC_DRIVE_TO_POINT:
+             return SystemState.HOLONOMIC_DRIVE_TO_POINT;
+        default:
+             return SystemState.IDLE;
+        }
+        
     }
 
     private void applyStates() {
         switch (systemState) {
             default:
             case TELEOP_DRIVE:
-                    new RunCommand(
-                        () -> this.drive(
-                            -MathUtil.applyDeadband(controller.getLeftY(), SwerveConstants.OIConstants.kDriveDeadband),
-                            -MathUtil.applyDeadband(controller.getLeftX(), SwerveConstants.OIConstants.kDriveDeadband),
-                            -MathUtil.applyDeadband(controller.getRightX(), SwerveConstants.OIConstants.kDriveDeadband),
-                            true, true),
-                        this);
+                getFCDriveCommand().schedule();
                 break;
             case PATHPLANNER_AUTO_PATH:
                 break;
             case ROTATION_LOCK:
+                getFCDriveCommandWithRotationLock(desiredRotationForRotationLockState);
                 break;
             case HOLONOMIC_DRIVE_TO_POINT:
                 break;
         }
     }
 
-    public void setState(WantedState state) {
-        this.wantedState = state;
-    }
-
     public void resetOdometry(Pose2d pose) {
         m_odometry.resetPosition(
-            Rotation2d.fromDegrees(-Nav_x.getAngle()),
+            getInitialRotation2dBasedOnAlliance(),
             new SwerveModulePosition[] {
                 m_frontLeft.getPosition(),
                 m_frontRight.getPosition(),
@@ -281,8 +290,94 @@ public class SwerveSubsystem extends SubsystemBase{
 
         SwerveModuleState[] swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
             fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(-Nav_x.getAngle()))
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, getInitialRotation2dBasedOnAlliance())
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
+        SwerveDriveKinematics.desaturateWheelSpeeds(
+            swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        m_frontLeft.setDesiredState(swerveModuleStates[0]);
+        m_frontRight.setDesiredState(swerveModuleStates[1]);
+        m_rearLeft.setDesiredState(swerveModuleStates[2]);
+        m_rearRight.setDesiredState(swerveModuleStates[3]);
+    }
+
+    /**
+     * Method to drive the robot with a Rotation Lock
+     * 
+     * @param xSpeed             Speed of the robot in the x direction (forward) [-1, 1].
+     * @param ySpeed             Speed of the robot in the y direction (sideways) [-1, 1].
+     * @param fieldRelativeAngle The desired field-relative angle to lock the robot's heading to.
+     * @param rateLimit          Whether to enable rate limiting for smoother translation control.
+     */
+    public void driveWithAngleLock(double xSpeed, double ySpeed, Rotation2d fieldRelativeAngle, boolean rateLimit) {
+        
+        double xSpeedCommanded;
+        double ySpeedCommanded;
+
+        if (rateLimit) {
+            double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
+            double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+
+            // Calculate the direction slew rate based on an estimate of the lateral acceleration
+            double directionSlewRate;
+            if (m_currentTranslationMag != 0.0) {
+                directionSlewRate = Math.abs(DriveConstants.kDirectionSlewRate / m_currentTranslationMag);
+            } else {
+                directionSlewRate = 500.0; //some high number that means the slew rate is effectively instantaneous
+            }
+            
+
+            double currentTime = WPIUtilJNI.now() * 1e-6;
+            double elapsedTime = currentTime - m_prevTime;
+            double angleDif = SwerveUtils.AngleDifference(inputTranslationDir, m_currentTranslationDir);
+            if (angleDif < 0.45*Math.PI) {
+                m_currentTranslationDir = SwerveUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime);
+                m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
+            }
+            else if (angleDif > 0.85*Math.PI) {
+                if (m_currentTranslationMag > 1e-4) { //some small number to avoid floating-point errors with equality checking
+                // keep currentTranslationDir unchanged
+                m_currentTranslationMag = m_magLimiter.calculate(0.0);
+                }
+                else {
+                m_currentTranslationDir = SwerveUtils.WrapAngle(m_currentTranslationDir + Math.PI);
+                m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
+                }
+            }
+            else {
+                m_currentTranslationDir = SwerveUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime);
+                m_currentTranslationMag = m_magLimiter.calculate(0.0);
+            }
+            m_prevTime = currentTime;
+            
+            xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
+            ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
+
+        } else {
+            // No rate limiting, just use the raw inputs
+            xSpeedCommanded = xSpeed;
+            ySpeedCommanded = ySpeed;
+        }
+
+        
+        // Set the setpoint for the PID controller to the desired angle
+        m_rotationLockPIDController.setSetpoint(fieldRelativeAngle.getRadians());
+        
+        double rotOutput = m_rotationLockPIDController.calculate(
+            getInitialRotation2dBasedOnAlliance().getRadians()
+        );
+
+        m_currentRotation = rotOutput;
+
+        double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
+        double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
+        double rotDelivered = m_currentRotation * DriveConstants.kMaxAngularSpeed; // This now uses the PID output
+
+        SwerveModuleState[] swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+            ChassisSpeeds.fromFieldRelativeSpeeds(
+                xSpeedDelivered, ySpeedDelivered, rotDelivered, getInitialRotation2dBasedOnAlliance()
+            )
+        );
+
         SwerveDriveKinematics.desaturateWheelSpeeds(
             swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
         m_frontLeft.setDesiredState(swerveModuleStates[0]);
@@ -298,6 +393,26 @@ public class SwerveSubsystem extends SubsystemBase{
         m_frontRight.setDesiredState(swerveModuleStates[1]);
         m_rearLeft.setDesiredState(swerveModuleStates[2]);
         m_rearRight.setDesiredState(swerveModuleStates[3]);
+    }
+
+    public Command getFCDriveCommand(){
+    return new RunCommand(
+      () -> {drive(
+          -MathUtil.applyDeadband(driverController.getLeftY(), SwerveConstants.OIConstants.kDriveDeadband),
+          -MathUtil.applyDeadband(driverController.getLeftX(), SwerveConstants.OIConstants.kDriveDeadband),
+          -MathUtil.applyDeadband(driverController.getRightX(), SwerveConstants.OIConstants.kDriveDeadband),
+          true, true);},
+      this);
+    }
+
+    public Command getFCDriveCommandWithRotationLock(Rotation2d desiredRotationLockAngle){
+    return new RunCommand(
+      () -> {driveWithAngleLock(
+          -MathUtil.applyDeadband(driverController.getLeftY(), SwerveConstants.OIConstants.kDriveDeadband),
+          -MathUtil.applyDeadband(driverController.getLeftX(), SwerveConstants.OIConstants.kDriveDeadband),
+          desiredRotationForRotationLockState,
+          true);},
+      this);
     }
 
     /**
@@ -319,24 +434,33 @@ public class SwerveSubsystem extends SubsystemBase{
     }
 
     public ChassisSpeeds getRobotRelativeFromFieldRelativeSpeeds(){
-        return ChassisSpeeds.fromFieldRelativeSpeeds(m_kinematics.toChassisSpeeds(m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()), getTrueInitialRotation2dBasedOnAlliance());
+        return ChassisSpeeds.fromFieldRelativeSpeeds(m_kinematics.toChassisSpeeds(m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()), getInitialRotation2dBasedOnAlliance());
     }
 
-    public Rotation2d getTrueRotation2DHeading(){
-        return Rotation2d.fromDegrees(-Nav_x.getRotation2d().getDegrees()); //getAngle
+    public Rotation2d getGyroRotation2DBlue(){
+        return m_gyroPigeon.getRotation2d();
     }
 
-    public Rotation2d getTrueInitialFlippeRotation2d(){
-        return Rotation2d.fromDegrees(-Nav_x.getAngle()).plus(Rotation2d.fromRadians(Math.PI));
+    public Rotation2d getGyroRotation2DRed(){
+        return m_gyroPigeon.getRotation2d().plus(Rotation2d.fromRadians(Math.PI));
     }
 
-    public Rotation2d getTrueInitialRotation2dBasedOnAlliance(){
-        return fieldFlipped ? getTrueInitialFlippeRotation2d() :  getTrueRotation2DHeading();
+    public double getGyroYawDegreesBlue(){
+        return getGyroRotation2DBlue().getDegrees();
+    }
+
+    public double getGyroYawDegreesRed(){
+        return getGyroRotation2DRed().getDegrees();
+    }
+
+
+    public Rotation2d getInitialRotation2dBasedOnAlliance(){
+        return isBlueAlliance ? getGyroRotation2DBlue() :  getGyroRotation2DRed();
     }
 
     /** Zeroes the heading of the robot. */
     public void zeroHeading() {
-        Nav_x.reset();
+        m_gyroPigeon.reset();
     }
 
     /** Resets the drive encoders to currently read a position of 0. */
@@ -345,6 +469,10 @@ public class SwerveSubsystem extends SubsystemBase{
         m_rearLeft.resetEncoders();
         m_frontRight.resetEncoders();
         m_rearRight.resetEncoders();
+    }
+
+    public void setWantedState(WantedState state) {
+        this.wantedState = state;
     }
 
 }

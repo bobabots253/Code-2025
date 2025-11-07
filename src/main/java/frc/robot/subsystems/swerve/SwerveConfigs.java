@@ -2,11 +2,12 @@ package frc.robot.subsystems.swerve;
 
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 public class SwerveConfigs {
     public static final class MAXSwerveModule {
-        public static final SparkMaxConfig drivingConfig = new SparkMaxConfig();
+        public static final SparkFlexConfig drivingConfig = new SparkFlexConfig();
         public static final SparkMaxConfig turningConfig = new SparkMaxConfig();
 
         static {
@@ -40,7 +41,6 @@ public class SwerveConfigs {
                     .velocityConversionFactor(turningFactor / 60.0); // radians per second
             turningConfig.closedLoop
                     .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                    // These are example gains you may need to them for your own robot!
                     .pid(1, 0, 0)
                     .outputRange(-1, 1)
                     .positionWrappingEnabled(true)

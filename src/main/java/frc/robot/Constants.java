@@ -108,6 +108,7 @@ public final class Constants {
       public enum AutomationLevel {
         AUTO_RELEASE,
         AUTO_DRIVE_AND_MANUAL_RELEASE,
+        MANUAL
       }
 
       public enum ReefSelectionMethod {

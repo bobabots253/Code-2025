@@ -48,15 +48,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.VisionConstants;
-import frc.robot.Autonomous.AutoModeManager;
-import frc.robot.Autonomous.AutoModeManager.DesiredMode;
-import frc.robot.Bobaboard.BotControls;
-import frc.robot.Bobaboard.ControlHub;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.elevator.ElevatorSubsystem;
 
 /*Important Notes for 2025:
 22 April Tags - Diff Angles (not all @ 90*). - center tags @ 30* down
@@ -117,8 +108,6 @@ Driveteam wanted a direct drive to place (Waiting for April Tag Map to make Tree
 public class Robot extends TimedRobot {
   public RobotContainer m_robotContainer;
   //private AutoChooser autoChooser;
-  private final ControlHub mControlBoard = ControlHub.getInstance();
-  private final BotControls mDriveControls = new BotControls();
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -131,15 +120,6 @@ public class Robot extends TimedRobot {
     DataLogManager.start();
     URCL.start();
     DriverStation.startDataLog(DataLogManager.getLog());
-    mDriveControls.PutControllerOption();
-    // m_robotContainer.m_robotDrive.zeroHeading();
-    // LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 1);
-    // LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 1);
-    // LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
-    // LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, VisionConstants.TRUSTWORTHY_TAGS);
-    SmartDashboard.putNumber("Set P Value",ElevatorConstants.kIncrementalPostionP);
-    SmartDashboard.putNumber("Set I Value",ElevatorConstants.kIncrementalPostionI);
-    SmartDashboard.putNumber("Set D Value",ElevatorConstants.kIncrementalPositionD);
   }
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -148,7 +128,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    mDriveControls.o_reportBotControlData();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -159,234 +138,26 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 0);
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 0);
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-
-    Pose2d BlueEFAlgaePose2d = new Pose2d((new Translation2d(5.686646, 4.0200)),
-                                              new Rotation2d(180 * (Math.PI/180)));
-    Pose2d RedEFAlgaePose2d = new Pose2d((new Translation2d(11.850906, 4.0200)), new Rotation2d(0 * (Math.PI/180)));//testing pose
-    ///Pose2d blueECoralPose2d = new Pose2d((new Translation2d(5.686646, 3.8549)), //good 10/22
-    // new Rotation2d(180 * (Math.PI/180)));
-
-    //C side Poses
-    Pose2d blueECoralPose2d = new Pose2d((new Translation2d(4.94939989, 2.89768804)), //good 10/22
-    new Rotation2d(120 * (Math.PI/180)));
-    Pose2d redECoralPose2d = new Pose2d ((new Translation2d(12.59816289, 5.15411196)), //good 10/22
-    new Rotation2d(-60 * (Math.PI/180)));
-    Pose2d blueFCoralPose2d = new Pose2d((new Translation2d(5.23550811, 3.06278804)), //good 10/22
-    new Rotation2d(120 * (Math.PI/180)));
-    Pose2d redFCoralPose2d = new Pose2d ((new Translation2d(12.31215311, 4.98901196)), //good 10/22
-    new Rotation2d(-60 * (Math.PI/180)));
-    Pose2d redCoralSecondOutPose2d = new Pose2d ((new Translation2d(12.899, 1.538)), //good 10/22
-    new Rotation2d(120 * (Math.PI/180)));
-
-    //E side Poses
-    Pose2d blueICoralPose2d = new Pose2d((new Translation2d(5.23550811, 4.98901196)), //good 10/22
-    new Rotation2d(-120 * (Math.PI/180)));
-    Pose2d redICoralPose2d = new Pose2d ((new Translation2d(12.31215311, 3.06278804)), //good 10/22
-    new Rotation2d(60 * (Math.PI/180)));
-    Pose2d blueJCoralPose2d = new Pose2d((new Translation2d(4.94939989, 5.15411196)), //fixed rot 10/22
-    new Rotation2d(-120 * (Math.PI/180)));
-    Pose2d redJCoralPose2d = new Pose2d((new Translation2d(12.59816289, 2.89768804)), //fixed rot 10/22
-    new Rotation2d(60 * (Math.PI/180)));
-
-    //Advance Auto Pose
-    //2.41
-    Pose2d redLeftAIntialPose2d = new Pose2d((new Translation2d(14.349, 5.625)), //fixed rot 10/22
-    new Rotation2d(-120 * (Math.PI/180)));
-    //1.46
-    Pose2d redLeftASecondPose2d = new Pose2d((new Translation2d(14.805, 4.463)), //fixed rot 10/22
-    new Rotation2d(180 * (Math.PI/180)));
-    //.9
-    Pose2d redBCoralPose2d = new Pose2d ((new Translation2d(14.256818, 4.1851)), //good 10/22
-    new Rotation2d(180 * (Math.PI/180)));
-    //2.21
-    Pose2d redLeftPlayerStationPose2d = new Pose2d ((new Translation2d(15.872, 7.507)), //good 10/22 
-    new Rotation2d(-125 * (Math.PI/180)));
-    //2.21 then goes toward redLeftASecondPose2d then another 1.05
-    Pose2d redACoralPose2d = new Pose2d ((new Translation2d(14.256818, 3.8549)), //good 10/22 
-    new Rotation2d(180 * (Math.PI/180)));
-
-    //2.34s
-    Pose2d redRightAInitialPose2d = new Pose2d ((new Translation2d(14.134, 2.309)), //good 10/22 
-    new Rotation2d(120 * (Math.PI/180)));
-    //1.7s
-    Pose2d redRightASecondPose2d = new Pose2d ((new Translation2d(14.805, 3.554)), //good 10/22 
-    new Rotation2d(180 * (Math.PI/180)));
-
-    Pose2d redRightPlayerStationPose2d = new Pose2d ((new Translation2d(15.944, 0.567)), //good 10/22 
-    new Rotation2d(125 * (Math.PI/180)));
-
-    
-    //BlueSide Poses
-    //2.51
-    Pose2d blueLeftAIntialPose2d = new Pose2d((new Translation2d(3.560, 5.625)), //fixed rot 10/22
-    new Rotation2d(-60 * (Math.PI/180)));
-    //1.84
-    Pose2d blueLeftASecondPose2d = new Pose2d((new Translation2d(2.697, 4.463)), //fixed rot 10/22
-    new Rotation2d(0));
-    //1.00
-    Pose2d blueACoralPose2d = new Pose2d((new Translation2d(3.2812, 4.190238)), // good 10/22
-    new Rotation2d(0));
-    //2.33
-    Pose2d blueLeftHumanPlayerPose2d = new Pose2d((new Translation2d(1.678, 7.495)), // good 10/22
-    new Rotation2d(-55 * (Math.PI/180)));
-
-    Pose2d blueLeftKickPose2d = new Pose2d((new Translation2d(4.867, 5.721 )), new Rotation2d( -120 * (Math.PI/180)));
-
-    //Blue Right
-    //2.5
-    Pose2d blueRightAIntialPose2d = new Pose2d((new Translation2d(3.560, 2.509)), //fixed rot 10/22
-    new Rotation2d(60 * (Math.PI/180)));
-    //1.8
-    Pose2d blueRightASecondPose2d = new Pose2d((new Translation2d(2.697, 3.554)), //fixed rot 10/22
-    new Rotation2d(0));
-    //1.04s
-    Pose2d blueBCoralPose2d = new Pose2d((new Translation2d(3.2812, 3.861562)), //good 10/22
-    new Rotation2d(0));
-
-    Pose2d blueRightHumanPlayerPose2d = new Pose2d((new Translation2d(1.630, 0.579)), // good 10/22
-    new Rotation2d(55 * (Math.PI/180)));
-
-    //BlueLeftAA
-    Pose2d blueLeftInitialOffPose2d = new Pose2d((new Translation2d(2.429, 5.305)), // good 10/22
-    new Rotation2d(0 * (Math.PI/180))); // -> to blueACoralA2
-    Pose2d blueLeftHumanPose2d = new Pose2d((new Translation2d(2.429, 5.305)), // good 10/22
-    new Rotation2d(-55 * (Math.PI/180)));
-    // Pose2d blueLeftInitialOffPose2d = new Pose2d((new Translation2d(2.429, 5.305)), // good 10/22
-    // new Rotation2d(0 * (Math.PI/180)));
-
-    //BlueRightAA
-    Pose2d blueRightInitialOffPose2d = new Pose2d((new Translation2d(2.429, 2.745)), // good 10/22
-    new Rotation2d(0 * (Math.PI/180)));
-    Pose2d blueRightHumanPose2d = new Pose2d((new Translation2d(1.256, 0.969)), // good 10/22
-    new Rotation2d(55 * (Math.PI/180)));
-
-    //RedLeftAA
-    Pose2d redLeftInitialOffPose2d = new Pose2d((new Translation2d(15.308, 2.745)), // good 10/22
-    new Rotation2d(180 * (Math.PI/180)));
-    Pose2d redLeftHumanPose2d = new Pose2d((new Translation2d(16.219, 0.890)), // good 10/22
-    new Rotation2d(125 * (Math.PI/180)));
-
-
-    AutoModeManager.updateAutoMode();
-    
-    if (AutoModeManager.m_autonomousCommand == null){
-      if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.L1_MIDDLE_START){
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
-          m_robotContainer.ReturnAutoCommand(BlueEFAlgaePose2d).schedule();
-        }else{
-          m_robotContainer.ReturnAutoCommand(RedEFAlgaePose2d).schedule();//testing
-        }
-      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.C_SIDE_LEFT_L2){
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
-          m_robotContainer.ReturnL2AutoCommand(blueECoralPose2d).schedule();//testing
-        }else{
-          m_robotContainer.ReturnL2AutoCommand(redECoralPose2d).schedule();//testing
-        }
-      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.C_SIDE_RIGHT_L2){
-          if(DriverStation.getAlliance().get() == Alliance.Blue){
-            m_robotContainer.ReturnL2AutoCommand(blueFCoralPose2d).schedule();//testing
-          }else{
-            m_robotContainer.ReturnL2AutoCommand(redFCoralPose2d).schedule();//testing
-          }
-      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.E_SIDE_LEFT_L2){
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
-          m_robotContainer.ReturnL2AutoCommand(blueICoralPose2d).schedule();//testing
-        }else{
-          m_robotContainer.ReturnL2AutoCommand(redICoralPose2d).schedule();//testing
-        }
-      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.E_SIDE_RIGHT_L2){
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
-          //m_robotContainer.ReturnL2AutoCommand(blueJCoralPose2d).schedule();
-          m_robotContainer.ReturnL2SimpleHumanCommand(blueJCoralPose2d, blueLeftKickPose2d, blueLeftHumanPlayerPose2d, blueLeftKickPose2d, blueJCoralPose2d, 3.5, 0.1, 2.5, 2.5).schedule();//testing
-        }else{
-          //m_robotContainer.ReturnL2AutoCommand(redJCoralPose2d).schedule();
-          m_robotContainer.ReturnL2HumanCommand(redJCoralPose2d, redCoralSecondOutPose2d, redRightPlayerStationPose2d, redRightASecondPose2d, redACoralPose2d, 3.5, 0.1, 2.5, 2.5).schedule();
-          //m_robotContainer.PIDAtonomousMoveTwiceToPose(redCoralSecondOutPose2d, redLeftPlayerStationPose2d).schedule();
-          //testing
-        }
-      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.LEFT_A2){
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
-          m_robotContainer.aSideL2AutoCommand(blueLeftAIntialPose2d, blueLeftASecondPose2d, blueACoralPose2d, blueLeftHumanPlayerPose2d).schedule();//testing
-        }else{
-          m_robotContainer.aSideL2AutoCommand(redRightAInitialPose2d, redRightASecondPose2d, redACoralPose2d, redRightPlayerStationPose2d).schedule();//testing
-      }
-      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.RIGHT_A2){
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
-          m_robotContainer.aSideL2AutoCommand(blueRightAIntialPose2d, blueRightASecondPose2d, blueBCoralPose2d, blueRightHumanPlayerPose2d).schedule();//testing
-        }else{
-          m_robotContainer.aSideL2AutoCommand(redLeftAIntialPose2d, redLeftASecondPose2d, redBCoralPose2d, redLeftPlayerStationPose2d).schedule();//testing
-        }
-      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.RIGHT_A2){
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
-          m_robotContainer.aSideL2AutoCommand(blueRightAIntialPose2d, blueRightASecondPose2d, blueBCoralPose2d, blueRightHumanPlayerPose2d).schedule();//testing
-        }else{
-          m_robotContainer.aSideL2AutoCommand(redLeftAIntialPose2d, redLeftASecondPose2d, redBCoralPose2d, redLeftPlayerStationPose2d).schedule();//testing
-        }
-      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.BLUE_LEFT_AA){
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
-          m_robotContainer.returnBlueLeftAACommand(blueLeftInitialOffPose2d, 2.5, blueACoralPose2d, 
-          1.5, blueLeftHumanPose2d, 2.3, 1.0, blueACoralPose2d, 
-          2.5, 1.8).schedule();
-          // m_robotContainer.aSideL2AutoCommand(blueRightAIntialPose2d, blueRightASecondPose2d, blueBCoralPose2d, blueRightHumanPlayerPose2d).schedule();//testing
-        }else{
-          // m_robotContainer.aSideL2AutoCommand(redLeftAIntialPose2d, redLeftASecondPose2d, redBCoralPose2d, redLeftPlayerStationPose2d).schedule();//testing
-        }
-      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.BLUE_RIGHT_AA){
-          if(DriverStation.getAlliance().get() == Alliance.Blue){
-            m_robotContainer.returnBlueLeftAACommand(blueRightInitialOffPose2d, 2.5, blueBCoralPose2d, 
-            3.2, blueRightHumanPose2d, 2.3, 1.0, blueACoralPose2d, 
-          3, 2.4).schedule();
-          }else{
-
-          }
-      }else if(AutoModeManager.desiredMode == AutoModeManager.DesiredMode.RED_LEFT_AA){
-        if(DriverStation.getAlliance().get() == Alliance.Red){
-          m_robotContainer.returnBlueLeftAACommand(redLeftInitialOffPose2d, 2.5, redACoralPose2d, 
-          3.6, redLeftHumanPose2d, 2.3, 1.0, redBCoralPose2d, 
-          3, 2.4).schedule();
-        }else{
-
-        }
-      }
-      
-      
-      //m_robotContainer.ReturnAutoCommand(BlueEFAlgaePose2d).schedule();
-      //m_robotContainer.ReturnL3AutoCommand(blueECoralPose2d).schedule();
-    } else {
-      AutoModeManager.m_autonomousCommand.schedule();
-    }
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 3);
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 3);
   }
 
   @Override
   public void teleopInit() {
-    mControlBoard.verifyPossibleControllerInit();
-    mDriveControls.selectControllerOption();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, 3);
-    LimelightHelpers.SetIMUMode(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, 3);
-    SmartDashboard.putString("ALLIANCE", RobotContainer.isRedAlliance().get().toString());
     SmartDashboard.putNumber("MATCH TIME", DriverStation.getMatchTime());
-    mControlBoard.verifyControllerIntegrity();
-    mControlBoard.update();
-    mDriveControls.RunRobot();
   }
         
 
