@@ -4,21 +4,12 @@
 
 package frc.robot.subsystems;
 
-import java.lang.reflect.Array;
-
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.util.PathPlannerLogging;
-
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -30,19 +21,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.kinematics.struct.SwerveModuleStateStruct;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructArrayPublisher;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,12 +33,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
-// import frc.robot.limelights.VisionSubsystem;
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.PoseEstimate;
-import frc.robot.RobotContainer;
 import frc.utils.SwerveUtils;
-import edu.wpi.first.wpilibj.SPI;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -274,27 +253,14 @@ public class DriveSubsystem extends SubsystemBase {
 
     double[] pose = {getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()};
     SmartDashboard.putNumberArray("POSE", pose);
-    //SmartDashboard.putBoolean("fieldFlipped", fieldFlipped);
   }
   
-  // public void addBasicVisionMeasurement(String limelight, SwerveDrivePoseEstimator poseEstimator) {
-  //     // LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_LEFT_APRIL_TAG_LL,
-  //     // fieldFlipped ? getInitialFlippeRotation2d().getDegrees(): getRotation2DHeading().getDegrees(), 0,
-  //     //         0, 0, 0, 0);
-  //     if (LimelightHelpers.getTV(limelight)) {
-  //         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight);
-  //         if (!(mt2.tagCount == 0)) {
-  //           poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds); //Timer.getFPGATimestamp()mt2.timestampSeconds
-  //         }
-  //     }
-  // }
 
   
     public void visionUpdate(String limelightName, SwerveDrivePoseEstimator poseEstimator){
       if(!LimelightHelpers.getTV(limelightName)){
         return;
       }
-      //PoseEstimate BotPoseEstimate_wpiBlue_MegaTag2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
       PoseEstimate BotPoseEstimate_wpiBlue_MegaTag1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
       Pose2d trustWorthPoseEstimate = new Pose2d();
       var allianceColor = DriverStation.getAlliance();
@@ -334,11 +300,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    //return m_odometry.getPoseMeters();
       return refinedodometryVision.getEstimatedPosition();
-    //This is for testing for pathplanner Remove this in the future and replace this switch either a switch or fuse positions.
-    // return refinedodometryVision.getEstimatedPosition();
-    // return m_odometry.getPoseMeters();
   }
 
     public Pose2d mono_getPoseVision_L() {
@@ -588,14 +550,6 @@ public class DriveSubsystem extends SubsystemBase {
   setModuleStates(lockStates);
 }
 
-//   public SwerveModulePosition[] returnSwerverModulePositions(){
-//     return new SwerveModulePosition[] {
-//       m_frontLeft.getPosition(),
-//       m_frontRight.getPosition(),
-//       m_rearLeft.getPosition(),
-//       m_rearRight.getPosition()
-// };
-//   }
   /**
    * Returns the turn rate of the robot.
    *

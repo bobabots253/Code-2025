@@ -6,8 +6,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.OIConstants;
 import frc.robot.RobotContainer;
-import frc.robot.commands.autoAlign;
-//import frc.robot.subsystems.TestSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
 
@@ -84,71 +82,13 @@ public class BotControls {
             }
 
             if (controlHub.driverController.X_Button.wasActivated()) {
-                // rContainer.autoAlignCommand(false).schedule();
             }
 
             if (controlHub.driverController.B_Button.wasActivated()) {
-                // rContainer.autoAlignCommand(true).schedule();
             }
             if (controlHub.driverController.A_Button.wasActivated()) {
-                // rContainer.tierTwoScoreCommand().schedule();
             }
-
-
-            // if(controlHub.driverController.X_Button.isBeingPressed() && controlHub.driverController.B_Button.isNotBeingPressed()){
-            //     rContainer.m_Elevator.setElevatorVoltage(1.5);
-            // }else if(controlHub.driverController.B_Button.isBeingPressed() && controlHub.driverController.X_Button.isNotBeingPressed()){
-            //     rContainer.m_Elevator.setElevatorVoltage(-.5);
-            // }else rContainer.m_Elevator.setElevatorVoltage(.7);
-
-            // if(controlHub.driverController.L_Bumper.wasReleased() || controlHub.driverController.R_Bumper.wasReleased()
-            //     && controlHub.driverController.L_Bumper.isNotBeingPressed() && controlHub.driverController.R_Bumper.isNotBeingPressed()){
-            //     rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
-            // } else{
-            // if (controlHub.driverController.L_Bumper.isBeingPressed() && !controlHub.driverController.R_Bumper.isBeingPressed()) {
-            //     rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.7);
-            //     }else if (controlHub.driverController.R_Bumper.isBeingPressed() && !controlHub.driverController.L_Bumper.isBeingPressed()) {
-            //     rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
-            //     }
-            // }
-        
-            
-            // if (controlHub.driverController.L_Bumper.wasActivated() && !controlHub.driverController.R_Bumper.wasActivated()){
-            //     interruptedPPLib = !interruptedPPLib;
-            //     RobotContainer.PathfindClosest(interruptedPPLib,false).schedule();
-            // }
-
-            // if (controlHub.driverController.R_Bumper.wasActivated() && !controlHub.driverController.L_Bumper.wasActivated()){
-            //     interruptedPPLib = !interruptedPPLib;
-            //     RobotContainer.PathfindClosest(interruptedPPLib,true).schedule();
-            // }
-
-        }
-            // if(controlHub.driverController.A_Button.wasReleased() || controlHub.driverController.B_Button.wasReleased()
-            // || controlHub.driverController.A_Button.isNotBeingPressed() || controlHub.driverController.B_Button.isNotBeingPressed()){
-            //     rContainer.m_Elevator.setSafePercentageOpenLoop(0.05);
-            // }
-
-            // if (controlHub.driverController.A_Button.isBeingPressed() || controlHub.driverController.B_Button.isBeingPressed()) {
-            //     if(controlHub.driverController.A_Button.isBeingPressed() && !controlHub.driverController.B_Button.isBeingPressed()){
-            //         rContainer.m_Elevator.setSafePercentageOpenLoop(-0.075);
-            //     } 
-            //     else if (controlHub.driverController.B_Button.isBeingPressed() && !controlHub.driverController.A_Button.isBeingPressed()){
-            //         rContainer.m_Elevator.setSafePercentageOpenLoop(0.15);
-            //     }
-            // }
-
-            // if(controlHub.driverController.Y_Button.wasReleased() || controlHub.driverController.X_Button.wasReleased()
-            //     || controlHub.driverController.Y_Button.isNotBeingPressed() || controlHub.driverController.X_Button.isNotBeingPressed()){
-            //         rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0);
-            //     }
-            // if (controlHub.driverController.X_Button.isBeingPressed() && !controlHub.driverController.Y_Button.isBeingPressed()){
-            //         rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.9);
-            //     } else if (controlHub.driverController.Y_Button.isBeingPressed() && !controlHub.driverController.X_Button.isBeingPressed()){
-            //         rContainer.m_Effector.setIntakeLazyPercentageOpenLoop(0.7);
-            // }
-    
-        else{
+    } else {
 // 2 Controller Here
         // Driver Controls
             if(Math.abs(controlHub.driverController.getLeftY())>=OIConstants.kDriveDeadband || 
@@ -161,8 +101,6 @@ public class BotControls {
                 } if (algaeCommand != null){
                     algaeCommand.cancel();
                 }
-                //TODO check to see if this works
-                //rContainer.cancelAutoAlignFunction();
             }
     
         //Resets the virtual heading based on the current heading (fixes drift)
@@ -173,54 +111,20 @@ public class BotControls {
 
             leftCommand = rContainer.autoAlignCommand(false);
             leftCommand.schedule();
-            // toggleCoralAutoAlign(false);
         }
 
 
         if (controlHub.driverController.B_Button.wasActivated()) {
                     rightCommand = rContainer.autoAlignCommand(true);
             rightCommand.schedule();
-            //toggleCoralAutoAlign(true);
         }
 
         if (controlHub.driverController.A_Button.wasActivated()) {
             algaeCommand = rContainer.autoAlignAlgaeCommad();
             algaeCommand.schedule();
         }
-        // if (controlHub.driverController.L_Bumper.wasActivated()){
-        //     rContainer.doubleRollerCommand().schedule();
-        // }
 
-
-        // if (controlHub.driverController.L_Bumper.wasActivated()){
-        //     if (leftCommand != null){
-        //         leftCommand.cancel();
-        //     } else if (rightCommand != null){
-        //         rightCommand.cancel();
-        //     } else if (algaeCommand != null){
-        //         algaeCommand.cancel();
-        //     }
-        // }
-
-        // if (controlHub.driverController.L_Bumper.wasActivated() && !controlHub.driverController.R_Bumper.wasActivated()){
-        //     interruptedPPLib = !interruptedPPLib;
-        //     RobotContainer.PathfindClosest(interruptedPPLib,false).schedule();
-        // }
-
-        // if (controlHub.driverController.R_Bumper.wasActivated() && !controlHub.driverController.L_Bumper.wasActivated()){
-        //     interruptedPPLib = !interruptedPPLib;
-        //     RobotContainer.PathfindClosest(interruptedPPLib,true).schedule();
-        // }
-        //works maybe mechanical
-        // if(!controlHub.driverController.R_Trigger.isBeingPressed() && !controlHub.driverController.L_Trigger.isBeingPressed()){
-        //     rContainer.m_Climb.setLazyOpenLoop(0.0);
-        // }else if (controlHub.driverController.L_Trigger.isBeingPressed()){
-        //     rContainer.m_Climb.setLazyOpenLoop(1.0);
-        // }else if (controlHub.driverController.R_Trigger.isBeingPressed()){
-        //     rContainer.m_Climb.setLazyOpenLoop(-1.0);
-        // }
         // Operator Side
-
         //Polls for Controller Input, if a button is being pressed deliver selected intake/extake speed
         if(controlHub.operatorController.L_Bumper.wasReleased() || controlHub.operatorController.R_Bumper.wasReleased()
                 && controlHub.operatorController.L_Bumper.isNotBeingPressed() && controlHub.operatorController.R_Bumper.isNotBeingPressed()){
@@ -260,56 +164,6 @@ public class BotControls {
             }else if (controlHub.operatorController.R_Trigger.wasActivated()){
                 rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0.7);
             }
-
-            // if(!controlHub.operatorController.POV90.isBeingPressed() && !controlHub.operatorController.POV270.isBeingPressed()){
-            //     rContainer.m_Climb.setLazyOpenLoop(0);
-            // }else if (controlHub.operatorController.POV90.isBeingPressed()){
-            //     rContainer.m_Climb.setLazyOpenLoop(1);
-            // }else if (controlHub.operatorController.POV270.isBeingPressed()){
-            //     rContainer.m_Climb.setLazyOpenLoop(-1);
-            // }
-
-            // if(controlHub.operatorController.L_Trigger.isNotBeingPressed() && controlHub.operatorController.R_Trigger.isNotBeingPressed()){
-            //     rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0);
-            // }else if(controlHub.operatorController.L_Trigger.wasActivated()){
-            //     rContainer.m_Effector.setPivotLazyPercentageOpenLoop(-.8);
-            // }else if (controlHub.operatorController.R_Trigger.wasActivated()){
-            //     rContainer.m_Effector.setPivotLazyPercentageOpenLoop(0.8);
-            // }
-
-            //  if(!controlHub.operatorController.L_Trigger.isBeingPressed() && !controlHub.operatorController.R_Trigger.isBeingPressed()){
-            //      rContainer.m_Climb.setLazyOpenLoop(0.0001);
-            // }else if (controlHub.operatorController.L_Trigger.isBeingPressed()){
-            //     rContainer.m_Climb.setLazyOpenLoop(1);
-            // }else if (controlHub.operatorController.R_Trigger.isBeingPressed()){
-            //     rContainer.m_Climb.setLazyOpenLoop(-1);
-        //  }
-
-
-        //     //Polls for Controller Input, if a button is being pressed deliver selected algae pivot angle
-        //     // if (!controlHub.operatorController.POV0.isBeingPressed() && !controlHub.operatorController.POV90.isBeingPressed()){
-        //     //     rContainer.stowAlgaeCommand().schedule();
-        //     // }else{
-        //     //     if(controlHub.operatorController.POV0.isBeingPressed()){
-        //     //     rContainer.stowAlgaeCommand().schedule();
-        //     // }else if(controlHub.operatorController.POV90.isBeingPressed()){
-        //     //     rContainer.algaeExtendCommand().schedule();
-        //     //     rContainer.m_Effector.setLazyPivotPositionSetpoint(EndEffectorConstants.extendedPIvotPosition);
-        //     // }
-        // 
-        
-
-            // if (!controlHub.operatorController.POV0.isBeingPressed()){
-            //     rContainer.m_Effector.
-            // }else{
-
-            // if (controlHub.operatorController.POV0.wasActivated()){
-            //         rContainer.stowElevatorCommand().schedule();
-            // }else if (controlHub.operatorController.POV90.wasActivated() && !controlHub.operatorController.B_Button.isBeingPressed()
-            //             && !controlHub.operatorController.X_Button.isBeingPressed() && !controlHub.operatorController.Y_Button.isBeingPressed()) {
-            //         rContainer.tierOneElevatorCommand().schedule();
-            // }
-        
 
         }
     }

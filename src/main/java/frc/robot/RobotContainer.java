@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import frc.robot.subsystems.TestSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -30,9 +29,7 @@ import frc.robot.commands.autoAlign;
 import frc.robot.commands.autoAlignWithTimeout;
 import frc.robot.commands.autonomousMovementAlign;
 import frc.robot.commands.autonomousMovementAlignWithTimeOut;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-// import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.EndEffectorSubsystem;
@@ -56,11 +53,10 @@ public class RobotContainer {
   public final ElevatorSubsystem m_Elevator;
   public final EndEffectorSubsystem m_Effector;
   public Command chosenSpinMove;
-  // public final ClimbSubsystem m_Climb;
-   /*READ ME:
+
+  /*READ ME:
   A static instance of the Robot Container with all its contents
   */
-
   public static RobotContainer getInstance() {
       if(instance == null) instance = new RobotContainer();
       return instance;
@@ -69,17 +65,15 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    //m_TestSubsystem =TestSubsystem.getInstance();
+
     m_robotDrive = DriveSubsystem.getInstance();
-    m_AutoModeManager = new AutoModeManager();
+
     m_ControlHub = ControlHub.getInstance();
-    //VisionSubsystem.getInstance(m_robotDrive);
     m_Elevator = ElevatorSubsystem.getInstance();
     m_Effector = EndEffectorSubsystem.getInstance();
-    // m_Climb = ClimbSubsystem.getInstance();
-    // Configure default commands
-    SmartDashboard.putData("Auto Mode", AutoModeManager.mModeChooser);
-    SmartDashboard.putBoolean("AutoAlign Status", false);
+
+    m_AutoModeManager = new AutoModeManager();
+    SmartDashboard.putData("autoModeSelection", AutoModeManager.mModeChooser);
     m_robotDrive.setDefaultCommand(new RunCommand(
       () -> m_robotDrive.drive(
           -MathUtil.applyDeadband(m_ControlHub.driverController.getLeftY(), OIConstants.kDriveDeadband),
@@ -152,20 +146,6 @@ public class RobotContainer {
               m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
             }, m_Effector),
             new WaitCommand(1.2)
-            // new InstantCommand(() -> {
-            //   m_Effector.setIntakeLazyPercentageOpenLoop(0);
-            //   }, m_Effector)
-
-            // new ParallelCommandGroup(
-            //   new SequentialCommandGroup(
-            //     new WaitCommand(1),
-            //     new InstantCommand(() -> {
-            //       m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
-            //     }, m_Effector)
-            //   )
-              // new InstantCommand(() -> {
-              //   m_Effector.setIntakeLazyPercentageOpenLoop(.8);
-              // }, m_Effector)
             
           )
       );
@@ -194,8 +174,6 @@ public class RobotContainer {
         new InstantCommand(() -> {
           m_Effector.setIntakeLazyPercentageOpenLoop(0);
         }, m_Effector)
-
-        
       );
       
     }
@@ -221,8 +199,6 @@ public class RobotContainer {
         new InstantCommand(() -> {
           m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
         }, m_Effector)
-
-        
       );
       
     }
@@ -383,27 +359,11 @@ public class RobotContainer {
       return new autonomousMovementAlignWithTimeOut(m_robotDrive, targetPose, timeoutSeconds);
   }
 
-    // public Command PIDAtonomousMoveTwiceToPose(Pose2d lowTolerance, Pose2d highTolerance){
-    //   return Commands.sequence(
-    //     PIDAutonomousMoveToPose(lowTolerance).withTimeout(2.1),
-    //     PIDPathfindToPose(highTolerance).withTimeout(2.5)
-    //   );
-    // }
-
     public Command ReturnAutoCommand(Pose2d targetPose){
       return Commands.sequence(
           spinMove(),
           PIDPathfindToPose(targetPose).withTimeout(5)
-      // Commands.parallel(
-      //         setElevatorL1Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
-      //     Commands.sequence(
-      //         new WaitCommand(0.8), //tune
-      //         doubleRollerCommand().withTimeout(2.5) //tune
-      //             .andThen(rollerDefaultStop()) 
-      //     )
-      // )
-
-  );
+      );
 }
     public Command aSideL2AutoCommand(Pose2d initialLinearPose, Pose2d beforeAlign, Pose2d targetPose, Pose2d humanStationPose){
       return Commands.sequence(
@@ -436,14 +396,14 @@ public class RobotContainer {
       Commands.parallel(
               setElevatorL3Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
           Commands.sequence(
-              new WaitCommand(1.0), //tune
+              new WaitCommand(1.0), 
               new InstantCommand(() -> {
                 m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
               }, m_Effector),
               new WaitCommand(1.0),
               new InstantCommand(() -> {
                 m_Effector.setIntakeLazyPercentageOpenLoop(0);
-              }, m_Effector) //tune 
+              }, m_Effector) 
           )
       )
 
@@ -457,14 +417,14 @@ public class RobotContainer {
       Commands.parallel(
               setElevatorL2Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
           Commands.sequence(
-              new WaitCommand(1), //tune
+              new WaitCommand(1),
               new InstantCommand(() -> {
                 m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
               }, m_Effector),
               new WaitCommand(1.0),
               new InstantCommand(() -> {
                 m_Effector.setIntakeLazyPercentageOpenLoop(0);
-              }, m_Effector) //tune 
+              }, m_Effector)  
           )
       )
 
@@ -478,14 +438,14 @@ public class RobotContainer {
       Commands.parallel(
               setElevatorL2Auto().withTimeout(1.8).andThen(setElevatorStowAuto()),
           Commands.sequence(
-              new WaitCommand(1), //tune
+              new WaitCommand(1), 
               new InstantCommand(() -> {
                 m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
               }, m_Effector),
               new WaitCommand(0.5),
               new InstantCommand(() -> {
                 m_Effector.setIntakeLazyPercentageOpenLoop(0);
-              }, m_Effector) //tune 
+              }, m_Effector)  
           )
       ).withTimeout(2.7),
       PIDAutonomousMoveToPoseWithTimeout(outReef, secondTimeout).withTimeout(0.1),
@@ -493,7 +453,6 @@ public class RobotContainer {
       new WaitCommand(1.25),
       Commands.parallel(
         PIDPathfindToPose(secondTarget),
-        //PIDAutonomousMoveToPoseWithTimeout(secondOutReef, quadTimeout),
         Commands.sequence(
           new InstantCommand(() -> {
             m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
@@ -504,7 +463,6 @@ public class RobotContainer {
           }, m_Effector)
         )
         ),
-        //PIDPathfindToPose(secondTarget),
         Commands.parallel(
           setElevatorL2Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
           Commands.sequence(
@@ -515,7 +473,7 @@ public class RobotContainer {
               new WaitCommand(1.0),
               new InstantCommand(() -> {
                 m_Effector.setIntakeLazyPercentageOpenLoop(0);
-              }, m_Effector) //tune 
+              }, m_Effector) 
       )
       ).withTimeout(5)
     );
@@ -528,14 +486,14 @@ public class RobotContainer {
       Commands.parallel(
               setElevatorL2Auto().withTimeout(1.8).andThen(setElevatorStowAuto()),
           Commands.sequence(
-              new WaitCommand(1), //tune
+              new WaitCommand(1), 
               new InstantCommand(() -> {
                 m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
               }, m_Effector),
               new WaitCommand(0.5),
               new InstantCommand(() -> {
                 m_Effector.setIntakeLazyPercentageOpenLoop(0);
-              }, m_Effector) //tune 
+              }, m_Effector)
           )
       ).withTimeout(2.7),
       PIDAutonomousMoveToPoseWithTimeout(outReef, secondTimeout).withTimeout(0.1),
@@ -543,7 +501,6 @@ public class RobotContainer {
       new WaitCommand(2.5),
       Commands.parallel(
         PIDPathfindToPose(secondTarget),
-        //PIDAutonomousMoveToPoseWithTimeout(secondOutReef, quadTimeout),
         Commands.sequence(
           new InstantCommand(() -> {
             m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
@@ -555,24 +512,6 @@ public class RobotContainer {
         )
         )
       );
-
-
-
-        //PIDPathfindToPose(secondTarget),
-    //     Commands.parallel(
-    //       setElevatorL2Auto().withTimeout(3.3).andThen(setElevatorStowAuto()),
-    //       Commands.sequence(
-    //           new WaitCommand(1), //tune
-    //           new InstantCommand(() -> {
-    //             m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
-    //           }, m_Effector),
-    //           new WaitCommand(1.0),
-    //           new InstantCommand(() -> {
-    //             m_Effector.setIntakeLazyPercentageOpenLoop(0);
-    //           }, m_Effector) //tune 
-    //   )
-    //   ).withTimeout(5)
-    // );
     }
     
     public Command returnChosenSpinMove(){
@@ -590,7 +529,7 @@ public class RobotContainer {
           Commands.parallel(
             setElevatorL2Auto().withTimeout(elevtorTimeout).andThen(setElevatorStowAuto()),
           Commands.sequence(
-            new WaitCommand(2.2), //tune
+            new WaitCommand(2.2),
             new InstantCommand(() -> {
               m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
             }, m_Effector),
@@ -618,7 +557,7 @@ public class RobotContainer {
         Commands.parallel(
           setElevatorL2Auto().withTimeout(elevtorTimeout).andThen(setElevatorStowAuto()),
           Commands.sequence(
-            new WaitCommand(1.5), //tune
+            new WaitCommand(1.5),
             new InstantCommand(() -> {
               m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
             }, m_Effector),
@@ -626,157 +565,11 @@ public class RobotContainer {
             new InstantCommand(() -> {
               m_Effector.setIntakeLazyPercentageOpenLoop(0);
             }, m_Effector)
-          ).withTimeout(elevtorTimeout+.4)//This .4 is arbitraty and is what Joshua thinks how long to stow
+          ).withTimeout(elevtorTimeout+ .4 ) //0.4 seconds to allow stow
         )
 
         );
     }
-    
-
-
-    // public Command intakeCoralCommand(){
-    //   return new SequentialCommandGroup(
-    //         new InstantCommand(() -> {
-    //           m_Effector.setLazyEndEffectorState(States.EndEffectorPos.INTAKE);},
-    //               m_Effector)
-    //           // new RunCommand(() -> {
-    //           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-    //           //     m_Effector),
-             
-    //         );
-    //     }
-
-        // public Command hardExtakeCoralCommand(){
-        //   return new SequentialCommandGroup(
-        //         new InstantCommand(() -> 
-        //           m_Effector.setLazyEndEffectorState(States.EndEffectorPos.HARD_REMOVE))
-        //           // new RunCommand(() -> {
-        //           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-        //           //     m_Effector),
-                 
-        //         );
-        //     }
-
-          // public Command softExtakeCoralCommand(){
-          // return new SequentialCommandGroup(
-          //       new InstantCommand(() -> 
-          //         m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SOFT_REMOVE))
-          //         // new RunCommand(() -> {
-          //         //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-          //         //     m_Effector),
-                 
-          //       );
-          //   }
-
-          // public Command smartIntakeCoralCommand(){
-          // return new SequentialCommandGroup(
-          //       new InstantCommand(() -> 
-          //         m_Effector.setLazyEndEffectorState(States.EndEffectorPos.SMART_INTAKE))
-          //         // new RunCommand(() -> {
-          //         //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-          //         //     m_Effector),
-                 
-          //       );
-          //   }
-            // public Command algaeExtendCommand(){
-            //   return new SequentialCommandGroup(
-            //         new InstantCommand(() -> 
-            //           m_Effector.setLazyEndEffectorState(States.EndEffectorPos.EXTENDED_PIVOT))
-            //           // new RunCommand(() -> {
-            //           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-            //           //     m_Effector),
-                     
-            //         );
-            // }
-
-            // public Command stowAlgaeCommand(){
-            //   return new SequentialCommandGroup(
-            //         new InstantCommand(() -> 
-            //           m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW))
-            //           // new RunCommand(() -> {
-            //           //   m_Effector.setLazyEndEffectorState(States.EndEffectorPos.STOW.intake);},
-            //           //     m_Effector),
-                     
-            //         );
-            // }
-
-
-
-            // public Command deployAlgaeRollers(){
-            //   return new SequentialCommandGroup(
-            //     new RunCommand(() -> {
-            //       m_Effector.setLazyEndEffectorState(States.EndEffectorPos.DEPLOY);
-            //     }, m_Effector),
-            //     new WaitCommand(.2),
-            //     new RunCommand(() -> {
-            //             m_Effector.setLazyEndEffectorState(States.EndEffectorPos.L1Score);
-            //           }, m_Effector)
-            //     );
-            //   }
-
-  // public void permissibleForward(BooleanSupplier permission){
-  //   new ConditionalCommand(RunElevatorPositive(), StopElevator(), permission);
-  // }
-  // public void permissibleBackward(BooleanSupplier permission){
-  //   new ConditionalCommand(RunElevatorNegative(), StopElevator(), permission);
-  // }
-
-  // public void RunNegative(){
-  //   new RunCommand(() -> m_TestSubsystem.setOpenLoop(-0.2), m_TestSubsystem);
-  // }
-
-  // public Command IntakePrep(){
-  //   return new RunCommand(() -> m_TestSubsystem.setState(States.TestPos.POS1), m_TestSubsystem);
-  // }
-
-  // public Command IntakeStow(){
-  //   return new RunCommand(() -> m_TestSubsystem.setState(States.TestPos.STOW), m_TestSubsystem);
-  // }
-
-  // public Command Score(){
-  //   return new ParallelCommandGroup(
-  //         // new RunCommand(() -> {
-  //         //   arm.setArmState(States.ArmPos.SCORE);
-  //         //   }, arm),
-  //         // new SequentialCommandGroup(
-  //         //   new WaitCommand(HookConstants.delay),
-  //         //   new RunCommand(() -> {
-  //         //     hook.setHookState(States.HookPos.SCORE);
-  //         //   }, hook
-  //         //   )
-  //         // )
-  //       );
-  // }
-
-  // public Command StowArm(){
-  // return new RunCommand(() -> {
-  //       arm.setArmState(States.ArmPos.STOW); 
-  //       hook.setHookState(States.HookPos.STOW);
-  //      }, arm, hook);
-  // }
-
-  /* READ ME:
-  //    * This command runs the SCORE command for the AMP shot in AUTO
-  //    * By condensing the entire score command into one method we no longer have to keep defining it everywhere and we set the standard for each attempt
-  //    * Utilizes Constants.java for realtive and absoulte scoring encoder values.
-  //    * Parrallel Command Group - The command runs at the same time but we put a time delay to calculate the exact timing
-  //    * We needed the wait command bc we need the momentum from the swinign arm to score into the AMP
-  //    */
-
-  // public Command scoreHookDelay() {
-  //   return new ParallelCommandGroup(
-  //         new RunCommand(() -> {
-  //           arm.setArmState(States.ArmPos.SCORE);
-  //           }, arm),
-  //         new SequentialCommandGroup(
-  //           new WaitCommand(HookConstants.delay),
-  //           new RunCommand(() -> {
-  //             hook.setHookState(States.HookPos.SCORE);
-  //           }, hook
-  //           )
-  //         )
-  //       );
-  // }
 
   /**
    * Returns the current alliance, with false indicating blue and true indicating red.
@@ -797,34 +590,14 @@ public class RobotContainer {
     return DriverStation.getAlliance();
   }
 
-  // public static Command ampAutoDrive() {
-  //   return new DriveToPose(FieldSetup.allianceAmpEntryPoseSupplier, FieldSetup.ampEntryTolerance);
-  // }
-
-  
-  // double redAMP_x = 14.7;
-  //       double redAMP_Y = 7.8;
-  //       Translation2d redAMPTranslation2d = new Translation2d(redAMP_x,redAMP_Y);
-  //       Pose2d redAMPPose2d = new Pose2d((redAMPTranslation2d), Rotation2d.fromDegrees(90));
-  
-  // public static Command PathFindReef21(boolean permission){
-  //   return new PathfindToPose(FieldSetup.allianceReefFarSupplier, FieldSetup.kReefFarEntranceTolerance, permission);
-  // }
-
-  // public static Command PathfindClosest(boolean permission, Boolean isRight) {
-  //   return new PathfindClosest(permission,isRight);
-  // }
-
 }
 
 
-/* 2023-2024 For-TEA-Simo Java Code by:
-
-Kaden J. Chow - Programming Lead - MHS 2026 - https://github.com/Kachow2323
-Ronit Barman - Tech Captain - MHS 2024
-Joshua Seo - Programming - MHS 2027
-Adam Situ - Asst. Programming Lead - MHS 2027
-Michelle Y - Asst. Programming Lead - MHS 2025
+/* FRC 253 2025 Code by:
+Kaden Chow - Programming Lead - MHS 2026 - https://github.com/Kachow2323
+Joshua Seo - Programming Lead - MHS 2027 - https://github.com/Shaguins
+Finn Nolan - Asst. Programming Lead - MHS 2027 - https://github.com/Finn-253
+Theo Nolan - Asst. Programming Lead - MHS 2027 - https://github.com/Theo-253
 
 With Invaluable Help from:
   Mentor John :D

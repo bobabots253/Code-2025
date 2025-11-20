@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Bobaboard.BotControls;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class autoAlignWithTimeout extends Command{
@@ -48,7 +47,6 @@ public class autoAlignWithTimeout extends Command{
         holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
         holonomicDriveController.setTolerance(new Pose2d(new Translation2d(0.015, 0.015),
                 Rotation2d.fromDegrees(1)));
-        //rotController.enableContinuousInput(-Math.PI, Math.PI);
         this.timeoutSeconds = timeoutSeconds;
         addRequirements(DriveSubsystem.getInstance());
     }
@@ -71,19 +69,8 @@ public class autoAlignWithTimeout extends Command{
     @Override
     public void execute(){
         chassis = holonomicDriveController.calculate(driveSubsystem.getPose(), targetPose, 0.0, targetPose.getRotation());
-
-        // TO DO Test on 10.22.25
-        // ChassisSpeeds robotRelative = ChassisSpeeds.fromFieldRelativeSpeeds(
-        //     chassis.vxMetersPerSecond, 
-        //     chassis.vyMetersPerSecond, 
-        //     chassis.omegaRadiansPerSecond, 
-        //     Rotation2d.fromDegrees(driveSubsystem.getVisionGyroRotation()));
-        // TODO to try the line 78 instead of 79
-        // input = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(robotRelative);
-
         input = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(chassis);
         driveSubsystem.setModuleStates(input);
-        // autoAlignCommand = new RunCommand(() -> driveSubsystem.setModuleStates(input), driveSubsystem);
         System.out.println("running");
 
     }
