@@ -82,9 +82,9 @@ public class RobotContainer {
     SmartDashboard.putBoolean("AutoAlign Status", false);
     m_robotDrive.setDefaultCommand(new RunCommand(
       () -> m_robotDrive.drive(
-          -MathUtil.applyDeadband(m_ControlHub.driverController.getLeftY(), OIConstants.kDriveDeadband),
-          -MathUtil.applyDeadband(m_ControlHub.driverController.getLeftX(), OIConstants.kDriveDeadband),
-          -MathUtil.applyDeadband(m_ControlHub.driverController.getRightX(), OIConstants.kDriveDeadband),
+          -MathUtil.applyDeadband(m_ControlHub.driverController.getLeftY()*.15, .02),
+          -MathUtil.applyDeadband(m_ControlHub.driverController.getLeftX()*.15, 0.02),
+          -MathUtil.applyDeadband(m_ControlHub.driverController.getRightX()*.15, .02),
           true, true),
       m_robotDrive));
 
@@ -132,7 +132,9 @@ public class RobotContainer {
               }, m_Elevator)
           );
       }
-
+    
+      
+    
     public void cancelAutoAlignFunction(){
       Command currentCommand = m_robotDrive.getCurrentCommand();
       if(currentCommand != null && currentCommand != m_robotDrive.getDefaultCommand()){

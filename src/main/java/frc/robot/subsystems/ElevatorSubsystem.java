@@ -123,6 +123,9 @@ private ElevatorSubsystem() {
     public void setElevatorVoltage(double volts) {
         SmartDashboard.putNumber("Elevator /Manual Voltage", volts);
         m_masterLiftingSparkMax.setVoltage(volts);
+        // System.out.println("the current output" + m_masterLiftingSparkMax.getAppliedOutput());
+        // System.out.println("the current volts" + m_masterLiftingSparkMax.getBusVoltage());
+        // System.out.println("the current " + m_masterLiftingSparkMax.getOutputCurrent());
     }
 
     public void setSafePercentageOpenLoop(double OpenLoopPercentage){
