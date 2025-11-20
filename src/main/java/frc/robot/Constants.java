@@ -179,7 +179,7 @@ public final class Constants {
     public static final double gearRadius = 0.0254;
 
     public static final double idealHomingLinearPosition = 0.000; //revs
-    public static final double softZeroLinearPosition = 0.100; //revs0.023809418082237244
+    public static final double softZeroLinearPosition = 0.050; //CCC Compensation
     public static final double L1Score = 8.2; // 2/24/25
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Elevator 
 
@@ -215,7 +215,7 @@ public final class Constants {
     public static final double kUniversalPIDOutputLow = -1; //max output is capped @ 1
     public static final double kUniversalPIDOutputHigh = 1;
     public static final double ELEVATOR_MAX_TRAVEL = 19.39500; //heuristic
-    public static final double ELEVATOR_MIN_TRAVEL = -0.20000; //heuristic
+    public static final double ELEVATOR_MIN_TRAVEL = -0.10000; //heuristic
     public static final double ELEVATOR_OUTPUT_LOW = -0.75;
     public static final double ELEVATOR_OUTPUT_HIGH = 0.75;
     public static final double arbFFVolatge = 0.05;

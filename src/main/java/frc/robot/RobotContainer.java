@@ -571,6 +571,30 @@ public class RobotContainer {
         );
     }
 
+    // Elimination Matches Staggered L2 Coral Auto
+    public Command ReturnL2StaggeredCommand(Pose2d kickOut, Pose2d targetPose, double kickOutTimeout, double targetTimeout, double waitTime){
+      return Commands.sequence(
+          new WaitCommand(waitTime),
+          spinMove(),
+          new WaitCommand(1.0), //Stop-gap Bad Tag Pose Measurement Rejection
+          PIDAutonomousMoveToPoseWithTimeout(kickOut, kickOutTimeout).withTimeout(kickOutTimeout),
+          pIDPathfindToPoseWithTimeout(targetPose, targetTimeout).withTimeout(targetTimeout),
+      Commands.parallel(
+              setElevatorL2Auto().withTimeout(1.8).andThen(setElevatorStowAuto()),
+          Commands.sequence(
+              new WaitCommand(1), //tune
+              new InstantCommand(() -> {
+                m_Effector.setIntakeLazyPercentageOpenLoop(1.0);
+              }, m_Effector),
+              new WaitCommand(0.5),
+              new InstantCommand(() -> {
+                m_Effector.setIntakeLazyPercentageOpenLoop(0);
+              }, m_Effector) //tune 
+          )
+      ).withTimeout(2.7)
+        );
+      }
+
   /**
    * Returns the current alliance, with false indicating blue and true indicating red.
    * If there is no alliance, blue alliance is assumed. ie: not in match
