@@ -9,12 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -23,7 +18,6 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 
 import frc.robot.Configs;
-import frc.robot.Constants.ModuleConstants;
 
 public class MAXSwerveModule {
   private final SparkMax m_drivingSparkMax;
@@ -54,8 +48,6 @@ public class MAXSwerveModule {
     m_turningEncoder = m_turningSparkMax.getAbsoluteEncoder();
     m_drivingPIDController = m_drivingSparkMax.getClosedLoopController();
     m_turningPIDController = m_turningSparkMax.getClosedLoopController();
-    //m_drivingPIDController.setFeedbackDevice(m_drivingEncoder);
-    //m_turningPIDController.setFeedbackDevice(m_turningEncoder);
 
     m_drivingSparkMax.configure(Configs.MAXSwerveModule.drivingConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);

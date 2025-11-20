@@ -4,13 +4,13 @@
 
 package frc.robot;
 
-import com.revrobotics.spark.*;
-import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
+import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.util.Units;
 
@@ -71,6 +71,7 @@ public final class Constants {
 
     //Use to globally fix Gyro Flip
     public static final boolean kGyroReversed = false;
+    public static double kTimedTurnSpeed = 4; //2.0 rad/s ~= 115 deg/s
   }
 
   public static final class ModuleConstants {
@@ -178,8 +179,8 @@ public final class Constants {
     public static final double gearRadius = 0.0254;
 
     public static final double idealHomingLinearPosition = 0.000; //revs
-    public static final double softZeroLinearPosition = 0.100; //revs0.023809418082237244
-    public static final double L1Score = 7.470; // 2/24/25
+    public static final double softZeroLinearPosition = 0.050; //CCC Compensation
+    public static final double L1Score = 8.2; // 2/24/25
     public static final double L1Misc = 0.120; //Note to Self: Fast but don't break Elevator 
 
     public static final double L2Score = 12.55; // 2/24/25 //works
@@ -188,6 +189,8 @@ public final class Constants {
     public static final double L3Score = 19.585; // 2/24/25 18.9
     public static final double L3Algae = 0.120;
     public static final double L3Misc = 0.120;
+    public static final double L1Handoff = 5.9047;
+    public static final double L1Flick = 12.55;
     public static final double pos1 = 0.120; 
     public static final double pos2 = 4.85; 
     public static final double codeStop = 0.120;
@@ -212,7 +215,7 @@ public final class Constants {
     public static final double kUniversalPIDOutputLow = -1; //max output is capped @ 1
     public static final double kUniversalPIDOutputHigh = 1;
     public static final double ELEVATOR_MAX_TRAVEL = 19.39500; //heuristic
-    public static final double ELEVATOR_MIN_TRAVEL = -0.075000; //heuristic
+    public static final double ELEVATOR_MIN_TRAVEL = -0.10000; //heuristic
     public static final double ELEVATOR_OUTPUT_LOW = -0.75;
     public static final double ELEVATOR_OUTPUT_HIGH = 0.75;
     public static final double arbFFVolatge = 0.05;
@@ -290,19 +293,12 @@ public final class Constants {
   }
 
   public static final class VisionConstants{
-      public static final double MIN_MT_TAG_COUNT = 2;
-      public static final double AVG_MT2_TAG_DIST = 3;
-      public static final double TRUSTWORTHY_DISTANCE = 4; //Meters
-      public static final double MAX_ANGULAR = 180; //Degrees
-      public static final String FRONT_LEFT_APRIL_TAG_LL = "limelight-orange";
-      public static final String FRONT_RIGHT_APRIL_TAG_LL = "limelight-purple";
-      public static final double DEFAULT_CROP_SIZE = 0.85;
-      public static final double FOV_X = 82; //for 3G's
-      public static final double FOV_Y = 56.2;
-      public static final double FOV_AREA = FOV_X * FOV_Y;
-      public static final int[] ALL_TAG_IDS = new int[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22};
-      public static final int[] TRUSTWORTHY_TAGS = new int[]{6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
-    public static final double RECENT_DATA_CUTOFF = 3.5;
+    public static final String FRONT_LEFT_APRIL_TAG_LL = "limelight-purple";
+    public static final String FRONT_RIGHT_APRIL_TAG_LL = "limelight-orange";
+    public static final double FRONT_LEFT_LL_OFFSET_BLUE = 23;
+    public static final double FRONT_RIGHT_LL_OFFSET_BLUE = -23;
+    public static final double FRONT_LEFT_LL_OFFSET_RED = 203;
+    public static final double FRONT_RIGHT_LL_OFFSET_RED = -203;
   }
 
   public static final class PPLibConstants{
@@ -314,14 +310,23 @@ public final class Constants {
         Units.degreesToRadians(540), Units.degreesToRadians(720), 12, false);
   }
 
-  
-public static final boolean tuningMode = false;
-
-public static final class ClimbConstants{
-  public static final int masterClimbCanID = 14;
-  public static final int slaveClimbCanID = 15;
-  public static final int kUniversalHardLimit = 45;
-  public static final int kUniversalSoftLimit = 40;
-  public static final int kSuperHighOutputLimit = 60;
+  public static final class PPHolonomicConstants{
+    public static final PIDConstants kTranslationPID = new PIDConstants(5.0,0,0); //tune
+    public static final PIDConstants kRotationPID = new PIDConstants(5.0,0,0); //tune
+    public static final double kRotationTolerance = 5; //degrees (0.0872665 rads)
+    public static final double kPositionTolerance = 0.0508; //meters (2")
+    public static final double TRUSTWORTHY_DISTANCE = 4; //Meters
+    public static final double MAX_ANGULAR = 180; //Degrees
   }
+
+  public static final boolean tuningMode = false;
+
+  public static final class ClimbConstants{
+    public static final int masterClimbCanID = 14;
+    public static final int slaveClimbCanID = 15;
+    public static final int kUniversalHardLimit = 45;
+    public static final int kUniversalSoftLimit = 40;
+    public static final int kSuperHighOutputLimit = 60;
+    }
+  
 }

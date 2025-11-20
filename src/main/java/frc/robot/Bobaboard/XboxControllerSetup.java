@@ -5,28 +5,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.utils.Util;
 
-//   public static final Trigger driver_A = new JoystickButton(driverController, 1),
-//     driver_B = new JoystickButton(driverController, 2), driver_X = new JoystickButton(driverController, 3),
-//     driver_Y = new JoystickButton(driverController, 4), driver_LB = new JoystickButton(driverController, 5),
-//     driver_RB = new JoystickButton(driverController, 6), driver_VIEW = new JoystickButton(driverController, 7),
-//     driver_MENU = new JoystickButton(driverController, 8);
-//   private static final Trigger operator_A = new JoystickButton(operatorController, 1),
-//     operator_B = new JoystickButton(operatorController, 2), operator_X = new JoystickButton(operatorController, 3),
-//     operator_Y = new JoystickButton(operatorController, 4), operator_LB = new JoystickButton(operatorController, 5),
-//     operator_RB = new JoystickButton(operatorController, 6), operator_VIEW = new JoystickButton(operatorController, 7),
-//     operator_MENU = new JoystickButton(operatorController, 8);
-  
-//   private static final POVButton operator_DPAD_UP = new POVButton(operatorController, 0),
-//     operator_DPAD_RIGHT = new POVButton(operatorController, 90), operator_DPAD_DOWN = new POVButton(operatorController, 180),
-//     operator_DPAD_LEFT = new POVButton(operatorController, 270);
-//   private static final POVButton driver_DPAD_UP = new POVButton(driverController, 0),
-//     driver_DPAD_RIGHT = new POVButton(driverController, 90), driver_DPAD_DOWN = new POVButton(driverController, 180),
-//     driver_DPAD_LEFT = new POVButton(driverController, 270);
-
 public class XboxControllerSetup extends XboxController {
     private static final double PRESS_THRESHOLD = 0.1;
 	private double DEAD_BAND = 0.2;
-	private boolean rumbling = false;
 	public ButtonCheck
             A_Button,
 			B_Button,

@@ -1,13 +1,8 @@
 package frc.robot;
 
-import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.*;
-
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -59,7 +54,6 @@ public final class Configs {
     public static final class ElevatorSubsystem {
         public static final SparkMaxConfig masterLiftingConfig = new SparkMaxConfig(); //Left (relative to swerve)
         public static final SparkMaxConfig slaveLiftingConfig = new SparkMaxConfig(); ////Right (relative to swerve)
-        //public static final SparkBaseConfig baseMasterLiftingConfig = new SparkMaxConfig();
         public static final SparkMaxConfig masterLiftingCoastModeConfig = new SparkMaxConfig();
         public static final SparkMaxConfig slaveLiftingCoastModeConfig = new SparkMaxConfig();
 
@@ -75,7 +69,7 @@ public final class Configs {
                          ElevatorConstants.kIncrementalPostionI,
                          ElevatorConstants.kIncrementalPositionD)
                     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh)
-                    .velocityFF(0) //1/ElevatorConstants.kV
+                    .velocityFF(0) 
                 .maxMotion
                     .maxVelocity(1100) //rpm
                     .maxAcceleration(2000) //rpm
@@ -146,69 +140,5 @@ public final class Configs {
                     .outputRange(EndEffectorConstants.kUniversalPIDOutputLow, EndEffectorConstants.kUniversalPIDOutputHigh);
         }   
      }
-
-     public static class ClimbSubsystem {
-        public static final SparkMaxConfig climbMasterConfig = new SparkMaxConfig();
-        public static final SparkMaxConfig climbFollowerConfig = new SparkMaxConfig();
-        public static final SparkMaxConfig climbMasterCoastConfig = new SparkMaxConfig();
-        public static final SparkMaxConfig climbFollowerCoastConfig = new SparkMaxConfig();
-        public static final SparkMaxConfig climbFollowerBrakeConfig = new SparkMaxConfig();
-         static {
-         climbMasterConfig
-             .inverted(false)
-             .idleMode(IdleMode.kBrake)
-             .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
-         // climbConfig.closedLoop
-         //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-         //     .pid(ElevatorConstants.kIncrementalPostionP,
-         //          ElevatorConstants.kIncrementalPostionI,
-         //          ElevatorConstants.kIncrementalPositionD)
-         //     .outputRange(ElevatorConstants.kUniversalPIDOutputLow, ElevatorConstants.kUniversalPIDOutputHigh)
-         //     .velocityFF(0);
-         climbFollowerConfig
-         .idleMode(IdleMode.kCoast)
-         .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
-         //.follow(ClimbConstants.masterClimbCanID, true);
- 
-         climbMasterCoastConfig
-                     .idleMode(IdleMode.kCoast)
-                     .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
- 
-         climbFollowerCoastConfig
-                     .idleMode(IdleMode.kCoast)
-                     .smartCurrentLimit(ClimbConstants.kSuperHighOutputLimit);
-
-        climbFollowerBrakeConfig
-                .idleMode(IdleMode.kBrake);
-         }
-        }
-//     public static final class TestSubsystem {
-//         public static final SparkMaxConfig TestConfig = new SparkMaxConfig();
-//         public static final SparkMaxConfig TestConfig2 = new SparkMaxConfig();
-
-//         static{
-//         TestConfig.follow(Constants.TestSubsystemConstants.rightArmMotorID);
-//         TestConfig
-//                     .idleMode(IdleMode.kBrake)
-//                     .smartCurrentLimit(45);
-//         TestConfig.closedLoop
-//                     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-//                     .pid(1.2, 0, 0.75)
-//                     .outputRange(-1, 1);
-//         TestConfig2
-//                     .idleMode(IdleMode.kBrake)
-//                     .smartCurrentLimit(25);
-//         TestConfig2.absoluteEncoder
-//                     // Invert the turning encoder, since the output shaft rotates in the opposite
-//                     // direction of the steering motor in the MAXSwerve Module.
-//                     .inverted(false);
-//         TestConfig2.closedLoop
-//                     .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-//                     // These are example gains you may need to them for your own robot!
-//                     .pid(1, 0, .5)
-//                     .outputRange(-1, 1)
-//                     .positionWrappingEnabled(false);
-//         }
-//     }
 
 }

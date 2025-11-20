@@ -4,21 +4,12 @@
 
 package frc.robot.subsystems;
 
-import java.lang.reflect.Array;
-
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.util.PathPlannerLogging;
-
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -30,30 +21,21 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.kinematics.struct.SwerveModuleStateStruct;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructArrayPublisher;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
-// import frc.robot.limelights.VisionSubsystem;
 import frc.robot.LimelightHelpers;
-import frc.robot.RobotContainer;
+import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.utils.SwerveUtils;
-import edu.wpi.first.wpilibj.SPI;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -150,7 +132,7 @@ public class DriveSubsystem extends SubsystemBase {
               m_rearLeft.getPosition(),
               m_rearRight.getPosition()
       }, new Pose2d(),
-      VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(5)),
+      VecBuilder.fill(0.4, 0.4, Units.degreesToRadians(5)),
       VecBuilder.fill(0.5, 0.5, 99999999));
 
     private static class DriveSubsystemHandler {
@@ -240,21 +222,18 @@ public class DriveSubsystem extends SubsystemBase {
         System.out.println("Caught NPE");
       }
 
-    /*Basic Vision Pose Estimator */
-    // try {
-    //   addBasicVisionMeasurement(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, mono_odometryVision_L);
-    //   addBasicVisionMeasurement(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, mono_odometryVision_R);
-    // }
-    // catch(Exception erException) {
-    //   System.out.println("No Valid Limelight Targets");
-    // }
-
     SmartDashboard.putData("Field Gyro", m_fieldGyro);
     SmartDashboard.putData("Field Vision LEFT", m_fieldVision_L);
     SmartDashboard.putData("Field Vision RIGHT", m_fieldVision_R);
     SmartDashboard.putData("Refined Vision", m_refinedVision);
 
     m_fieldGyro.setRobotPose(m_odometry.getPoseMeters());
+
+    visionUpdate(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, mono_odometryVision_L);
+    visionUpdate(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, mono_odometryVision_R);
+    visionUpdate(VisionConstants.FRONT_LEFT_APRIL_TAG_LL, refinedodometryVision);
+    visionUpdate(VisionConstants.FRONT_RIGHT_APRIL_TAG_LL, refinedodometryVision);
+
     m_fieldVision_L.setRobotPose(mono_odometryVision_L.getEstimatedPosition());
     m_fieldVision_R.setRobotPose(mono_odometryVision_R.getEstimatedPosition());
     m_refinedVision.setRobotPose(refinedodometryVision.getEstimatedPosition());
@@ -274,20 +253,46 @@ public class DriveSubsystem extends SubsystemBase {
 
     double[] pose = {getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()};
     SmartDashboard.putNumberArray("POSE", pose);
-    //SmartDashboard.putBoolean("fieldFlipped", fieldFlipped);
   }
   
-  // public void addBasicVisionMeasurement(String limelight, SwerveDrivePoseEstimator poseEstimator) {
-  //     // LimelightHelpers.SetRobotOrientation(VisionConstants.FRONT_LEFT_APRIL_TAG_LL,
-  //     // fieldFlipped ? getInitialFlippeRotation2d().getDegrees(): getRotation2DHeading().getDegrees(), 0,
-  //     //         0, 0, 0, 0);
-  //     if (LimelightHelpers.getTV(limelight)) {
-  //         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight);
-  //         if (!(mt2.tagCount == 0)) {
-  //           poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds); //Timer.getFPGATimestamp()mt2.timestampSeconds
-  //         }
-  //     }
-  // }
+
+  
+    public void visionUpdate(String limelightName, SwerveDrivePoseEstimator poseEstimator){
+      if(!LimelightHelpers.getTV(limelightName)){
+        return;
+      }
+      PoseEstimate BotPoseEstimate_wpiBlue_MegaTag1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
+      Pose2d trustWorthPoseEstimate = new Pose2d();
+      var allianceColor = DriverStation.getAlliance();
+      Rotation2d rawNavXRot = getRawNavXRotation();
+      if(allianceColor.get() == DriverStation.Alliance.Blue){
+        LimelightHelpers.SetRobotOrientation(
+          VisionConstants.FRONT_LEFT_APRIL_TAG_LL,
+          getRawNavXAngle() + VisionConstants.FRONT_LEFT_LL_OFFSET_BLUE, Nav_x.getRawGyroZ(),
+          0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(
+          VisionConstants.FRONT_RIGHT_APRIL_TAG_LL,
+          getRawNavXAngle() + VisionConstants.FRONT_RIGHT_LL_OFFSET_BLUE, Nav_x.getRawGyroZ(),
+          0, 0, 0, 0);
+
+      }else if(allianceColor.get() == DriverStation.Alliance.Red){
+        LimelightHelpers.SetRobotOrientation(
+          VisionConstants.FRONT_LEFT_APRIL_TAG_LL,
+          getRawNavXAngle() + VisionConstants.FRONT_LEFT_LL_OFFSET_RED, Nav_x.getRawGyroZ(),
+          0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(
+          VisionConstants.FRONT_RIGHT_APRIL_TAG_LL,
+          getRawNavXAngle() + VisionConstants.FRONT_RIGHT_LL_OFFSET_RED, Nav_x.getRawGyroZ(),
+          0, 0, 0, 0);
+          rawNavXRot = Nav_x.getRotation2d().plus(Rotation2d.fromDegrees(180));
+      }else return;
+
+      if(BotPoseEstimate_wpiBlue_MegaTag1.pose != null){
+        trustWorthPoseEstimate = new Pose2d(BotPoseEstimate_wpiBlue_MegaTag1.pose.getTranslation(), rawNavXRot);
+        poseEstimator.addVisionMeasurement(trustWorthPoseEstimate, BotPoseEstimate_wpiBlue_MegaTag1.timestampSeconds,
+           VecBuilder.fill(.5,.5, Units.degreesToRadians(10)));
+      }else return;
+    }
 
   /**
    * Returns the currently-estimated pose of the robot.
@@ -295,7 +300,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+      return refinedodometryVision.getEstimatedPosition();
   }
 
     public Pose2d mono_getPoseVision_L() {
@@ -464,9 +469,37 @@ public class DriveSubsystem extends SubsystemBase {
     Nav_x.reset();
   }
 
-  // public static void zeroGyro(){
-  //   Nav_x.zeroYaw();
-  // }
+  public Command spinMoveCommand(double timeoutSeconds) { //tune for 180 degrees
+        final double rotationRate = DriveConstants.kTimedTurnSpeed;
+        Command turnCommand = new RunCommand(
+            () -> driveRobotRelative(new ChassisSpeeds(
+                0, 
+                0, 
+                rotationRate //angularVelocity
+            )),
+            this
+        );
+        return turnCommand
+            .withTimeout(timeoutSeconds)
+            .andThen(() -> driveRobotRelative(
+              new ChassisSpeeds(0, 0, 0))); 
+    }
+
+    public Command inverseSpinMoveCommand(double timeoutSeconds) { //tune for 180 degrees
+      final double rotationRate = DriveConstants.kTimedTurnSpeed;
+      Command turnCommand = new RunCommand(
+          () -> driveRobotRelative(new ChassisSpeeds(
+              0, 
+              0, 
+              -(rotationRate) //angularVelocity
+          )),
+          this
+      );
+      return turnCommand
+          .withTimeout(timeoutSeconds)
+          .andThen(() -> driveRobotRelative(
+            new ChassisSpeeds(0, 0, 0))); 
+  }
 
   /**
    * Returns the heading of the robot.
@@ -477,6 +510,14 @@ public class DriveSubsystem extends SubsystemBase {
 
   public double getVisionGyroRotation(){
     return (-Nav_x.getAngle());
+  }
+
+  public Rotation2d getRawNavXRotation(){
+    return Nav_x.getRotation2d();
+  }
+
+  public double getRawNavXAngle(){
+    return Nav_x.getAngle();
   }
 
   public Rotation2d getTrueRotation2DHeading(){
@@ -509,14 +550,6 @@ public class DriveSubsystem extends SubsystemBase {
   setModuleStates(lockStates);
 }
 
-//   public SwerveModulePosition[] returnSwerverModulePositions(){
-//     return new SwerveModulePosition[] {
-//       m_frontLeft.getPosition(),
-//       m_frontRight.getPosition(),
-//       m_rearLeft.getPosition(),
-//       m_rearRight.getPosition()
-// };
-//   }
   /**
    * Returns the turn rate of the robot.
    *

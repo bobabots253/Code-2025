@@ -1,29 +1,32 @@
 package frc.robot.Autonomous;
-import java.util.Optional;
-
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Autonomous.BlueAutos.BlueBottomCommand;
-import frc.robot.Autonomous.BlueAutos.BlueMidSafetyCommand;
 import frc.robot.Autonomous.BlueAutos.CrossLineCommand;
-//import frc.robot.subsystems.TestSubsystem;
-import frc.robot.Autonomous.DefaultCommands.DoNothingCommand;
 import frc.robot.Autonomous.DefaultCommands.GoAutoCommand;
 import frc.robot.Autonomous.DefaultCommands.ReturnAutoCommand;
-import frc.robot.Autonomous.DefaultCommands.StandStillCommand;
 
-public final class AutoModeManager{
+public class AutoModeManager{
+    
     public enum DesiredMode {
 		DO_NOTHING,
         GO_AUTO,
         RETURN_AUTO,
-        AB_BOTAUTO,
-        NEW_AUTO,
-        AB_MIDLEAVE,
-        AB_MIDSCOREONE,
         STAND_STILL,
-        CROSS_LINE
+        CROSS_LINE,
+        L1_MIDDLE_START,
+        MIDSINGLESCORE,
+        C_SIDE_LEFT_L2,
+        C_SIDE_RIGHT_L2,
+        E_SIDE_LEFT_L2,
+        E_SIDE_RIGHT_L2,
+        C_SIDE_L1,
+        E_SIDE_L1,
+        RIGHT_A2,
+        LEFT_A2,
+        BLUE_LEFT_AA,
+        BLUE_RIGHT_AA,
+        RED_LEFT_AA,
+        RED_RIGHT_AA
 	}
 
     public static AutoModeManager AutoQueue;
@@ -32,24 +35,29 @@ public final class AutoModeManager{
         return AutoQueue;
     }
 
-    private DesiredMode defaultMode = DesiredMode.DO_NOTHING;
-    //private Optional<AutoModeBase> mAutoMode = Optional.empty();
     public static SendableChooser<DesiredMode> mModeChooser = new SendableChooser<>();
     public static Command m_autonomousCommand;
+    public static DesiredMode desiredMode;
 
     public AutoModeManager() {
     mModeChooser.setDefaultOption("Default Auto", DesiredMode.DO_NOTHING);
-    // mModeChooser.addOption("Return Auto", DesiredMode.RETURN_AUTO);
-    // mModeChooser.addOption("Go Auto", DesiredMode.GO_AUTO);
-    // mModeChooser.addOption("Bottom Feeder", DesiredMode.AB_BOTAUTO);
-    // mModeChooser.addOption("Safety Auto", DesiredMode.AB_MIDLEAVE);
-    // mModeChooser.addOption("Mid 1 Coral", DesiredMode.AB_MIDSCOREONE);
-    // mModeChooser.addOption("Stand Still Boi", DesiredMode.STAND_STILL);
     mModeChooser.addOption("Simple Cross Line", DesiredMode.CROSS_LINE);
+    mModeChooser.addOption("L1 from middle ", DesiredMode.L1_MIDDLE_START);
+    mModeChooser.addOption("Blue Mid L1-1P", DesiredMode.MIDSINGLESCORE);
+    mModeChooser.addOption("C Side Left Branch l2", DesiredMode.C_SIDE_LEFT_L2);
+    mModeChooser.addOption("C Side Right Branch l2", DesiredMode.C_SIDE_RIGHT_L2);
+    mModeChooser.addOption("E Side Left Branch l2", DesiredMode.E_SIDE_LEFT_L2);
+    mModeChooser.addOption("E Side Right Branch l2", DesiredMode.E_SIDE_RIGHT_L2);
+    mModeChooser.addOption("Left A2", DesiredMode.LEFT_A2);
+    mModeChooser.addOption("Right A2", DesiredMode.RIGHT_A2);
+    mModeChooser.addOption("Blue Left AA", DesiredMode.BLUE_LEFT_AA);
+    mModeChooser.addOption("Blue Right AA", DesiredMode.BLUE_RIGHT_AA);
+    mModeChooser.addOption("Red Left AA", DesiredMode.RED_LEFT_AA);
+
     }
 
     public static void updateAutoMode(){
-        DesiredMode desiredMode = mModeChooser.getSelected();
+        desiredMode = mModeChooser.getSelected();
         if (desiredMode == null) {
 			    desiredMode = DesiredMode.DO_NOTHING;
         }else{
@@ -60,28 +68,49 @@ public final class AutoModeManager{
 
     public static Command grabAutoMode(DesiredMode data){
         switch(data){
-            case DO_NOTHING:
-				m_autonomousCommand = DoNothingCommand.NoAuto();
-                break;
             case GO_AUTO:
                 m_autonomousCommand = GoAutoCommand.runDefaultedAutoCommand();
                 break;
             case RETURN_AUTO:
                 m_autonomousCommand = ReturnAutoCommand.runDefaultedAutoCommand();
-            break;
-            case AB_BOTAUTO:
-                m_autonomousCommand = BlueBottomCommand.runFullAutoCommand();
                 break;
-            case AB_MIDLEAVE:
-                m_autonomousCommand = BlueMidSafetyCommand.runDefaultedAutoCommand();
-                break;
-            case AB_MIDSCOREONE:
-                m_autonomousCommand = BlueMidSafetyCommand.runScoreOneAutoCommand();
-                break;
-            case STAND_STILL:
-                m_autonomousCommand = StandStillCommand.runDefaultedAutoCommand();  
             case CROSS_LINE:
                 m_autonomousCommand = CrossLineCommand.runDefaultedAutoCommand(); 
+                break;
+            case MIDSINGLESCORE:
+                m_autonomousCommand = null;
+                break;
+            case L1_MIDDLE_START:
+                m_autonomousCommand = null;
+                break;
+            case C_SIDE_LEFT_L2:
+                m_autonomousCommand = null;
+                break;
+            case C_SIDE_RIGHT_L2:
+                m_autonomousCommand = null;
+                break;
+            case E_SIDE_LEFT_L2:
+                m_autonomousCommand = null;
+                break;
+            case E_SIDE_RIGHT_L2:
+                m_autonomousCommand = null;
+                break;
+            case LEFT_A2:
+                m_autonomousCommand = null;
+                break;
+            case RIGHT_A2:
+                m_autonomousCommand = null;
+                break;
+            case BLUE_LEFT_AA:
+                m_autonomousCommand = null;
+                break;
+            case BLUE_RIGHT_AA:
+                m_autonomousCommand = null;
+                break;
+            case RED_LEFT_AA:
+                m_autonomousCommand = null;
+                break;
+            
             default:
 			    System.out.println("ERROR: unexpected auto mode!");
 				break;

@@ -1,12 +1,7 @@
 package frc.robot.Bobaboard;
 
-import java.util.Optional;
-
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Autonomous.AutoModeManager.DesiredMode;
 
 public class ControlHub {
     private static ControlHub mInstance = null;
@@ -22,7 +17,6 @@ public class ControlHub {
 	public XboxControllerSetup operatorController;
 	public XboxControllerSetup tControllerSetup1;
 	public XboxControllerSetup tControllerSetup2;
-	// Optional<Integer> testController = Optional.of();
 
 	boolean testBoolean = false;
 
